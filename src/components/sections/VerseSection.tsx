@@ -66,8 +66,8 @@ export default function VerseSection({ verse }: VerseSectionProps) {
                 >
                     <div className="relative bg-gradient-to-br from-[var(--color-primary)]/20 via-white to-[var(--color-primary)]/10 rounded-[20px] p-8 md:p-12 shadow-xl overflow-hidden">
                         {/* Decorative Elements */}
-                        <div className="absolute top-0 right-0 w-40 h-40 bg-[var(--color-accent)]/5 rounded-full -translate-y-1/2 translate-x-1/2" />
-                        <div className="absolute bottom-0 left-0 w-32 h-32 bg-[var(--color-primary)]/30 rounded-full translate-y-1/2 -translate-x-1/2" />
+                        <div className="absolute top-0 right-0 w-40 h-40 bg-[var(--color-accent)]/5 rounded-[20px] -translate-y-1/2 translate-x-1/2" />
+                        <div className="absolute bottom-0 left-0 w-32 h-32 bg-[var(--color-primary)]/30 rounded-[20px] translate-y-1/2 -translate-x-1/2" />
 
                         {/* Quote Icon */}
                         <div className="absolute top-6 left-6 text-[var(--color-accent)]/10">
@@ -110,7 +110,7 @@ export default function VerseSection({ verse }: VerseSectionProps) {
                                         href={verse.bible_link}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="inline-flex items-center gap-2 px-6 py-3 bg-[var(--color-accent)] text-white rounded-full font-medium hover:bg-[var(--color-accent-light)] transition-colors shadow-lg"
+                                        className="inline-flex items-center gap-2 px-6 py-3 bg-[var(--color-accent)] text-white rounded-[20px] font-medium hover:bg-[var(--color-accent-light)] transition-colors shadow-lg"
                                     >
                                         <BookOpen className="w-5 h-5" />
                                         Ler na Bíblia
@@ -120,7 +120,7 @@ export default function VerseSection({ verse }: VerseSectionProps) {
 
                                 <button
                                     onClick={shareVerse}
-                                    className="inline-flex items-center gap-2 px-6 py-3 bg-[var(--color-primary)] text-[var(--color-accent)] rounded-full font-medium hover:bg-[var(--color-primary-dark)] transition-colors"
+                                    className="inline-flex items-center gap-2 px-6 py-3 bg-[var(--color-primary)] text-[var(--color-accent)] rounded-[20px] font-medium hover:bg-[var(--color-primary-dark)] transition-colors"
                                 >
                                     <Share2 className="w-5 h-5" />
                                     Compartilhar

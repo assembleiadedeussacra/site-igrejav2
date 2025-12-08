@@ -78,7 +78,7 @@ export default function KnowledgeSection({ posts = [] }: KnowledgeSectionProps) 
                         <button
                             key={tab.id}
                             onClick={() => setActiveTab(tab.id as 'studies' | 'blog')}
-                            className={`flex items-center gap-2 px-6 py-3 rounded-full font-semibold transition-all ${activeTab === tab.id
+                            className={`flex items-center gap-2 px-6 py-3 rounded-[20px] font-semibold transition-all ${activeTab === tab.id
                                 ? 'bg-[var(--color-accent)] text-white shadow-lg'
                                 : 'bg-white text-[var(--color-accent)] hover:bg-[var(--color-primary)]/20 border border-[var(--color-accent)]/20'
                                 }`}
@@ -169,7 +169,7 @@ export default function KnowledgeSection({ posts = [] }: KnowledgeSectionProps) 
                                             {post.tags.map((tag) => (
                                                 <span
                                                     key={tag}
-                                                    className="inline-flex items-center gap-1 text-xs text-[var(--color-accent)] bg-[var(--color-primary)]/20 px-2 py-1 rounded-full"
+                                                    className="inline-flex items-center gap-1 text-xs text-[var(--color-accent)] bg-[var(--color-primary)]/20 px-2 py-1 rounded-[20px]"
                                                 >
                                                     <Tag className="w-3 h-3" />
                                                     {tag}

@@ -62,7 +62,7 @@ export default function AdminLoginPage() {
                 <div className="bg-white rounded-[20px] shadow-2xl p-8 md:p-10">
                     {/* Logo */}
                     <div className="text-center mb-8">
-                        <div className="relative w-20 h-20 mx-auto mb-4 rounded-full overflow-hidden border-4 border-[var(--color-primary)] shadow-lg">
+                        <div className="relative w-20 h-20 mx-auto mb-4 rounded-[20px] overflow-hidden border-4 border-[var(--color-primary)] shadow-lg">
                             <Image
                                 src="/images/logo-igreja.jpg"
                                 alt="Logo"

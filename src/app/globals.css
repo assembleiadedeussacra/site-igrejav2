@@ -30,12 +30,12 @@
   --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
   --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
   
-  /* Border Radius */
-  --radius-sm: 0.375rem;
-  --radius-md: 0.5rem;
-  --radius-lg: 0.75rem;
-  --radius-xl: 1rem;
-  --radius-2xl: 1.5rem;
+  /* Border Radius - Padronizado para 20px */
+  --radius-sm: 20px;
+  --radius-md: 20px;
+  --radius-lg: 20px;
+  --radius-xl: 20px;
+  --radius-2xl: 20px;
   --radius-standard: 20px; /* Padrão para todas as bordas arredondadas */
   
   /* Transitions */
@@ -76,12 +76,12 @@ body {
 
 ::-webkit-scrollbar-track {
   background: var(--color-primary-light);
-  border-radius: 4px;
+  border-radius: 20px;
 }
 
 ::-webkit-scrollbar-thumb {
   background: var(--color-accent);
-  border-radius: 4px;
+  border-radius: 20px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -238,7 +238,7 @@ img {
   background: rgba(255, 255, 255, 0.9);
   width: 44px !important;
   height: 44px !important;
-  border-radius: 50%;
+  border-radius: 20px;
   box-shadow: var(--shadow-md);
 }
 
@@ -346,7 +346,7 @@ img {
   width: 60px;
   height: 4px;
   background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-accent) 100%);
-  border-radius: 2px;
+  border-radius: 20px;
 }
 
 /* Quote Decoration */
@@ -371,7 +371,7 @@ img {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  border-radius: 9999px;
+  border-radius: 20px;
   background: var(--color-primary-light);
   color: var(--color-accent);
 }

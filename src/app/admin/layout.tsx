@@ -120,7 +120,7 @@ export default function AdminLayout({
                     {/* Logo */}
                     <div className="flex items-center justify-between p-4 border-b border-white/10">
                         <Link href="/admin" className="flex items-center gap-3">
-                            <div className="relative w-10 h-10 rounded-full overflow-hidden border-2 border-white/30">
+                            <div className="relative w-10 h-10 rounded-[20px] overflow-hidden border-2 border-white/30">
                                 <Image
                                     src="/images/logo-igreja.jpg"
                                     alt="Logo"
@@ -171,7 +171,7 @@ export default function AdminLayout({
                     {/* User */}
                     <div className="p-4 border-t border-white/10">
                         <div className="flex items-center gap-3 mb-4">
-                            <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center text-white font-bold">
+                            <div className="w-10 h-10 rounded-[20px] bg-white/20 flex items-center justify-center text-white font-bold">
                                 {user?.email?.[0]?.toUpperCase() || 'A'}
                             </div>
                             <div className="flex-1 min-w-0">

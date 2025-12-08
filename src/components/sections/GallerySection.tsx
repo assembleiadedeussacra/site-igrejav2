@@ -76,7 +76,7 @@ export default function GallerySection({ items = [] }: GallerySectionProps) {
                                     {/* Hover Overlay */}
                                     <div className="absolute inset-0 bg-[var(--color-accent)]/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                                         <div className="text-center text-white">
-                                            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-sm">
+                                            <div className="w-16 h-16 mx-auto mb-4 rounded-[20px] bg-white/20 flex items-center justify-center backdrop-blur-sm">
                                                 <Images className="w-8 h-8" />
                                             </div>
                                             <span className="font-semibold">Ver Álbum</span>

@@ -151,7 +151,7 @@ export default function ContactSection({ settings }: ContactSectionProps) {
                                 href={routesUrl}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[var(--color-accent)] to-[var(--color-accent-light)] text-white rounded-full font-semibold hover:shadow-lg transition-all hover:scale-105"
+                                className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[var(--color-accent)] to-[var(--color-accent-light)] text-white rounded-[20px] font-semibold hover:shadow-lg transition-all hover:scale-105"
                             >
                                 <Navigation className="w-5 h-5" />
                                 Obter Rotas

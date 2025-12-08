@@ -2,111 +2,156 @@ import { createClient } from '../lib/supabase/server';
 
 export const serverApi = {
     getBanners: async () => {
-        const supabase = await createClient();
-        const { data } = await supabase
-            .from('banners')
-            .select('*')
-            .eq('active', true)
-            .order('position', { ascending: true });
-        return data || [];
+        try {
+            const supabase = await createClient();
+            const result = await supabase
+                .from('banners')
+                .select('*')
+                .eq('active', true)
+                .order('position', { ascending: true });
+            return result.data || [];
+        } catch (error) {
+            console.error('Error fetching banners:', error);
+            return [];
+        }
     },
 
     getDailyVerse: async () => {
-        const supabase = await createClient();
-        // Usar data no fuso horário de Brasília para garantir consistência
-        const now = new Date();
-        const brasiliaTime = new Date(now.toLocaleString('en-US', { timeZone: 'America/Sao_Paulo' }));
-        const today = brasiliaTime.toISOString().split('T')[0];
+        try {
+            const supabase = await createClient();
+            // Usar data no fuso horário de Brasília para garantir consistência
+            const now = new Date();
+            const brasiliaTime = new Date(now.toLocaleString('en-US', { timeZone: 'America/Sao_Paulo' }));
+            const today = brasiliaTime.toISOString().split('T')[0];
 
-        // Buscar versículo específico para o dia atual
-        const { data: specificContent } = await supabase
-            .from('verses')
-            .select('*')
-            .eq('active_date', today)
-            .single();
+            // Buscar versículo específico para o dia atual
+            const { data: specificContent } = await supabase
+                .from('verses')
+                .select('*')
+                .eq('active_date', today)
+                .single();
 
-        if (specificContent) return specificContent;
+            if (specificContent) return specificContent;
 
-        // Se não houver versículo específico para hoje, buscar o mais recente
-        const { data } = await supabase
-            .from('verses')
-            .select('*')
-            .order('created_at', { ascending: false })
-            .limit(1)
-            .single();
+            // Se não houver versículo específico para hoje, buscar o mais recente
+            const { data } = await supabase
+                .from('verses')
+                .select('*')
+                .order('created_at', { ascending: false })
+                .limit(1)
+                .single();
 
-        return data || null;
+            return data || null;
+        } catch (error) {
+            console.error('Error fetching daily verse:', error);
+            return null;
+        }
     },
 
     getEvents: async () => {
-        const supabase = await createClient();
-        const { data } = await supabase
-            .from('events')
-            .select('*')
-            .eq('active', true)
-            .order('created_at', { ascending: true });
-        return data || [];
+        try {
+            const supabase = await createClient();
+            const { data } = await supabase
+                .from('events')
+                .select('*')
+                .eq('active', true)
+                .order('created_at', { ascending: true });
+            return data || [];
+        } catch (error) {
+            console.error('Error fetching events:', error);
+            return [];
+        }
     },
 
     getTestimonials: async () => {
-        const supabase = await createClient();
-        const { data } = await supabase
-            .from('testimonials')
-            .select('*')
-            .eq('active', true)
-            .order('created_at', { ascending: false });
-        return data || [];
+        try {
+            const supabase = await createClient();
+            const { data } = await supabase
+                .from('testimonials')
+                .select('*')
+                .eq('active', true)
+                .order('created_at', { ascending: false });
+            return data || [];
+        } catch (error) {
+            console.error('Error fetching testimonials:', error);
+            return [];
+        }
     },
 
     getFinancials: async () => {
-        const supabase = await createClient();
-        const { data } = await supabase
-            .from('financials')
-            .select('*')
-            .eq('active', true)
-            .limit(1)
-            .single();
-        return data || null;
+        try {
+            const supabase = await createClient();
+            const { data } = await supabase
+                .from('financials')
+                .select('*')
+                .eq('active', true)
+                .limit(1)
+                .single();
+            return data || null;
+        } catch (error) {
+            console.error('Error fetching financials:', error);
+            return null;
+        }
     },
 
     getSettings: async () => {
-        const supabase = await createClient();
-        const { data } = await supabase
-            .from('site_settings')
-            .select('*')
-            .limit(1)
-            .single();
-        return data || null;
+        try {
+            const supabase = await createClient();
+            const { data } = await supabase
+                .from('site_settings')
+                .select('*')
+                .limit(1)
+                .single();
+            return data || null;
+        } catch (error) {
+            console.error('Error fetching settings:', error);
+            return null;
+        }
     },
 
     getGalleryLinks: async () => {
-        const supabase = await createClient();
-        const { data } = await supabase
-            .from('gallery_links')
-            .select('*')
-            .eq('active', true)
-            .order('order', { ascending: true });
-        return data || [];
+        try {
+            const supabase = await createClient();
+            const { data } = await supabase
+                .from('gallery_links')
+                .select('*')
+                .eq('active', true)
+                .order('order', { ascending: true });
+            return data || [];
+        } catch (error) {
+            console.error('Error fetching gallery links:', error);
+            return [];
+        }
     },
 
     getPosts: async (limit = 3) => {
-        const supabase = await createClient();
-        const { data } = await supabase
-            .from('posts')
-            .select('*')
-            .eq('published', true)
-            .order('created_at', { ascending: false })
-            .limit(limit);
-        return data || [];
+        try {
+            const supabase = await createClient();
+            const { data } = await supabase
+                .from('posts')
+                .select('*')
+                .eq('published', true)
+                .order('created_at', { ascending: false })
+                .limit(limit);
+            return data || [];
+        } catch (error) {
+            console.error('Error fetching posts:', error);
+            return [];
+        }
     },
 
     getLeaders: async () => {
-        const supabase = await createClient();
-        const { data } = await supabase
-            .from('leaders')
-            .select('*')
-            .eq('active', true)
-            .order('order', { ascending: true });
-        return data || [];
+        try {
+            const supabase = await createClient();
+            const { data } = await supabase
+                .from('leaders')
+                .select('*')
+                .eq('active', true)
+                .order('order', { ascending: true });
+            return data || [];
+        } catch (error) {
+            console.error('Error fetching leaders:', error);
+            return [];
+        }
     }
 };

@@ -1,0 +1,33 @@
+warning: in the working copy of 'src/app/globals.css', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/app/page.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/components/sections/VerseSection.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/services/server.ts', LF will be replaced by CRLF the next time Git touches it
+ public/manifest.json                            |  1 [32m+[m
+ src/app/admin/banners/page.tsx                  | 28 [32m+++++++++[m[31m----------[m
+ src/app/admin/configuracoes/page.tsx            | 22 [32m+++++++[m[31m--------[m
+ src/app/admin/depoimentos/page.tsx              | 22 [32m+++++++[m[31m--------[m
+ src/app/admin/eventos/page.tsx                  | 28 [32m+++++++++[m[31m----------[m
+ src/app/admin/financeiro/page.tsx               | 16 [32m+++++[m[31m------[m
+ src/app/admin/galeria/page.tsx                  | 24 [32m++++++++[m[31m--------[m
+ src/app/admin/layout.tsx                        |  6 [32m++[m[31m--[m
+ src/app/admin/lideranca/page.tsx                | 24 [32m++++++++[m[31m--------[m
+ src/app/admin/login/page.tsx                    | 10 [32m+++[m[31m----[m
+ src/app/admin/page.tsx                          | 18 [32m++++++[m[31m------[m
+ src/app/admin/posts/page.tsx                    | 34 [32m+++++++++++[m[31m------------[m
+ src/app/admin/versiculo/page.tsx                | 18 [32m++++++[m[31m------[m
+ src/app/blog/page.tsx                           |  6 [32m++[m[31m--[m
+ src/app/estudos/page.tsx                        |  8 [32m+++[m[31m---[m
+ src/app/globals.css                             |  1 [32m+[m
+ src/app/page.tsx                                |  3 [31m--[m
+ src/components/layout/Footer.tsx                |  4 [32m+[m[31m--[m
+ src/components/layout/Header.tsx                | 12 [32m++++[m[31m----[m
+ src/components/sections/AboutSection.tsx        | 37 [32m+++++++++++++[m[31m------------[m
+ src/components/sections/ContactSection.tsx      | 10 [32m+++[m[31m----[m
+ src/components/sections/GallerySection.tsx      |  6 [32m++[m[31m--[m
+ src/components/sections/GivingSection.tsx       | 13 [32m+++++[m[31m----[m
+ src/components/sections/HeroSection.tsx         | 16 [32m+++++[m[31m------[m
+ src/components/sections/KnowledgeSection.tsx    | 10 [32m+++[m[31m----[m
+ src/components/sections/ScheduleSection.tsx     | 10 [32m+++[m[31m----[m
+ src/components/sections/TestimonialsSection.tsx |  6 [32m++[m[31m--[m
+ src/components/sections/VerseSection.tsx        |  2 [32m+[m[31m-[m
+ 28 files changed, 198 insertions(+), 197 deletions(-)

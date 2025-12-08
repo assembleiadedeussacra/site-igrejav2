@@ -61,8 +61,8 @@ export default function GivingSection({ financials }: GivingSectionProps) {
                 >
                     <div className="relative bg-gradient-to-br from-[var(--color-accent)] to-[var(--color-accent-light)] rounded-[20px] p-8 md:p-12 shadow-2xl overflow-hidden">
                         {/* Decorative Elements */}
-                        <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2" />
-                        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/2" />
+                        <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-[20px] -translate-y-1/2 translate-x-1/2" />
+                        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-[20px] translate-y-1/2 -translate-x-1/2" />
 
                         <div className="relative z-10">
                             {/* Header */}

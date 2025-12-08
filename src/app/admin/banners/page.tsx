@@ -195,7 +195,7 @@ export default function AdminBannersPage() {
                                 </button>
 
                                 {/* Position */}
-                                <span className="w-8 h-8 rounded-full bg-[var(--color-accent)] text-white flex items-center justify-center text-sm font-bold">
+                                <span className="w-8 h-8 rounded-[20px] bg-[var(--color-accent)] text-white flex items-center justify-center text-sm font-bold">
                                     {index + 1}
                                 </span>
 

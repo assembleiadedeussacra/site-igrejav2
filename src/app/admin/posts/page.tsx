@@ -69,8 +69,8 @@ export default function AdminPostsPage() {
                                 )}
                                 <div className="flex-1 min-w-0">
                                     <div className="flex items-center gap-2 mb-1">
-                                        <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${post.type === 'blog' ? 'bg-blue-100 text-blue-600' : 'bg-green-100 text-green-600'}`}>{post.type === 'blog' ? 'Blog' : 'Estudo'}</span>
-                                        {!post.published && <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-600">Rascunho</span>}
+                                        <span className={`px-2 py-0.5 rounded-[20px] text-xs font-medium ${post.type === 'blog' ? 'bg-blue-100 text-blue-600' : 'bg-green-100 text-green-600'}`}>{post.type === 'blog' ? 'Blog' : 'Estudo'}</span>
+                                        {!post.published && <span className="px-2 py-0.5 rounded-[20px] text-xs font-medium bg-yellow-100 text-yellow-600">Rascunho</span>}
                                     </div>
                                     <h3 className="font-bold text-[var(--color-accent)] truncate">{post.title}</h3>
                                     <p className="text-sm text-[var(--color-text-secondary)] truncate">{post.description}</p>

@@ -124,7 +124,7 @@ export default function ScheduleSection({ events = [] }: ScheduleSectionProps) {
                                 >
                                     {/* Badge */}
                                     <span
-                                        className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${config.badge} mb-4`}
+                                        className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-[20px] text-xs font-semibold ${config.badge} mb-4`}
                                     >
                                         <IconComponent className="w-3.5 h-3.5" />
                                         {config.label}

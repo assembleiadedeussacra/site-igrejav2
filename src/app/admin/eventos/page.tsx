@@ -53,7 +53,7 @@ export default function AdminEventosPage() {
                 <div className="divide-y">
                     {events.map((event, index) => (
                         <motion.div key={event.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.05 }} className="flex items-center gap-4 p-4 hover:bg-gray-50">
-                            <span className={`px-3 py-1 rounded-full text-xs font-semibold ${typeColors[event.type]}`}>{typeOptions.find((t) => t.value === event.type)?.label}</span>
+                            <span className={`px-3 py-1 rounded-[20px] text-xs font-semibold ${typeColors[event.type]}`}>{typeOptions.find((t) => t.value === event.type)?.label}</span>
                             <div className="flex-1">
                                 <h3 className="font-bold text-[var(--color-accent)]">{event.title}</h3>
                                 <div className="flex items-center gap-3 text-sm text-[var(--color-text-secondary)]">

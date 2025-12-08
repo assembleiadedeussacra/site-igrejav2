@@ -60,16 +60,16 @@ export default function Header({ settings }: HeaderProps) {
     return (
         <>
             <header
-                className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled
-                    ? 'bg-white/90 backdrop-blur-lg shadow-lg py-2'
-                    : 'bg-transparent py-4'
+                className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-white ${isScrolled
+                    ? 'shadow-lg py-2'
+                    : 'shadow-sm py-4'
                     }`}
             >
                 <div className="container-custom">
                     <div className="flex items-center justify-between">
                         {/* Logo */}
                         <Link href="/" className="flex items-center gap-3 group">
-                            <div className="relative w-12 h-12 rounded-full overflow-hidden border-2 border-[var(--color-accent)] shadow-md transition-transform group-hover:scale-105">
+                            <div className="relative w-12 h-12 rounded-[20px] overflow-hidden border-2 border-[var(--color-accent)] shadow-md transition-transform group-hover:scale-105">
                                 <Image
                                     src="/images/logo-igreja.jpg"
                                     alt="Logo Assembleia de Deus Missão Sacramento"
@@ -80,16 +80,10 @@ export default function Header({ settings }: HeaderProps) {
                                 />
                             </div>
                             <div className="hidden sm:block">
-                                <span
-                                    className={`font-bold text-base leading-tight transition-colors ${isScrolled ? 'text-[var(--color-accent)]' : 'text-white'
-                                        }`}
-                                >
+                                <span className="font-bold text-base leading-tight text-[var(--color-accent)]">
                                     AD Missão
                                 </span>
-                                <p
-                                    className={`text-xs transition-colors ${isScrolled ? 'text-[var(--color-text-secondary)]' : 'text-white/80'
-                                        }`}
-                                >
+                                <p className="text-xs text-[var(--color-text-secondary)]">
                                     Sacramento/MG
                                 </p>
                             </div>
@@ -101,10 +95,7 @@ export default function Header({ settings }: HeaderProps) {
                                 <Link
                                     key={link.href}
                                     href={link.href}
-                                    className={`px-4 py-2 rounded-[20px] font-medium transition-all hover:bg-[var(--color-accent)]/10 ${isScrolled
-                                        ? 'text-[var(--color-accent)]'
-                                        : 'text-white hover:bg-white/10'
-                                        }`}
+                                    className="px-4 py-2 rounded-[20px] font-medium transition-all hover:bg-[var(--color-accent)]/10 text-[var(--color-accent)]"
                                 >
                                     {link.label}
                                 </Link>
@@ -117,10 +108,7 @@ export default function Header({ settings }: HeaderProps) {
                                 onMouseLeave={() => setIsDropdownOpen(false)}
                             >
                                 <button
-                                    className={`flex items-center gap-1 px-4 py-2 rounded-[20px] font-medium transition-all hover:bg-[var(--color-accent)]/10 ${isScrolled
-                                        ? 'text-[var(--color-accent)]'
-                                        : 'text-white hover:bg-white/10'
-                                        }`}
+                                    className="flex items-center gap-1 px-4 py-2 rounded-[20px] font-medium transition-all hover:bg-[var(--color-accent)]/10 text-[var(--color-accent)]"
                                 >
                                     <BookOpen className="w-4 h-4" />
                                     Conhecimento
@@ -158,10 +146,7 @@ export default function Header({ settings }: HeaderProps) {
                                 <Link
                                     key={link.href}
                                     href={link.href}
-                                    className={`px-4 py-2 rounded-[20px] font-medium transition-all hover:bg-[var(--color-accent)]/10 ${isScrolled
-                                        ? 'text-[var(--color-accent)]'
-                                        : 'text-white hover:bg-white/10'
-                                        }`}
+                                    className="px-4 py-2 rounded-[20px] font-medium transition-all hover:bg-[var(--color-accent)]/10 text-[var(--color-accent)]"
                                 >
                                     {link.label}
                                 </Link>
@@ -178,10 +163,7 @@ export default function Header({ settings }: HeaderProps) {
                         {/* Mobile Menu Toggle */}
                         <button
                             onClick={() => setIsMobileMenuOpen(true)}
-                            className={`lg:hidden p-2 rounded-[20px] transition-colors ${isScrolled
-                                ? 'text-[var(--color-accent)] hover:bg-[var(--color-accent)]/10'
-                                : 'text-white hover:bg-white/10'
-                                }`}
+                            className="lg:hidden p-2 rounded-[20px] transition-colors text-[var(--color-accent)] hover:bg-[var(--color-accent)]/10"
                             aria-label="Abrir menu"
                         >
                             <Menu className="w-6 h-6" />
@@ -215,7 +197,7 @@ export default function Header({ settings }: HeaderProps) {
                                 {/* Header */}
                                 <div className="flex items-center justify-between p-4 border-b border-[var(--color-primary)]/20">
                                     <div className="flex items-center gap-3">
-                                        <div className="relative w-10 h-10 rounded-full overflow-hidden border-2 border-[var(--color-accent)]">
+                                        <div className="relative w-10 h-10 rounded-[20px] overflow-hidden border-2 border-[var(--color-accent)]">
                                             <Image
                                                 src="/images/logo-igreja.jpg"
                                                 alt="Logo"

@@ -95,7 +95,7 @@ export default function HeroSection({ banners = [] }: HeroSectionProps) {
                             transition={{ delay: 0.2, duration: 0.5 }}
                             className="mb-8"
                         >
-                            <div className="relative w-24 h-24 md:w-32 md:h-32 mx-auto rounded-full overflow-hidden border-4 border-white/30 shadow-2xl">
+                            <div className="relative w-24 h-24 md:w-32 md:h-32 mx-auto rounded-[20px] overflow-hidden border-4 border-white/30 shadow-2xl">
                                 <Image
                                     src="/images/logo-igreja.jpg"
                                     alt="Logo"

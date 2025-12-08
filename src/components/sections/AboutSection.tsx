@@ -154,14 +154,14 @@ export default function AboutSection({ leaders = [] }: AboutSectionProps) {
                         <div className="hidden md:flex items-center gap-2">
                             <button
                                 onClick={() => swiperRef.current?.slidePrev()}
-                                className="w-10 h-10 rounded-full bg-white shadow-md flex items-center justify-center text-[var(--color-accent)] hover:bg-[var(--color-accent)] hover:text-white transition-colors"
+                                className="w-10 h-10 rounded-[20px] bg-white shadow-md flex items-center justify-center text-[var(--color-accent)] hover:bg-[var(--color-accent)] hover:text-white transition-colors"
                                 aria-label="Anterior"
                             >
                                 <ChevronLeft className="w-5 h-5" />
                             </button>
                             <button
                                 onClick={() => swiperRef.current?.slideNext()}
-                                className="w-10 h-10 rounded-full bg-white shadow-md flex items-center justify-center text-[var(--color-accent)] hover:bg-[var(--color-accent)] hover:text-white transition-colors"
+                                className="w-10 h-10 rounded-[20px] bg-white shadow-md flex items-center justify-center text-[var(--color-accent)] hover:bg-[var(--color-accent)] hover:text-white transition-colors"
                                 aria-label="Próximo"
                             >
                                 <ChevronRight className="w-5 h-5" />

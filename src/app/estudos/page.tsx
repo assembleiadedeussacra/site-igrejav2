@@ -145,7 +145,7 @@ export default function EstudosPage() {
                                         {study.tags.map((tag) => (
                                             <span
                                                 key={tag}
-                                                className="inline-flex items-center gap-1 text-xs text-[var(--color-accent)] bg-[var(--color-primary)]/20 px-2 py-1 rounded-full"
+                                                className="inline-flex items-center gap-1 text-xs text-[var(--color-accent)] bg-[var(--color-primary)]/20 px-2 py-1 rounded-[20px]"
                                             >
                                                 <Tag className="w-3 h-3" />
                                                 {tag}

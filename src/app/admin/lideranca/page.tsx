@@ -120,7 +120,7 @@ export default function AdminLiderancaPage() {
                                 transition={{ delay: index * 0.05 }}
                                 className="bg-gray-50 rounded-[20px] p-4 flex flex-col items-center text-center group"
                             >
-                                <div className="relative w-24 h-24 rounded-full overflow-hidden mb-4 border-4 border-[var(--color-primary)]">
+                                <div className="relative w-24 h-24 rounded-[20px] overflow-hidden mb-4 border-4 border-[var(--color-primary)]">
                                     <Image src={leader.image_url} alt={leader.name} fill className="object-cover" />
                                 </div>
                                 <h3 className="font-bold text-[var(--color-accent)]">{leader.name}</h3>
