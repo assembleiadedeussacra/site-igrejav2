@@ -1,28 +1,40 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Pencil, Trash2, X, Save, Loader2, Calendar, Clock, Check } from 'lucide-react';
+import { api } from '@/services/api';
 
 interface Event { id: string; title: string; day_of_week: string; time_start: string; time_end: string | null; description: string | null; type: 'culto' | 'estudo' | 'oracao' | 'ebd'; active: boolean; }
-
-const initialEvents: Event[] = [
-    { id: '1', title: 'Culto de Ensino', day_of_week: 'Terça-feira', time_start: '19:30', time_end: '21:00', description: 'Estudo bíblico e ensino da Palavra', type: 'estudo', active: true },
-    { id: '2', title: 'Círculo de Oração', day_of_week: 'Quinta-feira', time_start: '19:30', time_end: '21:00', description: 'Momento de intercessão e oração', type: 'oracao', active: true },
-    { id: '3', title: 'Escola Bíblica Dominical', day_of_week: 'Domingo', time_start: '09:00', time_end: '10:30', description: 'Estudo bíblico para todas as idades', type: 'ebd', active: true },
-    { id: '4', title: 'Culto da Noite', day_of_week: 'Domingo', time_start: '19:00', time_end: '21:00', description: 'Culto de adoração e pregação', type: 'culto', active: true },
-];
 
 const dayOptions = ['Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado', 'Domingo'];
 const typeOptions = [{ value: 'culto', label: 'Culto' }, { value: 'estudo', label: 'Estudo' }, { value: 'oracao', label: 'Oração' }, { value: 'ebd', label: 'EBD' }];
 const typeColors = { culto: 'bg-blue-100 text-blue-600', estudo: 'bg-green-100 text-green-600', oracao: 'bg-purple-100 text-purple-600', ebd: 'bg-orange-100 text-orange-600' };
 
 export default function AdminEventosPage() {
-    const [events, setEvents] = useState<Event[]>(initialEvents);
+    const [events, setEvents] = useState<Event[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingEvent, setEditingEvent] = useState<Event | null>(null);
     const [isSaving, setIsSaving] = useState(false);
     const [formData, setFormData] = useState({ title: '', day_of_week: '', time_start: '', time_end: '', description: '', type: 'culto' as Event['type'], active: true });
+
+    useEffect(() => {
+        loadEvents();
+    }, []);
+
+    const loadEvents = async () => {
+        try {
+            setIsLoading(true);
+            const data = await api.getAdminEvents();
+            setEvents(data || []);
+        } catch (error) {
+            console.error('Erro ao carregar eventos:', error);
+            alert('Erro ao carregar eventos. Tente novamente.');
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     const openModal = (event?: Event) => {
         if (event) { setEditingEvent(event); setFormData({ title: event.title, day_of_week: event.day_of_week, time_start: event.time_start, time_end: event.time_end || '', description: event.description || '', type: event.type, active: event.active }); }
@@ -33,14 +45,42 @@ export default function AdminEventosPage() {
     const closeModal = () => { setIsModalOpen(false); setEditingEvent(null); };
 
     const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault(); setIsSaving(true);
-        await new Promise((r) => setTimeout(r, 1000));
-        if (editingEvent) { setEvents((prev) => prev.map((ev) => ev.id === editingEvent.id ? { ...ev, ...formData, time_end: formData.time_end || null, description: formData.description || null } : ev)); }
-        else { setEvents((prev) => [...prev, { id: Date.now().toString(), ...formData, time_end: formData.time_end || null, description: formData.description || null }]); }
-        closeModal(); setIsSaving(false);
+        e.preventDefault();
+        setIsSaving(true);
+
+        try {
+            const eventData = {
+                ...formData,
+                time_end: formData.time_end || null,
+                description: formData.description || null,
+            };
+
+            if (editingEvent) {
+                await api.updateEvent(editingEvent.id, eventData);
+            } else {
+                await api.createEvent(eventData);
+            }
+            await loadEvents();
+            closeModal();
+        } catch (error) {
+            console.error('Erro ao salvar evento:', error);
+            alert('Erro ao salvar evento. Tente novamente.');
+        } finally {
+            setIsSaving(false);
+        }
     };
 
-    const deleteEvent = (id: string) => { if (confirm('Excluir este evento?')) setEvents((prev) => prev.filter((e) => e.id !== id)); };
+    const deleteEvent = async (id: string) => {
+        if (!confirm('Excluir este evento?')) return;
+
+        try {
+            await api.deleteEvent(id);
+            await loadEvents();
+        } catch (error) {
+            console.error('Erro ao excluir evento:', error);
+            alert('Erro ao excluir evento. Tente novamente.');
+        }
+    };
 
     return (
         <div className="space-y-6">
@@ -50,8 +90,19 @@ export default function AdminEventosPage() {
             </div>
 
             <div className="bg-white rounded-[20px] shadow-lg overflow-hidden">
-                <div className="divide-y">
-                    {events.map((event, index) => (
+                {isLoading ? (
+                    <div className="p-12 text-center">
+                        <Loader2 className="w-16 h-16 mx-auto mb-4 text-gray-300 animate-spin" />
+                        <p className="text-[var(--color-text-secondary)]">Carregando eventos...</p>
+                    </div>
+                ) : events.length === 0 ? (
+                    <div className="p-12 text-center">
+                        <Calendar className="w-16 h-16 mx-auto mb-4 text-gray-300" />
+                        <p className="text-[var(--color-text-secondary)]">Nenhum evento cadastrado</p>
+                    </div>
+                ) : (
+                    <div className="divide-y">
+                        {events.map((event, index) => (
                         <motion.div key={event.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.05 }} className="flex items-center gap-4 p-4 hover:bg-gray-50">
                             <span className={`px-3 py-1 rounded-[20px] text-xs font-semibold ${typeColors[event.type]}`}>{typeOptions.find((t) => t.value === event.type)?.label}</span>
                             <div className="flex-1">
@@ -66,8 +117,9 @@ export default function AdminEventosPage() {
                                 <button onClick={() => deleteEvent(event.id)} className="p-2 rounded-[20px] text-red-600 hover:bg-red-50"><Trash2 className="w-5 h-5" /></button>
                             </div>
                         </motion.div>
-                    ))}
-                </div>
+                        ))}
+                    </div>
+                )}
             </div>
 
             <AnimatePresence>

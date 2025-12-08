@@ -10,70 +10,13 @@ import {
     ArrowLeft,
     Search,
 } from 'lucide-react';
+import * as serverApi from '@/services/server';
 
 export const metadata: Metadata = {
     title: 'Blog',
     description:
         'Notícias, eventos e artigos sobre a vida da nossa comunidade cristã.',
 };
-
-// Mock data - will be replaced by Supabase
-const posts = [
-    {
-        id: '1',
-        title: 'Celebração de Natal 2024',
-        description:
-            'Confira os preparativos e a programação especial para as celebrações de Natal da nossa igreja.',
-        cover_image: '/images/banner1.png',
-        tags: ['Eventos', 'Natal'],
-        created_at: '2024-12-05',
-    },
-    {
-        id: '2',
-        title: 'Retiro de Jovens - Momento Marcante',
-        description:
-            'Veja como foi o retiro de jovens e os testemunhos transformadores deste encontro especial.',
-        cover_image: '/images/Mocidade.jpg',
-        tags: ['Jovens', 'Retiro'],
-        created_at: '2024-11-15',
-    },
-    {
-        id: '3',
-        title: 'A Importância da Escola Bíblica Dominical',
-        description:
-            'Entenda por que a EBD é fundamental para o crescimento espiritual de toda a família.',
-        cover_image: '/images/banner2.png',
-        tags: ['EBD', 'Ensino'],
-        created_at: '2024-11-10',
-    },
-    {
-        id: '4',
-        title: 'Batismo nas Águas - Novembro 2024',
-        description:
-            'Celebramos mais uma cerimônia de batismo com novos irmãos fazendo sua profissão de fé.',
-        cover_image: '/images/banner1.png',
-        tags: ['Batismo', 'Celebração'],
-        created_at: '2024-11-08',
-    },
-    {
-        id: '5',
-        title: 'Campanha de Arrecadação',
-        description:
-            'Nossa igreja realizou uma campanha de arrecadação para ajudar famílias necessitadas.',
-        cover_image: '/images/banner2.png',
-        tags: ['Ação Social', 'Comunidade'],
-        created_at: '2024-11-01',
-    },
-    {
-        id: '6',
-        title: 'Aniversário da Igreja',
-        description:
-            'Celebramos mais um ano de história e bênçãos em nossa comunidade de fé.',
-        cover_image: '/images/banner1.png',
-        tags: ['Aniversário', 'Celebração'],
-        created_at: '2024-10-20',
-    },
-];
 
 function formatDate(dateString: string): string {
     const date = new Date(dateString);
@@ -84,7 +27,31 @@ function formatDate(dateString: string): string {
     });
 }
 
-export default function BlogPage() {
+export default async function BlogPage() {
+    let posts: Array<{
+        id: string;
+        title: string;
+        description: string;
+        cover_image: string | null;
+        tags: string[];
+        created_at: string;
+    }> = [];
+
+    try {
+        const allPosts = await serverApi.getPosts(100);
+        posts = allPosts
+            .filter((post) => post.type === 'blog' && post.published)
+            .map((post) => ({
+                id: post.id,
+                title: post.title,
+                description: post.description,
+                cover_image: post.cover_image,
+                tags: post.tags || [],
+                created_at: post.created_at,
+            }));
+    } catch (error) {
+        console.error('Erro ao carregar posts do blog:', error);
+    }
     return (
         <>
             <Header />

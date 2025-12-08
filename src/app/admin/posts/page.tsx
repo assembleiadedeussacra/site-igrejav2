@@ -1,25 +1,38 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Pencil, Trash2, X, Save, Loader2, FileText, Eye, EyeOff, Tag } from 'lucide-react';
+import { api } from '@/services/api';
 
 interface Post { id: string; title: string; description: string; cover_image: string | null; type: 'blog' | 'study'; tags: string[]; content: string; published: boolean; created_at: string; }
 
-const initialPosts: Post[] = [
-    { id: '1', title: 'A Importância da Oração Diária', description: 'Descubra como a oração pode transformar sua vida', cover_image: null, type: 'study', tags: ['Oração', 'Vida Cristã'], content: '', published: true, created_at: '2024-12-01' },
-    { id: '2', title: 'Celebração de Natal 2024', description: 'Programação especial para as celebrações de Natal', cover_image: '/images/banner1.png', type: 'blog', tags: ['Eventos', 'Natal'], content: '', published: true, created_at: '2024-12-05' },
-    { id: '3', title: 'Estudo sobre o Livro de Romanos', description: 'Análise profunda das epístolas de Paulo', cover_image: null, type: 'study', tags: ['Bíblia', 'Paulo'], content: '', published: false, created_at: '2024-11-28' },
-];
-
 export default function AdminPostsPage() {
-    const [posts, setPosts] = useState<Post[]>(initialPosts);
+    const [posts, setPosts] = useState<Post[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
     const [filter, setFilter] = useState<'all' | 'blog' | 'study'>('all');
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingPost, setEditingPost] = useState<Post | null>(null);
     const [isSaving, setIsSaving] = useState(false);
     const [formData, setFormData] = useState({ title: '', description: '', cover_image: '', type: 'blog' as Post['type'], tags: '', content: '', published: true });
+
+    useEffect(() => {
+        loadPosts();
+    }, []);
+
+    const loadPosts = async () => {
+        try {
+            setIsLoading(true);
+            const data = await api.getAdminPosts();
+            setPosts(data || []);
+        } catch (error) {
+            console.error('Erro ao carregar posts:', error);
+            alert('Erro ao carregar posts. Tente novamente.');
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     const filteredPosts = filter === 'all' ? posts : posts.filter((p) => p.type === filter);
 
@@ -32,16 +45,56 @@ export default function AdminPostsPage() {
     const closeModal = () => { setIsModalOpen(false); setEditingPost(null); };
 
     const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault(); setIsSaving(true);
-        await new Promise((r) => setTimeout(r, 1000));
-        const tagsArray = formData.tags.split(',').map((t) => t.trim()).filter(Boolean);
-        if (editingPost) { setPosts((prev) => prev.map((p) => p.id === editingPost.id ? { ...p, ...formData, cover_image: formData.cover_image || null, tags: tagsArray } : p)); }
-        else { setPosts((prev) => [{ id: Date.now().toString(), ...formData, cover_image: formData.cover_image || null, tags: tagsArray, created_at: new Date().toISOString().split('T')[0] }, ...prev]); }
-        closeModal(); setIsSaving(false);
+        e.preventDefault();
+        setIsSaving(true);
+
+        try {
+            const tagsArray = formData.tags.split(',').map((t) => t.trim()).filter(Boolean);
+            const postData = {
+                ...formData,
+                cover_image: formData.cover_image || null,
+                tags: tagsArray,
+            };
+
+            if (editingPost) {
+                await api.updatePost(editingPost.id, postData);
+            } else {
+                await api.createPost(postData);
+            }
+            await loadPosts();
+            closeModal();
+        } catch (error) {
+            console.error('Erro ao salvar post:', error);
+            alert('Erro ao salvar post. Tente novamente.');
+        } finally {
+            setIsSaving(false);
+        }
     };
 
-    const togglePublish = (id: string) => { setPosts((prev) => prev.map((p) => p.id === id ? { ...p, published: !p.published } : p)); };
-    const deletePost = (id: string) => { if (confirm('Excluir este post?')) setPosts((prev) => prev.filter((p) => p.id !== id)); };
+    const togglePublish = async (id: string) => {
+        try {
+            const post = posts.find((p) => p.id === id);
+            if (post) {
+                await api.updatePost(id, { published: !post.published });
+                await loadPosts();
+            }
+        } catch (error) {
+            console.error('Erro ao alterar publicação:', error);
+            alert('Erro ao alterar publicação. Tente novamente.');
+        }
+    };
+
+    const deletePost = async (id: string) => {
+        if (!confirm('Excluir este post?')) return;
+
+        try {
+            await api.deletePost(id);
+            await loadPosts();
+        } catch (error) {
+            console.error('Erro ao excluir post:', error);
+            alert('Erro ao excluir post. Tente novamente.');
+        }
+    };
 
     return (
         <div className="space-y-6">
@@ -58,7 +111,12 @@ export default function AdminPostsPage() {
             </div>
 
             <div className="bg-white rounded-[20px] shadow-lg overflow-hidden">
-                {filteredPosts.length === 0 ? (
+                {isLoading ? (
+                    <div className="p-12 text-center">
+                        <Loader2 className="w-16 h-16 mx-auto mb-4 text-gray-300 animate-spin" />
+                        <p className="text-[var(--color-text-secondary)]">Carregando posts...</p>
+                    </div>
+                ) : filteredPosts.length === 0 ? (
                     <div className="p-12 text-center"><FileText className="w-16 h-16 mx-auto mb-4 text-gray-300" /><p className="text-[var(--color-text-secondary)]">Nenhum post encontrado</p></div>
                 ) : (
                     <div className="divide-y">

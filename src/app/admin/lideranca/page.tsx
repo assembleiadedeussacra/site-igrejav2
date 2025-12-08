@@ -13,6 +13,7 @@ import {
     Loader2,
     Users,
 } from 'lucide-react';
+import { api } from '@/services/api';
 
 interface Leader {
     id: string;
@@ -23,19 +24,11 @@ interface Leader {
     active: boolean;
 }
 
-const initialLeaders: Leader[] = [
-    { id: '1', name: 'Pastor Paulo', title: 'Pastor Presidente', image_url: '/images/Pastor Paulo.jpg', order: 1, active: true },
-    { id: '2', name: 'Pb. Joanides', title: 'Presbítero', image_url: '/images/Pb Joanides.jpg', order: 2, active: true },
-    { id: '3', name: 'Presbitero Jonas', title: 'Presbítero', image_url: '/images/Presbitero Jonas.jpg', order: 3, active: true },
-    { id: '4', name: 'Jailton', title: 'Diácono', image_url: '/images/Jailton.jpg', order: 4, active: true },
-    { id: '5', name: 'Cleudijane', title: 'Diaconisa', image_url: '/images/Cleudijane.jpg', order: 5, active: true },
-    { id: '6', name: 'Janaina', title: 'Diaconisa', image_url: '/images/Janaina.jpg', order: 6, active: true },
-];
-
 const titleOptions = ['Pastor', 'Presbítero', 'Diácono', 'Diaconisa', 'Evangelista', 'Missionário', 'Outro'];
 
 export default function AdminLiderancaPage() {
-    const [leaders, setLeaders] = useState<Leader[]>(initialLeaders);
+    const [leaders, setLeaders] = useState<Leader[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingLeader, setEditingLeader] = useState<Leader | null>(null);
     const [isSaving, setIsSaving] = useState(false);
@@ -45,6 +38,23 @@ export default function AdminLiderancaPage() {
         image_url: '',
         active: true,
     });
+
+    useEffect(() => {
+        loadLeaders();
+    }, []);
+
+    const loadLeaders = async () => {
+        try {
+            setIsLoading(true);
+            const data = await api.getAdminLeaders();
+            setLeaders(data || []);
+        } catch (error) {
+            console.error('Erro ao carregar líderes:', error);
+            alert('Erro ao carregar líderes. Tente novamente.');
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     const openModal = (leader?: Leader) => {
         if (leader) {
@@ -70,26 +80,37 @@ export default function AdminLiderancaPage() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsSaving(true);
-        await new Promise((r) => setTimeout(r, 1000));
 
-        if (editingLeader) {
-            setLeaders((prev) => prev.map((l) => l.id === editingLeader.id ? { ...l, ...formData } : l));
-        } else {
-            const newLeader: Leader = {
-                id: Date.now().toString(),
-                ...formData,
-                order: leaders.length + 1,
-            };
-            setLeaders((prev) => [...prev, newLeader]);
+        try {
+            if (editingLeader) {
+                await api.updateLeader(editingLeader.id, formData);
+            } else {
+                const maxOrder = leaders.length > 0 ? Math.max(...leaders.map(l => l.order || 0)) : 0;
+                await api.createLeader({
+                    ...formData,
+                    order: maxOrder + 1,
+                });
+            }
+            await loadLeaders();
+            closeModal();
+        } catch (error) {
+            console.error('Erro ao salvar líder:', error);
+            alert('Erro ao salvar líder. Tente novamente.');
+        } finally {
+            setIsSaving(false);
         }
-
-        closeModal();
-        setIsSaving(false);
     };
 
     const deleteLeader = async (id: string) => {
         if (!confirm('Tem certeza que deseja excluir este líder?')) return;
-        setLeaders((prev) => prev.filter((l) => l.id !== id));
+
+        try {
+            await api.deleteLeader(id);
+            await loadLeaders();
+        } catch (error) {
+            console.error('Erro ao excluir líder:', error);
+            alert('Erro ao excluir líder. Tente novamente.');
+        }
     };
 
     return (
@@ -105,7 +126,12 @@ export default function AdminLiderancaPage() {
             </div>
 
             <div className="bg-white rounded-[20px] shadow-lg overflow-hidden">
-                {leaders.length === 0 ? (
+                {isLoading ? (
+                    <div className="p-12 text-center">
+                        <Loader2 className="w-16 h-16 mx-auto mb-4 text-gray-300 animate-spin" />
+                        <p className="text-[var(--color-text-secondary)]">Carregando líderes...</p>
+                    </div>
+                ) : leaders.length === 0 ? (
                     <div className="p-12 text-center">
                         <Users className="w-16 h-16 mx-auto mb-4 text-gray-300" />
                         <p className="text-[var(--color-text-secondary)]">Nenhum líder cadastrado</p>

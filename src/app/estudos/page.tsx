@@ -10,64 +10,13 @@ import {
     ArrowLeft,
     Search,
 } from 'lucide-react';
+import * as serverApi from '@/services/server';
 
 export const metadata: Metadata = {
     title: 'Estudos e Reflexões',
     description:
         'Estudos bíblicos e reflexões para fortalecer sua fé. Aprofunde seu conhecimento da Palavra de Deus.',
 };
-
-// Mock data - will be replaced by Supabase
-const studies = [
-    {
-        id: '1',
-        title: 'A Importância da Oração Diária',
-        description:
-            'Descubra como a oração pode transformar sua vida e fortalecer sua comunhão com Deus através de práticas simples e eficazes.',
-        tags: ['Oração', 'Vida Cristã'],
-        created_at: '2024-12-01',
-    },
-    {
-        id: '2',
-        title: 'Estudo sobre o Livro de Romanos',
-        description:
-            'Uma análise profunda das epístolas de Paulo e sua relevância para a igreja contemporânea.',
-        tags: ['Bíblia', 'Paulo', 'Epístolas'],
-        created_at: '2024-11-28',
-    },
-    {
-        id: '3',
-        title: 'Os Frutos do Espírito',
-        description:
-            'Reflexão sobre Gálatas 5:22-23 e como desenvolver os frutos do Espírito em nossa vida.',
-        tags: ['Espírito Santo', 'Gálatas'],
-        created_at: '2024-11-20',
-    },
-    {
-        id: '4',
-        title: 'A Armadura de Deus',
-        description:
-            'Entenda cada peça da armadura espiritual descrita em Efésios 6 e como aplicá-la no dia a dia.',
-        tags: ['Efésios', 'Batalha Espiritual'],
-        created_at: '2024-11-15',
-    },
-    {
-        id: '5',
-        title: 'Parábolas de Jesus',
-        description:
-            'Estudo sobre as principais parábolas de Jesus e seus ensinamentos para a vida cristã.',
-        tags: ['Jesus', 'Parábolas', 'Evangelhos'],
-        created_at: '2024-11-10',
-    },
-    {
-        id: '6',
-        title: 'O Sermão do Monte',
-        description:
-            'Análise detalhada de Mateus 5-7, considerado o maior sermão já pregado.',
-        tags: ['Mateus', 'Sermão do Monte'],
-        created_at: '2024-11-05',
-    },
-];
 
 function formatDate(dateString: string): string {
     const date = new Date(dateString);
@@ -78,7 +27,29 @@ function formatDate(dateString: string): string {
     });
 }
 
-export default function EstudosPage() {
+export default async function EstudosPage() {
+    let studies: Array<{
+        id: string;
+        title: string;
+        description: string;
+        tags: string[];
+        created_at: string;
+    }> = [];
+
+    try {
+        const allPosts = await serverApi.getPosts(100);
+        studies = allPosts
+            .filter((post) => post.type === 'study' && post.published)
+            .map((post) => ({
+                id: post.id,
+                title: post.title,
+                description: post.description,
+                tags: post.tags || [],
+                created_at: post.created_at,
+            }));
+    } catch (error) {
+        console.error('Erro ao carregar estudos:', error);
+    }
     return (
         <>
             <Header />
