@@ -10,7 +10,7 @@ import {
     ArrowLeft,
     Search,
 } from 'lucide-react';
-import * as serverApi from '@/services/server';
+import { serverApi } from '@/services/server';
 
 export const metadata: Metadata = {
     title: 'Blog',
