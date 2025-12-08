@@ -1,0 +1,28 @@
+{
+  "name": "Assembleia de Deus Missão - Sacramento/MG",
+  "short_name": "AD Missão",
+  "description": "Website oficial da Igreja Assembleia de Deus Missão de Sacramento MG. Uma comunidade de fé dedicada a adorar a Deus e servir ao próximo.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#232d82",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/images/logo-igreja.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/images/logo-igreja.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["religion", "lifestyle"],
+  "lang": "pt-BR",
+  "dir": "ltr"
+}
+

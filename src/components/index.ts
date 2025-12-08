@@ -1,0 +1,11 @@
+export { default as Header } from './layout/Header';
+export { default as Footer } from './layout/Footer';
+export { default as HeroSection } from './sections/HeroSection';
+export { default as VerseSection } from './sections/VerseSection';
+export { default as AboutSection } from './sections/AboutSection';
+export { default as KnowledgeSection } from './sections/KnowledgeSection';
+export { default as ScheduleSection } from './sections/ScheduleSection';
+export { default as GivingSection } from './sections/GivingSection';
+export { default as GallerySection } from './sections/GallerySection';
+export { default as TestimonialsSection } from './sections/TestimonialsSection';
+export { default as ContactSection } from './sections/ContactSection';
