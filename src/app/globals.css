@@ -30,13 +30,14 @@
   --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
   --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
   
-  /* Border Radius - Padronizado para 20px */
+  /* Border Radius - Padronizado para 20px (elementos), 30px (botões) */
   --radius-sm: 20px;
   --radius-md: 20px;
-  --radius-lg: 20px;
+  --radius-lg: 30px;
   --radius-xl: 20px;
   --radius-2xl: 20px;
   --radius-standard: 20px; /* Padrão para todas as bordas arredondadas */
+  --radius-button: 30px; /* Específico para botões */
   
   /* Transitions */
   --transition-fast: 150ms ease;
@@ -192,7 +193,7 @@ img {
   background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-light) 100%);
   color: white;
   font-weight: 600;
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-button);
   transition: all var(--transition-base);
   box-shadow: 0 4px 14px 0 rgba(35, 45, 130, 0.4);
 }
@@ -211,7 +212,7 @@ img {
   background: var(--color-surface);
   color: var(--color-accent);
   font-weight: 600;
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-button);
   border: 2px solid var(--color-accent);
   transition: all var(--transition-base);
 }

@@ -119,24 +119,24 @@ export default function TestimonialsSection({ testimonials = [] }: TestimonialsS
                                     transition={{ delay: index * 0.1 }}
                                     className="h-full"
                                 >
-                                    <div className="bg-white rounded-[20px] p-6 shadow-lg hover:shadow-xl transition-shadow h-full flex flex-col">
+                                    <div className="bg-white rounded-[20px] p-6 shadow-lg hover:shadow-xl transition-shadow h-full flex flex-col min-h-[280px]">
                                         {/* Quote Icon */}
-                                        <div className="w-10 h-10 rounded-[20px] bg-[var(--color-primary)]/20 flex items-center justify-center mb-4">
+                                        <div className="w-10 h-10 rounded-[20px] bg-[var(--color-primary)]/20 flex items-center justify-center mb-4 flex-shrink-0">
                                             <Quote className="w-5 h-5 text-[var(--color-accent)]" />
                                         </div>
 
                                         {/* Rating */}
-                                        <div className="mb-4">
+                                        <div className="mb-4 flex-shrink-0">
                                             <StarRating rating={testimonial.rating} />
                                         </div>
 
                                         {/* Text */}
-                                        <p className="text-[var(--color-text-secondary)] italic flex-1 mb-6">
+                                        <p className="text-[var(--color-text-secondary)] italic flex-1 mb-6 overflow-auto">
                                             &ldquo;{testimonial.text}&rdquo;
                                         </p>
 
                                         {/* Author */}
-                                        <div className="flex items-center gap-3 pt-4 border-t border-gray-100">
+                                        <div className="flex items-center gap-3 pt-4 border-t border-gray-100 flex-shrink-0">
                                             {testimonial.avatar_url ? (
                                                 <div className="w-12 h-12 rounded-[20px] overflow-hidden">
                                                     {/* eslint-disable-next-line @next/next/no-img-element */}

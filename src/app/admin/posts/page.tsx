@@ -47,7 +47,7 @@ export default function AdminPostsPage() {
         <div className="space-y-6">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div><h1 className="text-2xl font-bold text-[var(--color-accent)]">Blog & Estudos</h1><p className="text-[var(--color-text-secondary)]">Gerencie posts e estudos bíblicos</p></div>
-                <button onClick={() => openModal()} className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--color-accent)] text-white rounded-[20px] hover:bg-[var(--color-accent-light)]"><Plus className="w-5 h-5" /> Novo Post</button>
+                <button onClick={() => openModal()} className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--color-accent)] text-white rounded-[30px] hover:bg-[var(--color-accent-light)]"><Plus className="w-5 h-5" /> Novo Post</button>
             </div>
 
             {/* Filters */}
@@ -103,8 +103,8 @@ export default function AdminPostsPage() {
                                 <div><label className="block text-sm font-medium mb-1">Conteúdo</label><textarea value={formData.content} onChange={(e) => setFormData((p) => ({ ...p, content: e.target.value }))} rows={8} className="w-full px-4 py-2 rounded-[20px] border focus:border-[var(--color-accent)] outline-none resize-none" placeholder="Escreva o conteúdo do post..." /></div>
                                 <label className="flex items-center gap-2"><input type="checkbox" checked={formData.published} onChange={(e) => setFormData((p) => ({ ...p, published: e.target.checked }))} className="w-5 h-5 rounded" /><span>Publicar imediatamente</span></label>
                                 <div className="flex gap-3 pt-4">
-                                    <button type="button" onClick={closeModal} className="flex-1 px-4 py-2 border rounded-[20px] hover:bg-gray-50">Cancelar</button>
-                                    <button type="submit" disabled={isSaving} className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2 bg-[var(--color-accent)] text-white rounded-[20px] disabled:opacity-70">{isSaving ? <><Loader2 className="w-5 h-5 animate-spin" />Salvando...</> : <><Save className="w-5 h-5" />Salvar</>}</button>
+                                    <button type="button" onClick={closeModal} className="flex-1 px-4 py-2 border rounded-[30px] hover:bg-gray-50">Cancelar</button>
+                                    <button type="submit" disabled={isSaving} className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2 bg-[var(--color-accent)] text-white rounded-[30px] disabled:opacity-70">{isSaving ? <><Loader2 className="w-5 h-5 animate-spin" />Salvando...</> : <><Save className="w-5 h-5" />Salvar</>}</button>
                                 </div>
                             </form>
                         </motion.div>

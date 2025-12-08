@@ -11,6 +11,13 @@ CREATE TABLE IF NOT EXISTS banners (
   position INTEGER NOT NULL DEFAULT 0,
   link TEXT,
   alt_text TEXT NOT NULL,
+  logo_url TEXT,
+  title TEXT,
+  description TEXT,
+  button1_text TEXT,
+  button1_link TEXT,
+  button2_text TEXT,
+  button2_link TEXT,
   active BOOLEAN NOT NULL DEFAULT true,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()

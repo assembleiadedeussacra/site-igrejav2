@@ -6,6 +6,13 @@ export interface Banner {
     position: number;
     link: string | null;
     alt_text: string;
+    logo_url: string | null;
+    title: string | null;
+    description: string | null;
+    button1_text: string | null;
+    button1_link: string | null;
+    button2_text: string | null;
+    button2_link: string | null;
     active: boolean;
     created_at: string;
     updated_at: string;

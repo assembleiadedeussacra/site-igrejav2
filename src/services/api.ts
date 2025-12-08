@@ -183,5 +183,221 @@ export const api = {
             .eq('id', id);
 
         if (error) throw error;
-    }
+    },
+
+    // Admin - Get all (including inactive)
+    getAdminLeaders: async () => {
+        const supabase = createClient();
+        const { data, error } = await supabase
+            .from('leaders')
+            .select('*')
+            .order('order', { ascending: true });
+
+        if (error) throw error;
+        return data;
+    },
+
+    getAdminPosts: async () => {
+        const supabase = createClient();
+        const { data, error } = await supabase
+            .from('posts')
+            .select('*')
+            .order('created_at', { ascending: false });
+
+        if (error) throw error;
+        return data;
+    },
+
+    getAdminEvents: async () => {
+        const supabase = createClient();
+        const { data, error } = await supabase
+            .from('events')
+            .select('*')
+            .order('created_at', { ascending: true });
+
+        if (error) throw error;
+        return data;
+    },
+
+    // Admin Gallery Links
+    getAdminGalleryLinks: async () => {
+        const supabase = createClient();
+        const { data, error } = await supabase
+            .from('gallery_links')
+            .select('*')
+            .order('order', { ascending: true });
+
+        if (error) throw error;
+        return data;
+    },
+
+    createGalleryLink: async (link: Database['public']['Tables']['gallery_links']['Insert']) => {
+        const supabase = createClient();
+        const { data, error } = await (supabase as any)
+            .from('gallery_links')
+            .insert([link])
+            .select()
+            .single();
+
+        if (error) throw error;
+        return data;
+    },
+
+    updateGalleryLink: async (id: string, updates: Database['public']['Tables']['gallery_links']['Update']) => {
+        const supabase = createClient();
+        const { data, error } = await (supabase as any)
+            .from('gallery_links')
+            .update(updates)
+            .eq('id', id)
+            .select()
+            .single();
+
+        if (error) throw error;
+        return data;
+    },
+
+    deleteGalleryLink: async (id: string) => {
+        const supabase = createClient();
+        const { error } = await (supabase as any)
+            .from('gallery_links')
+            .delete()
+            .eq('id', id);
+
+        if (error) throw error;
+    },
+
+    // Admin Testimonials
+    getAdminTestimonials: async () => {
+        const supabase = createClient();
+        const { data, error } = await supabase
+            .from('testimonials')
+            .select('*')
+            .order('created_at', { ascending: false });
+
+        if (error) throw error;
+        return data;
+    },
+
+    createTestimonial: async (testimonial: Database['public']['Tables']['testimonials']['Insert']) => {
+        const supabase = createClient();
+        const { data, error } = await (supabase as any)
+            .from('testimonials')
+            .insert([testimonial])
+            .select()
+            .single();
+
+        if (error) throw error;
+        return data;
+    },
+
+    updateTestimonial: async (id: string, updates: Database['public']['Tables']['testimonials']['Update']) => {
+        const supabase = createClient();
+        const { data, error } = await (supabase as any)
+            .from('testimonials')
+            .update(updates)
+            .eq('id', id)
+            .select()
+            .single();
+
+        if (error) throw error;
+        return data;
+    },
+
+    deleteTestimonial: async (id: string) => {
+        const supabase = createClient();
+        const { error } = await (supabase as any)
+            .from('testimonials')
+            .delete()
+            .eq('id', id);
+
+        if (error) throw error;
+    },
+
+    // Admin Financials
+    getAdminFinancials: async () => {
+        const supabase = createClient();
+        const { data, error } = await supabase
+            .from('financials')
+            .select('*')
+            .limit(1)
+            .single();
+
+        if (error) throw error;
+        return data;
+    },
+
+    updateFinancials: async (updates: Database['public']['Tables']['financials']['Update']) => {
+        const supabase = createClient();
+        // Get existing or create new
+        const { data: existing } = await supabase
+            .from('financials')
+            .select('*')
+            .limit(1)
+            .single();
+
+        if (existing) {
+            const { data, error } = await (supabase as any)
+                .from('financials')
+                .update(updates)
+                .eq('id', existing.id)
+                .select()
+                .single();
+
+            if (error) throw error;
+            return data;
+        } else {
+            const { data, error } = await (supabase as any)
+                .from('financials')
+                .insert([updates])
+                .select()
+                .single();
+
+            if (error) throw error;
+            return data;
+        }
+    },
+
+    // Admin Settings
+    getAdminSettings: async () => {
+        const supabase = createClient();
+        const { data, error } = await supabase
+            .from('site_settings')
+            .select('*')
+            .limit(1)
+            .single();
+
+        if (error) throw error;
+        return data;
+    },
+
+    updateSettings: async (updates: Database['public']['Tables']['site_settings']['Update']) => {
+        const supabase = createClient();
+        // Get existing or create new
+        const { data: existing } = await supabase
+            .from('site_settings')
+            .select('*')
+            .limit(1)
+            .single();
+
+        if (existing) {
+            const { data, error } = await (supabase as any)
+                .from('site_settings')
+                .update(updates)
+                .eq('id', existing.id)
+                .select()
+                .single();
+
+            if (error) throw error;
+            return data;
+        } else {
+            const { data, error } = await (supabase as any)
+                .from('site_settings')
+                .insert([updates])
+                .select()
+                .single();
+
+            if (error) throw error;
+            return data;
+        }
+    },
 };

@@ -13,6 +13,7 @@ import {
     ArrowRight,
     RefreshCw,
 } from 'lucide-react';
+import { api } from '@/services/api';
 
 interface Stats {
     banners: number;
@@ -85,18 +86,27 @@ export default function AdminDashboardPage() {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        // TODO: Fetch real stats from Supabase
         const fetchStats = async () => {
             setIsLoading(true);
-            // Simulated data
-            await new Promise((resolve) => setTimeout(resolve, 500));
-            setStats({
-                banners: 2,
-                leaders: 6,
-                posts: 6,
-                events: 4,
-            });
-            setIsLoading(false);
+            try {
+                const [banners, leaders, posts, events] = await Promise.all([
+                    api.getAdminBanners().catch(() => []),
+                    api.getAdminLeaders().catch(() => []),
+                    api.getAdminPosts().catch(() => []),
+                    api.getAdminEvents().catch(() => []),
+                ]);
+
+                setStats({
+                    banners: banners.length || 0,
+                    leaders: leaders.length || 0,
+                    posts: posts.length || 0,
+                    events: events.length || 0,
+                });
+            } catch (error) {
+                console.error('Error fetching stats:', error);
+            } finally {
+                setIsLoading(false);
+            }
         };
 
         fetchStats();

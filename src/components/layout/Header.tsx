@@ -69,13 +69,13 @@ export default function Header({ settings }: HeaderProps) {
                     <div className="flex items-center justify-between">
                         {/* Logo */}
                         <Link href="/" className="flex items-center gap-3 group">
-                            <div className="relative w-12 h-12 rounded-[20px] overflow-hidden border-2 border-[var(--color-accent)] shadow-md transition-transform group-hover:scale-105">
+                            <div className="relative w-12 h-12 rounded-[20px] overflow-hidden transition-transform group-hover:scale-105">
                                 <Image
                                     src="/images/logo-igreja.jpg"
                                     alt="Logo Assembleia de Deus Missão Sacramento"
                                     fill
                                     sizes="48px"
-                                    className="object-cover"
+                                    className="object-contain"
                                     priority
                                 />
                             </div>
@@ -197,12 +197,12 @@ export default function Header({ settings }: HeaderProps) {
                                 {/* Header */}
                                 <div className="flex items-center justify-between p-4 border-b border-[var(--color-primary)]/20">
                                     <div className="flex items-center gap-3">
-                                        <div className="relative w-10 h-10 rounded-[20px] overflow-hidden border-2 border-[var(--color-accent)]">
+                                        <div className="relative w-10 h-10 rounded-[20px] overflow-hidden">
                                             <Image
                                                 src="/images/logo-igreja.jpg"
                                                 alt="Logo"
                                                 fill
-                                                className="object-cover"
+                                                className="object-contain"
                                             />
                                         </div>
                                         <span className="font-bold text-[var(--color-accent)]">

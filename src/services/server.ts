@@ -1,4 +1,5 @@
 import { createClient } from '../lib/supabase/server';
+import { fetchDailyVerse } from './verse-api';
 
 export const serverApi = {
     getBanners: async () => {
@@ -24,7 +25,7 @@ export const serverApi = {
             const brasiliaTime = new Date(now.toLocaleString('en-US', { timeZone: 'America/Sao_Paulo' }));
             const today = brasiliaTime.toISOString().split('T')[0];
 
-            // Buscar versículo específico para o dia atual
+            // Buscar versículo específico para o dia atual no banco
             const { data: specificContent } = await supabase
                 .from('verses')
                 .select('*')
@@ -33,7 +34,23 @@ export const serverApi = {
 
             if (specificContent) return specificContent;
 
-            // Se não houver versículo específico para hoje, buscar o mais recente
+            // Se não houver versículo específico, buscar automaticamente da API
+            const apiVerse = await fetchDailyVerse();
+            
+            if (apiVerse) {
+                // Opcionalmente, salvar no banco para cache futuro
+                // Mas não vamos salvar automaticamente para evitar poluir o banco
+                return {
+                    id: `api-${today}`,
+                    text: apiVerse.text,
+                    reference: apiVerse.reference,
+                    bible_link: apiVerse.bible_link,
+                    active_date: today,
+                    created_at: new Date().toISOString(),
+                };
+            }
+
+            // Fallback: buscar o mais recente do banco
             const { data } = await supabase
                 .from('verses')
                 .select('*')
@@ -44,6 +61,23 @@ export const serverApi = {
             return data || null;
         } catch (error) {
             console.error('Error fetching daily verse:', error);
+            // Try API as last resort
+            try {
+                const apiVerse = await fetchDailyVerse();
+                if (apiVerse) {
+                    const today = new Date().toISOString().split('T')[0];
+                    return {
+                        id: `api-${today}`,
+                        text: apiVerse.text,
+                        reference: apiVerse.reference,
+                        bible_link: apiVerse.bible_link,
+                        active_date: today,
+                        created_at: new Date().toISOString(),
+                    };
+                }
+            } catch (apiError) {
+                console.error('Error fetching from API:', apiError);
+            }
             return null;
         }
     },

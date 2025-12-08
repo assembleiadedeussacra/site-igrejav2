@@ -99,7 +99,7 @@ export default function AdminLiderancaPage() {
                     <h1 className="text-2xl font-bold text-[var(--color-accent)]">Liderança</h1>
                     <p className="text-[var(--color-text-secondary)]">Gerencie os líderes da igreja</p>
                 </div>
-                <button onClick={() => openModal()} className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--color-accent)] text-white rounded-[20px] hover:bg-[var(--color-accent-light)] transition-colors">
+                <button onClick={() => openModal()} className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--color-accent)] text-white rounded-[30px] hover:bg-[var(--color-accent-light)] transition-colors">
                     <Plus className="w-5 h-5" /> Novo Líder
                 </button>
             </div>
@@ -165,8 +165,8 @@ export default function AdminLiderancaPage() {
                                     <input type="url" value={formData.image_url} onChange={(e) => setFormData((p) => ({ ...p, image_url: e.target.value }))} className="w-full px-4 py-2 rounded-[20px] border border-gray-200 focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/20 outline-none" required />
                                 </div>
                                 <div className="flex gap-3 pt-4">
-                                    <button type="button" onClick={closeModal} className="flex-1 px-4 py-2 border border-gray-200 rounded-[20px] hover:bg-gray-50">Cancelar</button>
-                                    <button type="submit" disabled={isSaving} className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2 bg-[var(--color-accent)] text-white rounded-[20px] hover:bg-[var(--color-accent-light)] disabled:opacity-70">
+                                    <button type="button" onClick={closeModal} className="flex-1 px-4 py-2 border border-gray-200 rounded-[30px] hover:bg-gray-50">Cancelar</button>
+                                    <button type="submit" disabled={isSaving} className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2 bg-[var(--color-accent)] text-white rounded-[30px] hover:bg-[var(--color-accent-light)] disabled:opacity-70">
                                         {isSaving ? <><Loader2 className="w-5 h-5 animate-spin" />Salvando...</> : <><Save className="w-5 h-5" />Salvar</>}
                                     </button>
                                 </div>

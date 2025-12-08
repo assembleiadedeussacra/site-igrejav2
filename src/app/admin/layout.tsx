@@ -129,8 +129,8 @@ export default function AdminLayout({
                                 />
                             </div>
                             <div>
-                                <h1 className="font-bold text-white text-sm">AD Missão</h1>
-                                <p className="text-white/60 text-xs">Admin</p>
+                                <h1 className="font-bold text-white text-xs">AD Missão</h1>
+                                <p className="text-white/60 text-[10px]">Admin</p>
                             </div>
                         </Link>
                         <button
@@ -151,15 +151,15 @@ export default function AdminLayout({
                                         <Link
                                             href={item.href}
                                             onClick={() => setIsSidebarOpen(false)}
-                                            className={`flex items-center gap-3 px-4 py-3 rounded-[20px] transition-all ${isActive
+                                            className={`flex items-center gap-3 px-3 py-2.5 rounded-[20px] transition-all ${isActive
                                                     ? 'bg-white/20 text-white'
                                                     : 'text-white/70 hover:bg-white/10 hover:text-white'
                                                 }`}
                                         >
-                                            <item.icon className="w-5 h-5 flex-shrink-0" />
-                                            <span className="font-medium">{item.label}</span>
+                                            <item.icon className="w-4 h-4 flex-shrink-0" />
+                                            <span className="font-medium text-sm">{item.label}</span>
                                             {isActive && (
-                                                <ChevronRight className="w-4 h-4 ml-auto" />
+                                                <ChevronRight className="w-3.5 h-3.5 ml-auto" />
                                             )}
                                         </Link>
                                     </li>
@@ -217,7 +217,7 @@ export default function AdminLayout({
                             <Menu className="w-6 h-6 text-gray-600" />
                         </button>
                         <div className="hidden lg:block">
-                            <h2 className="text-lg font-semibold text-[var(--color-accent)]">
+                            <h2 className="text-base font-semibold text-[var(--color-accent)]">
                                 {menuItems.find((item) => item.href === pathname)?.label ||
                                     'Dashboard'}
                             </h2>

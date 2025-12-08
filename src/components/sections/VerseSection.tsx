@@ -110,7 +110,7 @@ export default function VerseSection({ verse }: VerseSectionProps) {
                                         href={verse.bible_link}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="inline-flex items-center gap-2 px-6 py-3 bg-[var(--color-accent)] text-white rounded-[20px] font-medium hover:bg-[var(--color-accent-light)] transition-colors shadow-lg"
+                                        className="inline-flex items-center gap-2 px-6 py-3 bg-[var(--color-accent)] text-white rounded-[30px] font-medium hover:bg-[var(--color-accent-light)] transition-colors shadow-lg"
                                     >
                                         <BookOpen className="w-5 h-5" />
                                         Ler na Bíblia
@@ -120,7 +120,7 @@ export default function VerseSection({ verse }: VerseSectionProps) {
 
                                 <button
                                     onClick={shareVerse}
-                                    className="inline-flex items-center gap-2 px-6 py-3 bg-[var(--color-primary)] text-[var(--color-accent)] rounded-[20px] font-medium hover:bg-[var(--color-primary-dark)] transition-colors"
+                                    className="inline-flex items-center gap-2 px-6 py-3 bg-[var(--color-primary)] text-[var(--color-accent)] rounded-[30px] font-medium hover:bg-[var(--color-primary-dark)] transition-colors"
                                 >
                                     <Share2 className="w-5 h-5" />
                                     Compartilhar

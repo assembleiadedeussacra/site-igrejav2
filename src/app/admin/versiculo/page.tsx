@@ -58,10 +58,10 @@ export default function AdminVersiculoPage() {
                         <cite className="text-[var(--color-accent)] font-bold not-italic">{verse.reference}</cite>
                     </div>
                     <div className="flex gap-3">
-                        <button onClick={refreshVerse} disabled={isLoading} className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--color-primary)] text-[var(--color-accent)] rounded-[20px] hover:bg-[var(--color-primary-dark)] disabled:opacity-70">
+                        <button onClick={refreshVerse} disabled={isLoading} className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--color-primary)] text-[var(--color-accent)] rounded-[30px] hover:bg-[var(--color-primary-dark)] disabled:opacity-70">
                             <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} /> Sortear Novo
                         </button>
-                        <a href={verse.bible_link} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-4 py-2 border border-[var(--color-accent)] text-[var(--color-accent)] rounded-[20px] hover:bg-[var(--color-accent)]/10">
+                        <a href={verse.bible_link} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-4 py-2 border border-[var(--color-accent)] text-[var(--color-accent)] rounded-[30px] hover:bg-[var(--color-accent)]/10">
                             <ExternalLink className="w-4 h-4" /> Ver na Bíblia
                         </a>
                     </div>
@@ -82,7 +82,7 @@ export default function AdminVersiculoPage() {
                             <label className="block text-sm font-medium text-[var(--color-text)] mb-1">Link Bible.com</label>
                             <input type="url" value={formData.bible_link} onChange={(e) => setFormData((p) => ({ ...p, bible_link: e.target.value }))} className="w-full px-4 py-2 rounded-[20px] border border-gray-200 focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/20 outline-none" placeholder="https://www.bible.com/..." />
                         </div>
-                        <button type="submit" disabled={isSaving} className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-[var(--color-accent)] text-white rounded-[20px] hover:bg-[var(--color-accent-light)] disabled:opacity-70">
+                        <button type="submit" disabled={isSaving} className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-[var(--color-accent)] text-white rounded-[30px] hover:bg-[var(--color-accent-light)] disabled:opacity-70">
                             {isSaving ? <><Loader2 className="w-5 h-5 animate-spin" />Salvando...</> : <><Save className="w-5 h-5" />Salvar Versículo</>}
                         </button>
                     </form>

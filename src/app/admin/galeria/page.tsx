@@ -42,7 +42,7 @@ export default function AdminGaleriaPage() {
         <div className="space-y-6">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div><h1 className="text-2xl font-bold text-[var(--color-accent)]">Galeria de Fotos</h1><p className="text-[var(--color-text-secondary)]">Gerencie os links para álbuns no Google Drive</p></div>
-                <button onClick={() => openModal()} className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--color-accent)] text-white rounded-[20px] hover:bg-[var(--color-accent-light)]"><Plus className="w-5 h-5" /> Novo Álbum</button>
+                <button onClick={() => openModal()} className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--color-accent)] text-white rounded-[30px] hover:bg-[var(--color-accent-light)]"><Plus className="w-5 h-5" /> Novo Álbum</button>
             </div>
 
             <div className="bg-white rounded-[20px] shadow-lg overflow-hidden">

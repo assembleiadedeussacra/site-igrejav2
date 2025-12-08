@@ -52,7 +52,7 @@ export default function AdminFinanceiroPage() {
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div><label className="block text-sm font-medium mb-1">Chave PIX *</label><input type="text" value={pixKey} onChange={(e) => setPixKey(e.target.value)} className="w-full px-4 py-2 rounded-[20px] border focus:border-[var(--color-accent)] outline-none" required /></div>
                         <div><label className="block text-sm font-medium mb-1">URL do QR Code *</label><input type="url" value={qrcodeUrl} onChange={(e) => setQrcodeUrl(e.target.value)} className="w-full px-4 py-2 rounded-[20px] border focus:border-[var(--color-accent)] outline-none" required /><p className="text-xs text-gray-500 mt-1">URL da imagem do QR Code</p></div>
-                        <button type="submit" disabled={isSaving} className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-[var(--color-accent)] text-white rounded-[20px] hover:bg-[var(--color-accent-light)] disabled:opacity-70">{isSaving ? <><Loader2 className="w-5 h-5 animate-spin" />Salvando...</> : <><Save className="w-5 h-5" />Salvar</>}</button>
+                        <button type="submit" disabled={isSaving} className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-[var(--color-accent)] text-white rounded-[30px] hover:bg-[var(--color-accent-light)] disabled:opacity-70">{isSaving ? <><Loader2 className="w-5 h-5 animate-spin" />Salvando...</> : <><Save className="w-5 h-5" />Salvar</>}</button>
                     </form>
                 </motion.div>
             </div>

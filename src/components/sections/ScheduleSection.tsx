@@ -77,7 +77,7 @@ export default function ScheduleSection({ events = [] }: ScheduleSectionProps) {
                     className="mb-12"
                 >
                     <div className="bg-white rounded-[20px] shadow-lg overflow-hidden">
-                        <div className="aspect-[16/9] md:aspect-[21/9]">
+                        <div className="aspect-[16/14] md:aspect-[21/9]">
                             <iframe
                                 src={googleCalendarUrl}
                                 className="w-full h-full border-0"
