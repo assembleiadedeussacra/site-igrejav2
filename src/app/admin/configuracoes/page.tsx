@@ -1,37 +1,89 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Settings, Save, Loader2, MapPin, Mail, Phone, Instagram, Calendar } from 'lucide-react';
+import { api } from '@/services/api';
 
 export default function AdminConfiguracoesPage() {
+    const [isLoading, setIsLoading] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
     const [formData, setFormData] = useState({
-        church_name: 'Assembleia de Deus Missão',
-        church_address: 'Rua Carlos R da Cunha n° 90',
-        church_city: 'Sacramento - MG',
-        church_cep: '38190-000',
-        phone: '34984327019',
-        email: 'contato@assembleiasacramento.com.br',
-        instagram_url: 'https://www.instagram.com/assembleiasacramento/',
-        instagram_handle: '@assembleiasacramento',
-        google_calendar_embed: 'https://calendar.google.com/calendar/embed?...',
+        church_name: '',
+        church_address: '',
+        church_city: '',
+        church_cep: '',
+        phone: '',
+        email: '',
+        instagram_url: '',
+        instagram_handle: '',
+        google_calendar_embed: '',
     });
+
+    const loadSettings = async () => {
+        setIsLoading(true);
+        try {
+            const data = await api.getAdminSettings();
+            if (data) {
+                setFormData({
+                    church_name: data.church_name || '',
+                    church_address: data.church_address || '',
+                    church_city: data.church_city || '',
+                    church_cep: data.church_cep || '',
+                    phone: data.phone || '',
+                    email: data.email || '',
+                    instagram_url: data.instagram_url || '',
+                    instagram_handle: data.instagram_handle || '',
+                    google_calendar_embed: data.google_calendar_embed || '',
+                });
+            }
+        } catch (error) {
+            console.error('Error loading settings:', error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        loadSettings();
+    }, []);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsSaving(true);
-        await new Promise((r) => setTimeout(r, 1000));
-        setIsSaving(false);
-        alert('Configurações salvas com sucesso!');
+
+        try {
+            await api.updateSettings({
+                church_name: formData.church_name,
+                church_address: formData.church_address,
+                church_city: formData.church_city,
+                church_cep: formData.church_cep,
+                phone: formData.phone,
+                email: formData.email,
+                instagram_url: formData.instagram_url,
+                instagram_handle: formData.instagram_handle,
+                google_calendar_embed: formData.google_calendar_embed,
+            });
+            alert('Configurações salvas com sucesso!');
+        } catch (error) {
+            console.error('Error saving settings:', error);
+            alert('Erro ao salvar configurações. Tente novamente.');
+        } finally {
+            setIsSaving(false);
+        }
     };
 
     return (
         <div className="space-y-6">
-            <div><h1 className="text-2xl font-bold text-[var(--color-accent)]">Configurações</h1><p className="text-[var(--color-text-secondary)]">Configure as informações gerais do site</p></div>
+            <div><h1 className="text-lg font-bold text-[var(--color-accent)]">Configurações</h1><p className="text-[var(--color-text-secondary)] text-sm">Configure as informações gerais do site</p></div>
 
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-white rounded-[20px] shadow-lg p-6">
-                <form onSubmit={handleSubmit} className="space-y-6">
+            {isLoading ? (
+                <div className="bg-white rounded-[20px] shadow-lg p-12 text-center">
+                    <Loader2 className="w-8 h-8 mx-auto animate-spin text-[var(--color-accent)]" />
+                </div>
+            ) : (
+                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-white rounded-[20px] shadow-lg p-6">
+                    <form onSubmit={handleSubmit} className="space-y-6">
                     {/* Church Info */}
                     <div>
                         <h2 className="text-lg font-bold text-[var(--color-accent)] mb-4 flex items-center gap-2"><Settings className="w-5 h-5" /> Informações da Igreja</h2>
@@ -67,9 +119,10 @@ export default function AdminConfiguracoesPage() {
                         <div><label className="block text-sm font-medium mb-1">URL do Google Calendar Embed</label><input type="url" value={formData.google_calendar_embed} onChange={(e) => setFormData((p) => ({ ...p, google_calendar_embed: e.target.value }))} className="w-full px-4 py-2 rounded-[20px] border focus:border-[var(--color-accent)] outline-none" /></div>
                     </div>
 
-                    <button type="submit" disabled={isSaving} className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-[var(--color-accent)] text-white rounded-[20px] hover:bg-[var(--color-accent-light)] disabled:opacity-70">{isSaving ? <><Loader2 className="w-5 h-5 animate-spin" />Salvando...</> : <><Save className="w-5 h-5" />Salvar Configurações</>}</button>
-                </form>
-            </motion.div>
+                        <button type="submit" disabled={isSaving} className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-[var(--color-accent)] text-white rounded-[30px] hover:bg-[var(--color-accent-light)] disabled:opacity-70">{isSaving ? <><Loader2 className="w-5 h-5 animate-spin" />Salvando...</> : <><Save className="w-5 h-5" />Salvar Configurações</>}</button>
+                    </form>
+                </motion.div>
+            )}
         </div>
     );
 }

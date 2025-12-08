@@ -44,7 +44,7 @@ export default function AdminVersiculoPage() {
     return (
         <div className="space-y-6">
             <div>
-                <h1 className="text-2xl font-bold text-[var(--color-accent)]">Versículo do Dia</h1>
+                <h1 className="text-lg font-bold text-[var(--color-accent)]">Versículo do Dia</h1>
                 <p className="text-[var(--color-text-secondary)]">Configure o versículo exibido na página inicial</p>
             </div>
 

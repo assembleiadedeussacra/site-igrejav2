@@ -260,7 +260,7 @@ export default function AdminBannersPage() {
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl font-bold text-[var(--color-accent)]">
+                    <h1 className="text-lg font-bold text-[var(--color-accent)]">
                         Gerenciar Banners
                     </h1>
                     <p className="text-[var(--color-text-secondary)]">
@@ -395,7 +395,7 @@ export default function AdminBannersPage() {
                             className="fixed inset-4 md:inset-auto md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:max-w-2xl md:w-full bg-white rounded-[20px] shadow-2xl z-50 overflow-hidden flex flex-col max-h-[90vh]"
                         >
                             <div className="flex items-center justify-between p-4 border-b flex-shrink-0">
-                                <h2 className="text-xl font-bold text-[var(--color-accent)]">
+                                <h2 className="text-lg font-bold text-[var(--color-accent)]">
                                     {editingBanner ? 'Editar Banner' : 'Novo Banner'}
                                 </h2>
                                 <button

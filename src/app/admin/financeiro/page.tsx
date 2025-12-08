@@ -1,15 +1,36 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Copy, Check, QrCode, Save, Loader2, Wallet } from 'lucide-react';
+import { api } from '@/services/api';
 
 export default function AdminFinanceiroPage() {
-    const [pixKey, setPixKey] = useState('34984327019');
-    const [qrcodeUrl, setQrcodeUrl] = useState('/images/qrcode-pix.png');
+    const [pixKey, setPixKey] = useState('');
+    const [qrcodeUrl, setQrcodeUrl] = useState('');
+    const [isLoading, setIsLoading] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
     const [copied, setCopied] = useState(false);
+
+    const loadFinancials = async () => {
+        setIsLoading(true);
+        try {
+            const data = await api.getAdminFinancials();
+            if (data) {
+                setPixKey(data.pix_key || '');
+                setQrcodeUrl(data.pix_qrcode_url || '');
+            }
+        } catch (error) {
+            console.error('Error loading financials:', error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        loadFinancials();
+    }, []);
 
     const copyPixKey = async () => {
         await navigator.clipboard.writeText(pixKey);
@@ -20,18 +41,34 @@ export default function AdminFinanceiroPage() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsSaving(true);
-        await new Promise((r) => setTimeout(r, 1000));
-        setIsSaving(false);
-        alert('Configurações salvas com sucesso!');
+
+        try {
+            await api.updateFinancials({
+                pix_key: pixKey,
+                pix_qrcode_url: qrcodeUrl,
+                active: true,
+            });
+            alert('Configurações salvas com sucesso!');
+        } catch (error) {
+            console.error('Error saving financials:', error);
+            alert('Erro ao salvar configurações. Tente novamente.');
+        } finally {
+            setIsSaving(false);
+        }
     };
 
     return (
         <div className="space-y-6">
-            <div><h1 className="text-2xl font-bold text-[var(--color-accent)]">Dízimos e Ofertas</h1><p className="text-[var(--color-text-secondary)]">Configure as informações de PIX para contribuições</p></div>
+            <div><h1 className="text-lg font-bold text-[var(--color-accent)]">Dízimos e Ofertas</h1><p className="text-[var(--color-text-secondary)] text-sm">Configure as informações de PIX para contribuições</p></div>
 
-            <div className="grid lg:grid-cols-2 gap-6">
-                {/* Preview */}
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-gradient-to-br from-[var(--color-accent)] to-[var(--color-accent-light)] rounded-[20px] p-6 text-white">
+            {isLoading ? (
+                <div className="bg-white rounded-[20px] shadow-lg p-12 text-center">
+                    <Loader2 className="w-8 h-8 mx-auto animate-spin text-[var(--color-accent)]" />
+                </div>
+            ) : (
+                <div className="grid lg:grid-cols-2 gap-6">
+                    {/* Preview */}
+                    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-gradient-to-br from-[var(--color-accent)] to-[var(--color-accent-light)] rounded-[20px] p-6 text-white">
                     <h2 className="text-lg font-bold mb-4 flex items-center gap-2"><Wallet className="w-5 h-5" /> Preview</h2>
                     <div className="bg-white/10 backdrop-blur-sm rounded-[20px] p-4 mb-4">
                         <p className="text-white/80 text-sm uppercase tracking-wider mb-2">Chave PIX</p>
@@ -56,6 +93,7 @@ export default function AdminFinanceiroPage() {
                     </form>
                 </motion.div>
             </div>
+            )}
         </div>
     );
 }
