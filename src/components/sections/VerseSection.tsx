@@ -64,7 +64,7 @@ export default function VerseSection({ verse }: VerseSectionProps) {
                     transition={{ delay: 0.2 }}
                     className="max-w-4xl mx-auto"
                 >
-                    <div className="relative bg-gradient-to-br from-[var(--color-primary)]/20 via-white to-[var(--color-primary)]/10 rounded-3xl p-8 md:p-12 shadow-xl overflow-hidden">
+                    <div className="relative bg-gradient-to-br from-[var(--color-primary)]/20 via-white to-[var(--color-primary)]/10 rounded-[20px] p-8 md:p-12 shadow-xl overflow-hidden">
                         {/* Decorative Elements */}
                         <div className="absolute top-0 right-0 w-40 h-40 bg-[var(--color-accent)]/5 rounded-full -translate-y-1/2 translate-x-1/2" />
                         <div className="absolute bottom-0 left-0 w-32 h-32 bg-[var(--color-primary)]/30 rounded-full translate-y-1/2 -translate-x-1/2" />

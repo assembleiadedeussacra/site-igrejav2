@@ -65,7 +65,7 @@ export default function ScheduleSection({ events = [] }: ScheduleSectionProps) {
                         Agenda
                     </h2>
                     <p className="text-[var(--color-text-secondary)] max-w-2xl mx-auto text-lg">
-                        Fique por dentro dos nossos cultos e eventos
+                        Programação de cultos, estudos bíblicos e atividades ministeriais
                     </p>
                 </motion.div>
 
@@ -76,7 +76,7 @@ export default function ScheduleSection({ events = [] }: ScheduleSectionProps) {
                     viewport={{ once: true }}
                     className="mb-12"
                 >
-                    <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+                    <div className="bg-white rounded-[20px] shadow-lg overflow-hidden">
                         <div className="aspect-[16/9] md:aspect-[21/9]">
                             <iframe
                                 src={googleCalendarUrl}
@@ -89,8 +89,8 @@ export default function ScheduleSection({ events = [] }: ScheduleSectionProps) {
                     <div className="flex items-center justify-center gap-2 mt-4 text-[var(--color-text-secondary)] text-sm">
                         <Info className="w-4 h-4" />
                         <span>
-                            A agenda pode sofrer alterações. Confirme os detalhes nos cultos ou
-                            entre em contato.
+                            A programação está sujeita a alterações. Para confirmação, entre em contato
+                            conosco ou consulte os avisos durante os cultos.
                         </span>
                     </div>
                 </motion.div>
@@ -120,7 +120,7 @@ export default function ScheduleSection({ events = [] }: ScheduleSectionProps) {
                                     whileInView={{ opacity: 1, y: 0 }}
                                     viewport={{ once: true }}
                                     transition={{ delay: index * 0.1 }}
-                                    className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 card-hover group"
+                                    className="bg-white rounded-[20px] p-6 shadow-lg hover:shadow-xl transition-all duration-300 card-hover group"
                                 >
                                     {/* Badge */}
                                     <span

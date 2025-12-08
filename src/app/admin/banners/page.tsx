@@ -151,7 +151,7 @@ export default function AdminBannersPage() {
                 </div>
                 <button
                     onClick={() => openModal()}
-                    className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--color-accent)] text-white rounded-xl hover:bg-[var(--color-accent-light)] transition-colors"
+                    className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--color-accent)] text-white rounded-[20px] hover:bg-[var(--color-accent-light)] transition-colors"
                 >
                     <Plus className="w-5 h-5" />
                     Novo Banner
@@ -159,7 +159,7 @@ export default function AdminBannersPage() {
             </div>
 
             {/* Banners List */}
-            <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+            <div className="bg-white rounded-[20px] shadow-lg overflow-hidden">
                 {isLoading ? (
                     <div className="p-12 text-center">
                         <Loader2 className="w-8 h-8 mx-auto animate-spin text-[var(--color-accent)]" />
@@ -200,7 +200,7 @@ export default function AdminBannersPage() {
                                 </span>
 
                                 {/* Thumbnail */}
-                                <div className="relative w-32 h-20 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
+                                <div className="relative w-32 h-20 rounded-[20px] overflow-hidden bg-gray-100 flex-shrink-0">
                                     <Image
                                         src={banner.image_desktop_url}
                                         alt={banner.alt_text}
@@ -223,7 +223,7 @@ export default function AdminBannersPage() {
                                 <div className="flex items-center gap-2">
                                     <button
                                         onClick={() => toggleActive(banner.id, banner.active)}
-                                        className={`p-2 rounded-lg transition-colors ${banner.active
+                                        className={`p-2 rounded-[20px] transition-colors ${banner.active
                                             ? 'text-green-600 hover:bg-green-50'
                                             : 'text-gray-400 hover:bg-gray-100'
                                             }`}
@@ -237,14 +237,14 @@ export default function AdminBannersPage() {
                                     </button>
                                     <button
                                         onClick={() => openModal(banner)}
-                                        className="p-2 rounded-lg text-blue-600 hover:bg-blue-50 transition-colors"
+                                        className="p-2 rounded-[20px] text-blue-600 hover:bg-blue-50 transition-colors"
                                         title="Editar"
                                     >
                                         <Pencil className="w-5 h-5" />
                                     </button>
                                     <button
                                         onClick={() => deleteBanner(banner.id)}
-                                        className="p-2 rounded-lg text-red-600 hover:bg-red-50 transition-colors"
+                                        className="p-2 rounded-[20px] text-red-600 hover:bg-red-50 transition-colors"
                                         title="Excluir"
                                     >
                                         <Trash2 className="w-5 h-5" />
@@ -274,7 +274,7 @@ export default function AdminBannersPage() {
                             initial={{ opacity: 0, scale: 0.95 }}
                             animate={{ opacity: 1, scale: 1 }}
                             exit={{ opacity: 0, scale: 0.95 }}
-                            className="fixed inset-4 md:inset-auto md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:max-w-lg md:w-full bg-white rounded-2xl shadow-2xl z-50 overflow-hidden"
+                            className="fixed inset-4 md:inset-auto md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:max-w-lg md:w-full bg-white rounded-[20px] shadow-2xl z-50 overflow-hidden"
                         >
                             <div className="flex items-center justify-between p-4 border-b">
                                 <h2 className="text-xl font-bold text-[var(--color-accent)]">
@@ -282,7 +282,7 @@ export default function AdminBannersPage() {
                                 </h2>
                                 <button
                                     onClick={closeModal}
-                                    className="p-2 rounded-lg hover:bg-gray-100"
+                                    className="p-2 rounded-[20px] hover:bg-gray-100"
                                 >
                                     <X className="w-5 h-5" />
                                 </button>
@@ -303,7 +303,7 @@ export default function AdminBannersPage() {
                                                 image_desktop_url: e.target.value,
                                             }))
                                         }
-                                        className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/20 outline-none"
+                                        className="w-full px-4 py-2 rounded-[20px] border border-gray-200 focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/20 outline-none"
                                         placeholder="https://..."
                                         required
                                     />
@@ -323,7 +323,7 @@ export default function AdminBannersPage() {
                                                 image_mobile_url: e.target.value,
                                             }))
                                         }
-                                        className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/20 outline-none"
+                                        className="w-full px-4 py-2 rounded-[20px] border border-gray-200 focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/20 outline-none"
                                         placeholder="https://..."
                                         required
                                     />
@@ -340,7 +340,7 @@ export default function AdminBannersPage() {
                                         onChange={(e) =>
                                             setFormData((p) => ({ ...p, alt_text: e.target.value }))
                                         }
-                                        className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/20 outline-none"
+                                        className="w-full px-4 py-2 rounded-[20px] border border-gray-200 focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/20 outline-none"
                                         placeholder="Descrição da imagem"
                                         required
                                     />
@@ -357,7 +357,7 @@ export default function AdminBannersPage() {
                                         onChange={(e) =>
                                             setFormData((p) => ({ ...p, link: e.target.value }))
                                         }
-                                        className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/20 outline-none"
+                                        className="w-full px-4 py-2 rounded-[20px] border border-gray-200 focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/20 outline-none"
                                         placeholder="https://..."
                                     />
                                 </div>
@@ -383,14 +383,14 @@ export default function AdminBannersPage() {
                                     <button
                                         type="button"
                                         onClick={closeModal}
-                                        className="flex-1 px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                                        className="flex-1 px-4 py-2 border border-gray-200 rounded-[20px] hover:bg-gray-50 transition-colors"
                                     >
                                         Cancelar
                                     </button>
                                     <button
                                         type="submit"
                                         disabled={isSaving}
-                                        className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2 bg-[var(--color-accent)] text-white rounded-lg hover:bg-[var(--color-accent-light)] transition-colors disabled:opacity-70"
+                                        className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2 bg-[var(--color-accent)] text-white rounded-[20px] hover:bg-[var(--color-accent-light)] transition-colors disabled:opacity-70"
                                     >
                                         {isSaving ? (
                                             <>

@@ -30,23 +30,23 @@ interface AboutSectionProps {
 const features = [
     {
         icon: Heart,
-        title: 'Amor e Comunhão',
-        description: 'Uma família unida em Cristo, acolhendo todos com amor e carinho.',
+        title: 'Comunhão Cristã',
+        description: 'Uma comunidade unida em Cristo, fundamentada no amor e respeito mútuo.',
     },
     {
         icon: BookOpen,
-        title: 'Palavra de Deus',
-        description: 'Ensinamentos bíblicos sólidos para fortalecer sua fé e caminhada cristã.',
+        title: 'Ensino Bíblico',
+        description: 'Pregação e ensino fundamentados nas Escrituras Sagradas para edificação espiritual.',
     },
     {
         icon: HandHelping,
-        title: 'Oração e Adoração',
-        description: 'Momentos de adoração e intercessão para buscar a presença de Deus.',
+        title: 'Adoração e Oração',
+        description: 'Cultos de adoração e momentos de intercessão dedicados à busca da presença divina.',
     },
     {
         icon: Users,
-        title: 'Comunidade Ativa',
-        description: 'Diversos departamentos e atividades para todas as idades.',
+        title: 'Ministérios e Departamentos',
+        description: 'Estrutura organizada com diversos ministérios para atender todas as faixas etárias.',
     },
 ];
 
@@ -81,20 +81,21 @@ export default function AboutSection({ leaders = [] }: AboutSectionProps) {
                         transition={{ duration: 0.6 }}
                     >
                         <p className="text-lg text-[var(--color-text-secondary)] leading-relaxed mb-6">
-                            Bem-vindo à <strong className="text-[var(--color-accent)]">Assembleia de Deus Missão</strong> em
-                            Sacramento, Minas Gerais. Somos uma comunidade de fé dedicada a adorar a Deus,
-                            compartilhar o evangelho de Jesus Cristo e servir ao próximo.
+                            A <strong className="text-[var(--color-accent)]">Assembleia de Deus Missão</strong> em
+                            Sacramento, Minas Gerais, é uma igreja evangélica comprometida com a pregação do Evangelho,
+                            o ensino bíblico e o desenvolvimento espiritual de seus membros e visitantes.
                         </p>
                         <p className="text-lg text-[var(--color-text-secondary)] leading-relaxed mb-8">
-                            Nossas portas estão abertas para todos que buscam um relacionamento mais profundo
-                            com Deus e desejam crescer em comunhão. <strong className="text-[var(--color-accent)]">Venha nos visitar!</strong>
+                            Nossa missão é proclamar a Palavra de Deus, promover a adoração genuína e servir a comunidade
+                            com amor e dedicação. Estamos abertos a receber todos aqueles que buscam conhecer mais sobre
+                            Jesus Cristo e crescer na fé cristã.
                         </p>
 
                         <Link
                             href="#contato"
                             className="inline-flex items-center gap-2 btn-primary"
                         >
-                            Saiba Mais
+                            Entre em Contato
                             <ArrowRight className="w-5 h-5" />
                         </Link>
                     </motion.div>
@@ -114,9 +115,9 @@ export default function AboutSection({ leaders = [] }: AboutSectionProps) {
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
                                 transition={{ delay: index * 0.1 }}
-                                className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow group"
+                                className="bg-white rounded-[20px] p-6 shadow-lg hover:shadow-xl transition-shadow group"
                             >
-                                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[var(--color-accent)] to-[var(--color-accent-light)] flex items-center justify-center mb-4 text-white group-hover:scale-110 transition-transform">
+                                <div className="w-12 h-12 rounded-[20px] bg-gradient-to-br from-[var(--color-accent)] to-[var(--color-accent-light)] flex items-center justify-center mb-4 text-white group-hover:scale-110 transition-transform">
                                     <feature.icon className="w-6 h-6" />
                                 </div>
                                 <h3 className="font-bold text-[var(--color-accent)] mb-2">
@@ -145,7 +146,7 @@ export default function AboutSection({ leaders = [] }: AboutSectionProps) {
                                 Nossa Liderança
                             </h3>
                             <p className="text-[var(--color-text-secondary)] mt-2">
-                                Conheça os líderes da nossa comunidade
+                                Liderança espiritual comprometida com o serviço cristão
                             </p>
                         </div>
 
@@ -198,7 +199,7 @@ export default function AboutSection({ leaders = [] }: AboutSectionProps) {
                                     whileInView={{ opacity: 1, scale: 1 }}
                                     viewport={{ once: true }}
                                     transition={{ delay: index * 0.1 }}
-                                    className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 group"
+                                    className="bg-white rounded-[20px] overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 group"
                                 >
                                     {/* Image */}
                                     <div className="relative h-56 md:h-64 overflow-hidden">

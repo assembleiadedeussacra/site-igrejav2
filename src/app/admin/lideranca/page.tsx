@@ -99,12 +99,12 @@ export default function AdminLiderancaPage() {
                     <h1 className="text-2xl font-bold text-[var(--color-accent)]">Liderança</h1>
                     <p className="text-[var(--color-text-secondary)]">Gerencie os líderes da igreja</p>
                 </div>
-                <button onClick={() => openModal()} className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--color-accent)] text-white rounded-xl hover:bg-[var(--color-accent-light)] transition-colors">
+                <button onClick={() => openModal()} className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--color-accent)] text-white rounded-[20px] hover:bg-[var(--color-accent-light)] transition-colors">
                     <Plus className="w-5 h-5" /> Novo Líder
                 </button>
             </div>
 
-            <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+            <div className="bg-white rounded-[20px] shadow-lg overflow-hidden">
                 {leaders.length === 0 ? (
                     <div className="p-12 text-center">
                         <Users className="w-16 h-16 mx-auto mb-4 text-gray-300" />
@@ -118,7 +118,7 @@ export default function AdminLiderancaPage() {
                                 initial={{ opacity: 0, scale: 0.95 }}
                                 animate={{ opacity: 1, scale: 1 }}
                                 transition={{ delay: index * 0.05 }}
-                                className="bg-gray-50 rounded-xl p-4 flex flex-col items-center text-center group"
+                                className="bg-gray-50 rounded-[20px] p-4 flex flex-col items-center text-center group"
                             >
                                 <div className="relative w-24 h-24 rounded-full overflow-hidden mb-4 border-4 border-[var(--color-primary)]">
                                     <Image src={leader.image_url} alt={leader.name} fill className="object-cover" />
@@ -126,10 +126,10 @@ export default function AdminLiderancaPage() {
                                 <h3 className="font-bold text-[var(--color-accent)]">{leader.name}</h3>
                                 <p className="text-sm text-[var(--color-text-secondary)]">{leader.title}</p>
                                 <div className="flex gap-2 mt-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <button onClick={() => openModal(leader)} className="p-2 rounded-lg bg-blue-100 text-blue-600 hover:bg-blue-200">
+                                    <button onClick={() => openModal(leader)} className="p-2 rounded-[20px] bg-blue-100 text-blue-600 hover:bg-blue-200">
                                         <Pencil className="w-4 h-4" />
                                     </button>
-                                    <button onClick={() => deleteLeader(leader.id)} className="p-2 rounded-lg bg-red-100 text-red-600 hover:bg-red-200">
+                                    <button onClick={() => deleteLeader(leader.id)} className="p-2 rounded-[20px] bg-red-100 text-red-600 hover:bg-red-200">
                                         <Trash2 className="w-4 h-4" />
                                     </button>
                                 </div>
@@ -143,30 +143,30 @@ export default function AdminLiderancaPage() {
                 {isModalOpen && (
                     <>
                         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={closeModal} className="fixed inset-0 bg-black/50 z-50" />
-                        <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} className="fixed inset-4 md:inset-auto md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:max-w-lg md:w-full bg-white rounded-2xl shadow-2xl z-50 overflow-hidden">
+                        <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} className="fixed inset-4 md:inset-auto md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:max-w-lg md:w-full bg-white rounded-[20px] shadow-2xl z-50 overflow-hidden">
                             <div className="flex items-center justify-between p-4 border-b">
                                 <h2 className="text-xl font-bold text-[var(--color-accent)]">{editingLeader ? 'Editar Líder' : 'Novo Líder'}</h2>
-                                <button onClick={closeModal} className="p-2 rounded-lg hover:bg-gray-100"><X className="w-5 h-5" /></button>
+                                <button onClick={closeModal} className="p-2 rounded-[20px] hover:bg-gray-100"><X className="w-5 h-5" /></button>
                             </div>
                             <form onSubmit={handleSubmit} className="p-4 space-y-4">
                                 <div>
                                     <label className="block text-sm font-medium text-[var(--color-text)] mb-1">Nome *</label>
-                                    <input type="text" value={formData.name} onChange={(e) => setFormData((p) => ({ ...p, name: e.target.value }))} className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/20 outline-none" required />
+                                    <input type="text" value={formData.name} onChange={(e) => setFormData((p) => ({ ...p, name: e.target.value }))} className="w-full px-4 py-2 rounded-[20px] border border-gray-200 focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/20 outline-none" required />
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium text-[var(--color-text)] mb-1">Cargo *</label>
-                                    <select value={formData.title} onChange={(e) => setFormData((p) => ({ ...p, title: e.target.value }))} className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/20 outline-none" required>
+                                    <select value={formData.title} onChange={(e) => setFormData((p) => ({ ...p, title: e.target.value }))} className="w-full px-4 py-2 rounded-[20px] border border-gray-200 focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/20 outline-none" required>
                                         <option value="">Selecione...</option>
                                         {titleOptions.map((t) => <option key={t} value={t}>{t}</option>)}
                                     </select>
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium text-[var(--color-text)] mb-1">URL da Foto *</label>
-                                    <input type="url" value={formData.image_url} onChange={(e) => setFormData((p) => ({ ...p, image_url: e.target.value }))} className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/20 outline-none" required />
+                                    <input type="url" value={formData.image_url} onChange={(e) => setFormData((p) => ({ ...p, image_url: e.target.value }))} className="w-full px-4 py-2 rounded-[20px] border border-gray-200 focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/20 outline-none" required />
                                 </div>
                                 <div className="flex gap-3 pt-4">
-                                    <button type="button" onClick={closeModal} className="flex-1 px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-50">Cancelar</button>
-                                    <button type="submit" disabled={isSaving} className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2 bg-[var(--color-accent)] text-white rounded-lg hover:bg-[var(--color-accent-light)] disabled:opacity-70">
+                                    <button type="button" onClick={closeModal} className="flex-1 px-4 py-2 border border-gray-200 rounded-[20px] hover:bg-gray-50">Cancelar</button>
+                                    <button type="submit" disabled={isSaving} className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2 bg-[var(--color-accent)] text-white rounded-[20px] hover:bg-[var(--color-accent-light)] disabled:opacity-70">
                                         {isSaving ? <><Loader2 className="w-5 h-5 animate-spin" />Salvando...</> : <><Save className="w-5 h-5" />Salvar</>}
                                     </button>
                                 </div>

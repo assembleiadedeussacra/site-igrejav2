@@ -40,7 +40,7 @@ export default function GallerySection({ items = [] }: GallerySectionProps) {
                         Galeria de Fotos
                     </h2>
                     <p className="text-[var(--color-text-secondary)] max-w-2xl mx-auto text-lg">
-                        Momentos especiais da nossa comunidade
+                        Registros fotográficos de cultos, eventos e atividades ministeriais
                     </p>
                 </motion.div>
 
@@ -60,7 +60,7 @@ export default function GallerySection({ items = [] }: GallerySectionProps) {
                                 viewport={{ once: true }}
                                 transition={{ delay: index * 0.1 }}
                                 whileHover={{ y: -8 }}
-                                className="group relative bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300"
+                                className="group relative bg-white rounded-[20px] overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300"
                             >
                                 {/* Image */}
                                 <div className="relative h-64 overflow-hidden">
@@ -88,7 +88,7 @@ export default function GallerySection({ items = [] }: GallerySectionProps) {
                                 {/* Content */}
                                 <div className="p-6">
                                     <div className="flex items-center gap-3">
-                                        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[var(--color-accent)] to-[var(--color-accent-light)] flex items-center justify-center text-white">
+                                        <div className="w-12 h-12 rounded-[20px] bg-gradient-to-br from-[var(--color-accent)] to-[var(--color-accent-light)] flex items-center justify-center text-white">
                                             <IconComponent className="w-6 h-6" />
                                         </div>
                                         <div>

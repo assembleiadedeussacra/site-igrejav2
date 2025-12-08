@@ -13,9 +13,6 @@ import {
 } from '@/components';
 import { serverApi } from '@/services/server';
 
-// Revalidar a página a cada hora para garantir que o versículo do dia seja atualizado
-export const revalidate = 3600; // 1 hora em segundos
-
 export default async function Home() {
   const [
     banners,

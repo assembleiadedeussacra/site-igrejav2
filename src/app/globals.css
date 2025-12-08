@@ -36,6 +36,7 @@
   --radius-lg: 0.75rem;
   --radius-xl: 1rem;
   --radius-2xl: 1.5rem;
+  --radius-standard: 20px; /* Padrão para todas as bordas arredondadas */
   
   /* Transitions */
   --transition-fast: 150ms ease;

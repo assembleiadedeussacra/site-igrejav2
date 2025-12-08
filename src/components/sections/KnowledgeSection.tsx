@@ -62,8 +62,8 @@ export default function KnowledgeSection({ posts = [] }: KnowledgeSectionProps) 
                         Conhecimento
                     </h2>
                     <p className="text-[var(--color-text-secondary)] max-w-2xl mx-auto text-lg">
-                        Explore nosso conteúdo de estudos bíblicos, reflexões e artigos para
-                        fortalecer sua fé.
+                        Estudos bíblicos, reflexões teológicas e artigos para crescimento espiritual e
+                        aprofundamento na Palavra de Deus.
                     </p>
                 </motion.div>
 
@@ -109,7 +109,7 @@ export default function KnowledgeSection({ posts = [] }: KnowledgeSectionProps) 
                             >
                                 {activeTab === 'blog' && post.cover_image ? (
                                     // Blog Card with Image
-                                    <div className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 card-hover">
+                                    <div className="bg-white rounded-[20px] overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 card-hover">
                                         <div className="relative h-48 overflow-hidden">
                                             <Image
                                                 src={post.cover_image}
@@ -151,8 +151,8 @@ export default function KnowledgeSection({ posts = [] }: KnowledgeSectionProps) 
                                     </div>
                                 ) : (
                                     // Study Card (no image)
-                                    <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 card-hover h-full flex flex-col">
-                                        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[var(--color-accent)] to-[var(--color-accent-light)] flex items-center justify-center mb-4 text-white">
+                                    <div className="bg-white rounded-[20px] p-6 shadow-lg hover:shadow-xl transition-all duration-300 card-hover h-full flex flex-col">
+                                        <div className="w-12 h-12 rounded-[20px] bg-gradient-to-br from-[var(--color-accent)] to-[var(--color-accent-light)] flex items-center justify-center mb-4 text-white">
                                             <BookOpen className="w-6 h-6" />
                                         </div>
                                         <div className="flex items-center gap-2 text-sm text-[var(--color-text-muted)] mb-3">

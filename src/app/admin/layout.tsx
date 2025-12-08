@@ -151,7 +151,7 @@ export default function AdminLayout({
                                         <Link
                                             href={item.href}
                                             onClick={() => setIsSidebarOpen(false)}
-                                            className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${isActive
+                                            className={`flex items-center gap-3 px-4 py-3 rounded-[20px] transition-all ${isActive
                                                     ? 'bg-white/20 text-white'
                                                     : 'text-white/70 hover:bg-white/10 hover:text-white'
                                                 }`}
@@ -183,7 +183,7 @@ export default function AdminLayout({
                         </div>
                         <button
                             onClick={handleLogout}
-                            className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-white/10 text-white rounded-lg hover:bg-white/20 transition-colors"
+                            className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-white/10 text-white rounded-[20px] hover:bg-white/20 transition-colors"
                         >
                             <LogOut className="w-4 h-4" />
                             Sair
@@ -212,7 +212,7 @@ export default function AdminLayout({
                     <div className="flex items-center justify-between px-4 py-3">
                         <button
                             onClick={() => setIsSidebarOpen(true)}
-                            className="lg:hidden p-2 rounded-lg hover:bg-gray-100"
+                            className="lg:hidden p-2 rounded-[20px] hover:bg-gray-100"
                         >
                             <Menu className="w-6 h-6 text-gray-600" />
                         </button>

@@ -82,10 +82,10 @@ export default function ContactSection({ settings }: ContactSectionProps) {
                                     href={item.href}
                                     target={item.href.startsWith('http') ? '_blank' : undefined}
                                     rel={item.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-                                    className="block bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 group card-hover h-full"
+                                    className="block bg-white rounded-[20px] p-6 shadow-lg hover:shadow-xl transition-all duration-300 group card-hover h-full"
                                 >
                                     <div
-                                        className={`w-14 h-14 rounded-xl bg-gradient-to-br ${item.color} flex items-center justify-center mb-4 text-white group-hover:scale-110 transition-transform`}
+                                        className={`w-14 h-14 rounded-[20px] bg-gradient-to-br ${item.color} flex items-center justify-center mb-4 text-white group-hover:scale-110 transition-transform`}
                                     >
                                         <item.icon className="w-7 h-7" />
                                     </div>
@@ -101,9 +101,9 @@ export default function ContactSection({ settings }: ContactSectionProps) {
                                     </div>
                                 </a>
                             ) : (
-                                <div className="bg-white rounded-2xl p-6 shadow-lg h-full">
+                                <div className="bg-white rounded-[20px] p-6 shadow-lg h-full">
                                     <div
-                                        className={`w-14 h-14 rounded-xl bg-gradient-to-br ${item.color} flex items-center justify-center mb-4 text-white`}
+                                        className={`w-14 h-14 rounded-[20px] bg-gradient-to-br ${item.color} flex items-center justify-center mb-4 text-white`}
                                     >
                                         <item.icon className="w-7 h-7" />
                                     </div>
@@ -132,7 +132,7 @@ export default function ContactSection({ settings }: ContactSectionProps) {
                         </h3>
                     </div>
 
-                    <div className="relative bg-white rounded-2xl shadow-lg overflow-hidden">
+                    <div className="relative bg-white rounded-[20px] shadow-lg overflow-hidden">
                         <div className="aspect-[16/9] md:aspect-[21/9]">
                             <iframe
                                 src={googleMapsEmbedUrl}

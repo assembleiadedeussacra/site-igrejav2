@@ -108,7 +108,7 @@ export default function AdminDashboardPage() {
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-gradient-to-r from-[var(--color-accent)] to-[var(--color-accent-light)] rounded-2xl p-6 md:p-8 text-white"
+                className="bg-gradient-to-r from-[var(--color-accent)] to-[var(--color-accent-light)] rounded-[20px] p-6 md:p-8 text-white"
             >
                 <h1 className="text-2xl md:text-3xl font-bold mb-2">
                     Bem-vindo ao Painel Administrativo
@@ -129,11 +129,11 @@ export default function AdminDashboardPage() {
                     >
                         <Link
                             href={card.href}
-                            className="block bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all group"
+                            className="block bg-white rounded-[20px] p-6 shadow-lg hover:shadow-xl transition-all group"
                         >
                             <div className="flex items-center justify-between mb-4">
                                 <div
-                                    className={`w-12 h-12 rounded-xl bg-gradient-to-br ${card.color} flex items-center justify-center text-white group-hover:scale-110 transition-transform`}
+                                    className={`w-12 h-12 rounded-[20px] bg-gradient-to-br ${card.color} flex items-center justify-center text-white group-hover:scale-110 transition-transform`}
                                 >
                                     <card.icon className="w-6 h-6" />
                                 </div>
@@ -157,7 +157,7 @@ export default function AdminDashboardPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
-                className="bg-white rounded-2xl p-6 shadow-lg"
+                className="bg-white rounded-[20px] p-6 shadow-lg"
             >
                 <h2 className="text-xl font-bold text-[var(--color-accent)] mb-4 flex items-center gap-2">
                     <RefreshCw className="w-5 h-5" />
@@ -168,7 +168,7 @@ export default function AdminDashboardPage() {
                         <Link
                             key={action.label}
                             href={action.href}
-                            className="flex items-center gap-3 p-4 rounded-xl border border-gray-200 hover:border-[var(--color-accent)] hover:bg-[var(--color-primary)]/10 transition-all group"
+                            className="flex items-center gap-3 p-4 rounded-[20px] border border-gray-200 hover:border-[var(--color-accent)] hover:bg-[var(--color-primary)]/10 transition-all group"
                         >
                             <action.icon className="w-5 h-5 text-[var(--color-accent)]" />
                             <span className="font-medium text-[var(--color-text)]">
@@ -187,7 +187,7 @@ export default function AdminDashboardPage() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.5 }}
-                    className="bg-white rounded-2xl p-6 shadow-lg"
+                    className="bg-white rounded-[20px] p-6 shadow-lg"
                 >
                     <h2 className="text-xl font-bold text-[var(--color-accent)] mb-4 flex items-center gap-2">
                         <FileText className="w-5 h-5" />
@@ -201,7 +201,7 @@ export default function AdminDashboardPage() {
                         ].map((post, index) => (
                             <div
                                 key={index}
-                                className="flex items-center justify-between p-3 rounded-lg bg-gray-50"
+                                className="flex items-center justify-between p-3 rounded-[20px] bg-gray-50"
                             >
                                 <div>
                                     <p className="font-medium text-[var(--color-text)]">
@@ -233,7 +233,7 @@ export default function AdminDashboardPage() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.6 }}
-                    className="bg-white rounded-2xl p-6 shadow-lg"
+                    className="bg-white rounded-[20px] p-6 shadow-lg"
                 >
                     <h2 className="text-xl font-bold text-[var(--color-accent)] mb-4 flex items-center gap-2">
                         <Calendar className="w-5 h-5" />
@@ -248,7 +248,7 @@ export default function AdminDashboardPage() {
                         ].map((item, index) => (
                             <div
                                 key={index}
-                                className="flex items-center justify-between p-3 rounded-lg bg-gray-50"
+                                className="flex items-center justify-between p-3 rounded-[20px] bg-gray-50"
                             >
                                 <div className="flex items-center gap-3">
                                     <span className="font-bold text-[var(--color-accent)] w-16">

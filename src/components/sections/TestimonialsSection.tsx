@@ -56,7 +56,7 @@ export default function TestimonialsSection({ testimonials = [] }: TestimonialsS
                         Depoimentos
                     </h2>
                     <p className="text-[var(--color-text-secondary)] max-w-2xl mx-auto text-lg">
-                        O que nossos membros dizem sobre a igreja
+                        Testemunhos de membros sobre a experiência na comunidade
                     </p>
                 </motion.div>
 
@@ -119,7 +119,7 @@ export default function TestimonialsSection({ testimonials = [] }: TestimonialsS
                                     transition={{ delay: index * 0.1 }}
                                     className="h-full"
                                 >
-                                    <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow h-full flex flex-col">
+                                    <div className="bg-white rounded-[20px] p-6 shadow-lg hover:shadow-xl transition-shadow h-full flex flex-col">
                                         {/* Quote Icon */}
                                         <div className="w-10 h-10 rounded-full bg-[var(--color-primary)]/20 flex items-center justify-center mb-4">
                                             <Quote className="w-5 h-5 text-[var(--color-accent)]" />
@@ -175,7 +175,7 @@ export default function TestimonialsSection({ testimonials = [] }: TestimonialsS
                     className="text-center mt-8"
                 >
                     <p className="text-[var(--color-text-muted)] text-sm">
-                        Avaliações inspiradas no estilo Google My Business
+                        Depoimentos reais de membros e visitantes da igreja
                     </p>
                 </motion.div>
             </div>

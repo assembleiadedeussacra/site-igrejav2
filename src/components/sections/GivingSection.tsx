@@ -48,7 +48,7 @@ export default function GivingSection({ financials }: GivingSectionProps) {
                         Dízimos e Ofertas
                     </h2>
                     <p className="text-[var(--color-text-secondary)] max-w-2xl mx-auto text-lg">
-                        Contribua com a obra de Deus através do PIX
+                        Contribua com a obra missionária e ministerial através de dízimos e ofertas
                     </p>
                 </motion.div>
 
@@ -59,7 +59,7 @@ export default function GivingSection({ financials }: GivingSectionProps) {
                     viewport={{ once: true }}
                     className="max-w-4xl mx-auto"
                 >
-                    <div className="relative bg-gradient-to-br from-[var(--color-accent)] to-[var(--color-accent-light)] rounded-3xl p-8 md:p-12 shadow-2xl overflow-hidden">
+                    <div className="relative bg-gradient-to-br from-[var(--color-accent)] to-[var(--color-accent-light)] rounded-[20px] p-8 md:p-12 shadow-2xl overflow-hidden">
                         {/* Decorative Elements */}
                         <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2" />
                         <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/2" />
@@ -77,7 +77,7 @@ export default function GivingSection({ financials }: GivingSectionProps) {
                             <div className="grid md:grid-cols-2 gap-8 items-center">
                                 {/* PIX Key */}
                                 <div className="space-y-6">
-                                    <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6">
+                                    <div className="bg-white/10 backdrop-blur-sm rounded-[20px] p-6">
                                         <p className="text-white/80 text-sm uppercase tracking-wider mb-2">
                                             Chave PIX (Telefone)
                                         </p>
@@ -88,7 +88,7 @@ export default function GivingSection({ financials }: GivingSectionProps) {
                                             <motion.button
                                                 onClick={copyPixKey}
                                                 whileTap={{ scale: 0.95 }}
-                                                className={`p-3 rounded-xl transition-all ${copied
+                                                className={`p-3 rounded-[20px] transition-all ${copied
                                                     ? 'bg-green-500 text-white'
                                                     : 'bg-white/20 text-white hover:bg-white/30'
                                                     }`}
@@ -113,7 +113,8 @@ export default function GivingSection({ financials }: GivingSectionProps) {
                                     </div>
 
                                     <p className="text-white/80 text-sm">
-                                        Ou escaneie o QR Code ao lado com o aplicativo do seu banco.
+                                        Escaneie o QR Code ao lado utilizando o aplicativo do seu banco
+                                        ou copie a chave PIX acima.
                                     </p>
                                 </div>
 
@@ -121,7 +122,7 @@ export default function GivingSection({ financials }: GivingSectionProps) {
                                 <div className="flex justify-center">
                                     <motion.div
                                         whileHover={{ scale: 1.05 }}
-                                        className="bg-white rounded-2xl p-6 shadow-xl"
+                                        className="bg-white rounded-[20px] p-6 shadow-xl"
                                     >
                                         <div className="flex items-center gap-2 text-[var(--color-accent)] mb-4">
                                             <QrCode className="w-5 h-5" />

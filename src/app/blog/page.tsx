@@ -92,7 +92,7 @@ export default function BlogPage() {
                 {/* Hero Section */}
                 <section className="bg-gradient-to-br from-[var(--color-accent)] to-[var(--color-accent-light)] py-16 md:py-24">
                     <div className="container-custom text-center text-white">
-                        <div className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-white/10 flex items-center justify-center">
+                        <div className="w-16 h-16 mx-auto mb-6 rounded-[20px] bg-white/10 flex items-center justify-center">
                             <FileText className="w-8 h-8" />
                         </div>
                         <h1 className="text-4xl md:text-5xl font-bold mb-4">Blog</h1>
@@ -112,7 +112,7 @@ export default function BlogPage() {
                                 <input
                                     type="text"
                                     placeholder="Buscar artigos..."
-                                    className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-200 focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/20 outline-none transition-all"
+                                    className="w-full pl-12 pr-4 py-3 rounded-[20px] border border-gray-200 focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/20 outline-none transition-all"
                                 />
                             </div>
                         </div>
@@ -126,7 +126,7 @@ export default function BlogPage() {
                             {posts.map((post) => (
                                 <article
                                     key={post.id}
-                                    className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 card-hover group"
+                                    className="bg-white rounded-[20px] overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 card-hover group"
                                 >
                                     <div className="relative h-48 overflow-hidden">
                                         <Image

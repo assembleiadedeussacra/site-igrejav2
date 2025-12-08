@@ -101,8 +101,8 @@ export default function Footer({ settings }: FooterProps) {
                             </div>
                         </Link>
                         <p className="text-white/80 mb-6 leading-relaxed">
-                            Uma comunidade de fé dedicada a adorar a Deus e servir ao próximo.
-                            Venha nos conhecer!
+                            Igreja evangélica comprometida com a pregação do Evangelho, o ensino bíblico
+                            e o serviço cristão. Estamos abertos para receber você e sua família.
                         </p>
                         <div className="flex flex-col gap-2">
                             {socialLinks.map((social) => (

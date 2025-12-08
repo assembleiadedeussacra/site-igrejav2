@@ -113,9 +113,9 @@ export default function HeroSection({ banners = [] }: HeroSectionProps) {
                             transition={{ delay: 0.3, duration: 0.5 }}
                             className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight"
                         >
-                            Bem-vindo à{' '}
+                            Assembleia de Deus{' '}
                             <span className="text-[var(--color-primary)]">
-                                Assembleia de Deus Missão
+                                Missão
                             </span>
                         </motion.h1>
 
@@ -124,9 +124,9 @@ export default function HeroSection({ banners = [] }: HeroSectionProps) {
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.4, duration: 0.5 }}
-                            className="text-xl md:text-2xl text-white/90 mb-10 max-w-2xl mx-auto"
+                            className="text-xl md:text-2xl text-white/95 mb-10 max-w-2xl mx-auto font-light"
                         >
-                            Uma comunidade de fé dedicada a adorar a Deus e servir ao próximo
+                            Uma igreja comprometida com a Palavra de Deus, a adoração e o serviço cristão
                         </motion.p>
 
                         {/* CTA Buttons */}
@@ -138,17 +138,17 @@ export default function HeroSection({ banners = [] }: HeroSectionProps) {
                         >
                             <Link
                                 href="#contato"
-                                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-[var(--color-primary)] text-[var(--color-accent)] font-bold rounded-full hover:bg-white transition-all hover:scale-105 shadow-lg hover:shadow-xl"
+                                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-[var(--color-primary)] text-[var(--color-accent)] font-semibold rounded-[20px] hover:bg-white transition-all shadow-lg hover:shadow-xl"
                             >
                                 <MapPin className="w-5 h-5" />
-                                Venha nos Visitar
+                                Visite-nos
                             </Link>
                             <Link
                                 href="#sobre"
-                                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white/10 backdrop-blur-sm text-white font-bold rounded-full border-2 border-white/30 hover:bg-white/20 transition-all hover:scale-105"
+                                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white/10 backdrop-blur-sm text-white font-semibold rounded-[20px] border-2 border-white/30 hover:bg-white/20 transition-all"
                             >
                                 <Info className="w-5 h-5" />
-                                Saiba Mais
+                                Conheça Nossa História
                             </Link>
                         </motion.div>
                     </motion.div>
