@@ -9,6 +9,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://assembleiasacramento.com.br'),
   title: {
     default: 'Assembleia de Deus Missão - Sacramento/MG',
     template: '%s | Assembleia de Deus Missão Sacramento',
