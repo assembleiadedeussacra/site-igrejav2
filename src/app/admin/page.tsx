@@ -106,10 +106,10 @@ export default function AdminDashboardPage() {
             setIsLoading(true);
             try {
                 const [banners, leaders, posts, events] = await Promise.all([
-                    api.getAdminBanners().catch(() => []),
-                    api.getAdminLeaders().catch(() => []),
-                    api.getAdminPosts().catch(() => []),
-                    api.getAdminEvents().catch(() => []),
+                    api.getAdminBanners().catch(() => []) as Promise<any[]>,
+                    api.getAdminLeaders().catch(() => []) as Promise<any[]>,
+                    api.getAdminPosts().catch(() => []) as Promise<any[]>,
+                    api.getAdminEvents().catch(() => []) as Promise<any[]>,
                 ]);
 
                 setStats({
@@ -120,7 +120,7 @@ export default function AdminDashboardPage() {
                 });
 
                 // Posts recentes (últimos 3)
-                const sortedPosts = posts
+                const sortedPosts = (posts as any[])
                     .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
                     .slice(0, 3)
                     .map((p) => ({
@@ -132,7 +132,7 @@ export default function AdminDashboardPage() {
                 setRecentPosts(sortedPosts);
 
                 // Eventos ativos (máximo 4)
-                const activeEvents = events
+                const activeEvents = (events as any[])
                     .filter((e) => e.active)
                     .slice(0, 4)
                     .map((e) => ({

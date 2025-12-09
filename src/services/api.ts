@@ -444,7 +444,7 @@ export const api = {
             const { data, error } = await (supabase as any)
                 .from('financials')
                 .update(updates)
-                .eq('id', existing.id)
+                .eq('id', (existing as any).id)
                 .select()
                 .single();
 
@@ -488,7 +488,7 @@ export const api = {
             const { data, error } = await (supabase as any)
                 .from('site_settings')
                 .update(updates)
-                .eq('id', existing.id)
+                .eq('id', (existing as any).id)
                 .select()
                 .single();
 

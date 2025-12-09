@@ -44,7 +44,7 @@ export const serverApi = {
                     id: `api-${today}`,
                     text: apiVerse.text,
                     reference: apiVerse.reference,
-                    bible_link: apiVerse.bible_link,
+                    bible_link: apiVerse.bible_link || null,
                     active_date: today,
                     created_at: new Date().toISOString(),
                 };

@@ -38,7 +38,7 @@ export default async function BlogPage() {
     }> = [];
 
     try {
-        const allPosts = await serverApi.getPosts(100);
+        const allPosts = (await serverApi.getPosts(100)) as any[];
         posts = allPosts
             .filter((post) => post.type === 'blog' && post.published)
             .map((post) => ({
@@ -95,25 +95,40 @@ export default async function BlogPage() {
                                     key={post.id}
                                     className="bg-white rounded-[20px] overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 card-hover group"
                                 >
-                                    <div className="relative h-48 overflow-hidden">
-                                        <Image
-                                            src={post.cover_image}
-                                            alt={post.title}
-                                            fill
-                                            className="object-cover group-hover:scale-105 transition-transform duration-500"
-                                            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                                        />
-                                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-                                        <div className="absolute bottom-4 left-4 right-4">
-                                            <div className="flex flex-wrap gap-2">
-                                                {post.tags.slice(0, 2).map((tag) => (
-                                                    <span key={tag} className="tag">
-                                                        {tag}
-                                                    </span>
-                                                ))}
+                                    {post.cover_image && (
+                                        <div className="relative h-48 overflow-hidden">
+                                            <Image
+                                                src={post.cover_image}
+                                                alt={post.title}
+                                                fill
+                                                className="object-cover group-hover:scale-105 transition-transform duration-500"
+                                                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                                            />
+                                            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+                                            <div className="absolute bottom-4 left-4 right-4">
+                                                <div className="flex flex-wrap gap-2">
+                                                    {post.tags.slice(0, 2).map((tag) => (
+                                                        <span key={tag} className="tag">
+                                                            {tag}
+                                                        </span>
+                                                    ))}
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    )}
+                                    {!post.cover_image && (
+                                        <div className="relative h-48 overflow-hidden bg-gradient-to-br from-[var(--color-accent)] to-[var(--color-accent-light)]">
+                                            <div className="absolute bottom-4 left-4 right-4">
+                                                <div className="flex flex-wrap gap-2">
+                                                    {post.tags.slice(0, 2).map((tag) => (
+                                                        <span key={tag} className="tag">
+                                                            {tag}
+                                                        </span>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
 
                                     <div className="p-6">
                                         <div className="flex items-center gap-2 text-sm text-[var(--color-text-muted)] mb-3">

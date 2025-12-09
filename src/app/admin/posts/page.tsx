@@ -54,6 +54,7 @@ export default function AdminPostsPage() {
                 ...formData,
                 cover_image: formData.cover_image || null,
                 tags: tagsArray,
+                author: null, // Author field is required but can be null
             };
 
             if (editingPost) {

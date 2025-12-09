@@ -57,7 +57,6 @@ export default function AdminConfiguracoesPage() {
             await api.updateSettings({
                 church_name: formData.church_name,
                 church_address: formData.church_address,
-                church_city: formData.church_city,
                 church_cep: formData.church_cep,
                 phone: formData.phone,
                 email: formData.email,

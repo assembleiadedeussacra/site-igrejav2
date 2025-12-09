@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Copy, Check, QrCode, Save, Loader2, Wallet } from 'lucide-react';
 import { api } from '@/services/api';
+import { Financial } from '@/lib/database.types';
 
 export default function AdminFinanceiroPage() {
     const [pixKey, setPixKey] = useState('');
@@ -16,7 +17,7 @@ export default function AdminFinanceiroPage() {
     const loadFinancials = async () => {
         setIsLoading(true);
         try {
-            const data = await api.getAdminFinancials();
+            const data = await api.getAdminFinancials() as Financial | null;
             if (data) {
                 setPixKey(data.pix_key || '');
                 setQrcodeUrl(data.pix_qrcode_url || '');

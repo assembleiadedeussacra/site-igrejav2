@@ -37,7 +37,7 @@ export default async function EstudosPage() {
     }> = [];
 
     try {
-        const allPosts = await serverApi.getPosts(100);
+        const allPosts = (await serverApi.getPosts(100)) as any[];
         studies = allPosts
             .filter((post) => post.type === 'study' && post.published)
             .map((post) => ({
