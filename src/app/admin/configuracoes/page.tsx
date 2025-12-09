@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Settings, Save, Loader2, MapPin, Mail, Phone, Instagram, Calendar } from 'lucide-react';
 import { api } from '@/services/api';
+import { SiteSettings } from '@/lib/database.types';
 
 export default function AdminConfiguracoesPage() {
     const [isLoading, setIsLoading] = useState(true);
@@ -23,12 +24,12 @@ export default function AdminConfiguracoesPage() {
     const loadSettings = async () => {
         setIsLoading(true);
         try {
-            const data = await api.getAdminSettings();
+            const data = await api.getAdminSettings() as SiteSettings | null;
             if (data) {
                 setFormData({
                     church_name: data.church_name || '',
                     church_address: data.church_address || '',
-                    church_city: data.church_city || '',
+                    church_city: '', // Not in database schema
                     church_cep: data.church_cep || '',
                     phone: data.phone || '',
                     email: data.email || '',
