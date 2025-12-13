@@ -270,6 +270,13 @@ img {
   font-weight: bold;
 }
 
+/* Swiper Wrapper Styles for About Section */
+#sobre .swiper-wrapper {
+  padding-top: 20px;
+  padding-bottom: 20px;
+  overflow: hidden;
+}
+
 /* Animation Keyframes */
 @keyframes fadeIn {
   from {

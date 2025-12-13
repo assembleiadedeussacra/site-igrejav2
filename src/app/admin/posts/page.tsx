@@ -7,9 +7,8 @@ import { Plus, Pencil, Trash2, X, Save, Loader2, FileText, Eye, EyeOff, Tag, Upl
 import { api } from '@/services/api';
 import { uploadPostCover, uploadPostInlineImage } from '@/lib/supabase/storage';
 import RichTextEditor from '@/components/admin/RichTextEditor';
+import { Post } from '@/lib/database.types';
 import toast from 'react-hot-toast';
-
-interface Post { id: string; title: string; description: string; cover_image: string | null; type: 'blog' | 'study'; tags: string[]; content: string; published: boolean; created_at: string; related_posts?: Post[]; }
 
 export default function AdminPostsPage() {
     const [posts, setPosts] = useState<Post[]>([]);
@@ -169,6 +168,7 @@ export default function AdminPostsPage() {
                 cover_image: coverImageUrl || null,
                 tags: tagsArray,
                 author: null,
+                views: editingPost?.views ?? 0,
             };
 
             let savedPostId: string;

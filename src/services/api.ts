@@ -1,5 +1,5 @@
 import { createClient } from '../lib/supabase/client';
-import { Database, AboutPageCover, Post } from '../lib/database.types';
+import { Database, AboutPageCover, Post, PageBanner } from '../lib/database.types';
 
 export const api = {
     getBanners: async () => {
@@ -374,7 +374,7 @@ export const api = {
                 .order('order', { ascending: false })
                 .limit(1);
             
-            const maxOrder = existingEvents && existingEvents.length > 0 ? existingEvents[0].order : -1;
+            const maxOrder = existingEvents && existingEvents.length > 0 ? (existingEvents[0] as { order: number }).order : -1;
             event.order = maxOrder + 1;
         }
         
@@ -840,7 +840,7 @@ export const api = {
         return data;
     },
 
-    getAdminPageBanner: async (pageType: 'estudos' | 'blog') => {
+    getAdminPageBanner: async (pageType: 'estudos' | 'blog'): Promise<PageBanner | null> => {
         const supabase = createClient();
         const { data, error } = await supabase
             .from('page_banners')
@@ -850,10 +850,10 @@ export const api = {
             .single();
 
         if (error && error.code !== 'PGRST116') throw error;
-        return data;
+        return data as PageBanner | null;
     },
 
-    createPageBanner: async (banner: Database['public']['Tables']['page_banners']['Insert']) => {
+    createPageBanner: async (banner: Omit<PageBanner, 'id' | 'created_at' | 'updated_at'>) => {
         const supabase = createClient();
         const { data, error } = await (supabase as any)
             .from('page_banners')
@@ -865,7 +865,7 @@ export const api = {
         return data;
     },
 
-    updatePageBanner: async (id: string, updates: Database['public']['Tables']['page_banners']['Update']) => {
+    updatePageBanner: async (id: string, updates: Partial<Omit<PageBanner, 'id' | 'created_at' | 'updated_at'>>) => {
         const supabase = createClient();
         const { data, error } = await (supabase as any)
             .from('page_banners')
@@ -975,7 +975,7 @@ export const api = {
     incrementPostViews: async (postId: string) => {
         const supabase = createClient();
         // First get current views
-        const { data: post } = await supabase
+        const { data: post } = await (supabase as any)
             .from('posts')
             .select('views')
             .eq('id', postId)
@@ -983,7 +983,7 @@ export const api = {
 
         if (!post) return;
 
-        const { error } = await supabase
+        const { error } = await (supabase as any)
             .from('posts')
             .update({ views: (post.views || 0) + 1 })
             .eq('id', postId);

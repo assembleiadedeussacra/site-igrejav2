@@ -7,7 +7,6 @@ import Link from 'next/link';
 import { Header, Footer } from '@/components';
 import PostViewTracker from '@/components/posts/PostViewTracker';
 import { api } from '@/services/api';
-import { serverApi } from '@/services/server';
 import type { Post, SiteSettings } from '@/lib/database.types';
 import { Calendar, Tag, ArrowLeft, Eye } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -25,7 +24,7 @@ export default function EstudoPostPage() {
                 setIsLoading(true);
                 const results = await Promise.allSettled([
                     api.getPostById(id),
-                    serverApi.getSettings(),
+                    api.getSettings(),
                 ]);
 
                 setPost(results[0].status === 'fulfilled' ? results[0].value : null);
