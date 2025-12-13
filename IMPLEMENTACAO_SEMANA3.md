@@ -212,12 +212,14 @@ Execute no Supabase SQL Editor:
 
 ## 📝 Ações Pendentes do Usuário
 
-### 1. Executar Migração de Índices
+### 1. ✅ Executar Migração de Índices
 
-Execute no Supabase SQL Editor:
-```sql
--- Arquivo: supabase/migrations/add_performance_indexes.sql
-```
+**Guia completo criado em:** `EXECUTAR_MIGRACAO_INDICES.md`
+
+**Método rápido:**
+1. Acesse Supabase Dashboard > SQL Editor
+2. Cole o conteúdo de `SQL_INDICES_PRONTO_COLAR.txt`
+3. Execute (Run ou Ctrl+Enter)
 
 ### 2. Testar PWA
 
