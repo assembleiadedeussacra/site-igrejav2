@@ -278,6 +278,59 @@ export const api = {
         if (error) throw error;
     },
 
+    // Post Relations
+    getPostRelations: async (postId: string) => {
+        const supabase = createClient();
+        const { data, error } = await supabase
+            .from('post_relations')
+            .select(`
+                *,
+                related_post:posts!post_relations_related_post_id_fkey(
+                    id,
+                    title,
+                    type,
+                    description
+                )
+            `)
+            .eq('post_id', postId);
+
+        if (error) throw error;
+        return data;
+    },
+
+    createPostRelation: async (postId: string, relatedPostId: string) => {
+        const supabase = createClient();
+        const { data, error } = await (supabase as any)
+            .from('post_relations')
+            .insert([{ post_id: postId, related_post_id: relatedPostId }])
+            .select()
+            .single();
+
+        if (error) throw error;
+        return data;
+    },
+
+    deletePostRelation: async (postId: string, relatedPostId: string) => {
+        const supabase = createClient();
+        const { error } = await (supabase as any)
+            .from('post_relations')
+            .delete()
+            .eq('post_id', postId)
+            .eq('related_post_id', relatedPostId);
+
+        if (error) throw error;
+    },
+
+    deleteAllPostRelations: async (postId: string) => {
+        const supabase = createClient();
+        const { error } = await (supabase as any)
+            .from('post_relations')
+            .delete()
+            .eq('post_id', postId);
+
+        if (error) throw error;
+    },
+
     getAdminEvents: async () => {
         const supabase = createClient();
         const { data, error } = await supabase

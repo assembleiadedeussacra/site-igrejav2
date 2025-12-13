@@ -39,6 +39,7 @@ CREATE TABLE IF NOT EXISTS leaders (
   name TEXT NOT NULL,
   title TEXT NOT NULL,
   image_url TEXT NOT NULL,
+  department TEXT,
   "order" INTEGER NOT NULL DEFAULT 0,
   active BOOLEAN NOT NULL DEFAULT true,
   created_at TIMESTAMPTZ DEFAULT NOW(),

@@ -57,7 +57,7 @@ export default async function EstudosPage() {
                 {/* Hero Section */}
                 <section className="bg-gradient-to-br from-[var(--color-accent)] to-[var(--color-accent-light)] py-16 md:py-24">
                     <div className="container-custom text-center text-white">
-                        <div className="w-16 h-16 mx-auto mb-6 rounded-[20px] bg-white/10 flex items-center justify-center">
+                        <div className="w-16 h-16 mx-auto mb-6 rounded-[10px] bg-white/10 flex items-center justify-center">
                             <BookOpen className="w-8 h-8" />
                         </div>
                         <h1 className="text-4xl md:text-5xl font-bold mb-4">
@@ -79,7 +79,7 @@ export default async function EstudosPage() {
                                 <input
                                     type="text"
                                     placeholder="Buscar estudos..."
-                                    className="w-full pl-12 pr-4 py-3 rounded-[20px] border border-gray-200 focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/20 outline-none transition-all"
+                                    className="w-full pl-12 pr-4 py-3 rounded-[10px] border border-gray-200 focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/20 outline-none transition-all"
                                 />
                             </div>
                         </div>
@@ -93,9 +93,9 @@ export default async function EstudosPage() {
                             {studies.map((study, index) => (
                                 <article
                                     key={study.id}
-                                    className="bg-white rounded-[20px] p-6 shadow-lg hover:shadow-xl transition-all duration-300 card-hover h-full flex flex-col group"
+                                    className="bg-white rounded-[10px] p-6 shadow-lg hover:shadow-xl transition-all duration-300 card-hover h-full flex flex-col group"
                                 >
-                                    <div className="w-12 h-12 rounded-[20px] bg-gradient-to-br from-[var(--color-accent)] to-[var(--color-accent-light)] flex items-center justify-center mb-4 text-white group-hover:scale-110 transition-transform">
+                                    <div className="w-12 h-12 rounded-[10px] bg-gradient-to-br from-[var(--color-accent)] to-[var(--color-accent-light)] flex items-center justify-center mb-4 text-white group-hover:scale-110 transition-transform">
                                         <BookOpen className="w-6 h-6" />
                                     </div>
 
@@ -116,7 +116,7 @@ export default async function EstudosPage() {
                                         {study.tags.map((tag) => (
                                             <span
                                                 key={tag}
-                                                className="inline-flex items-center gap-1 text-xs text-[var(--color-accent)] bg-[var(--color-primary)]/20 px-2 py-1 rounded-[20px]"
+                                                className="inline-flex items-center gap-1 text-xs text-[var(--color-accent)] bg-[var(--color-primary)]/20 px-2 py-1 rounded-[10px]"
                                             >
                                                 <Tag className="w-3 h-3" />
                                                 {tag}

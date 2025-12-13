@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
+import Toaster from '@/components/ui/Toaster';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -82,8 +83,8 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" className={inter.variable}>
       <head>
-        <link rel="icon" href="/favicon.ico" sizes="any" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <link rel="icon" href="/images/logo-igreja.jpg" type="image/jpeg" sizes="any" />
+        <link rel="apple-touch-icon" href="/images/logo-igreja.jpg" />
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#232d82" />
         <script
@@ -137,7 +138,10 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="antialiased">{children}</body>
+      <body className="antialiased">
+        {children}
+        <Toaster />
+      </body>
     </html>
   );
 }

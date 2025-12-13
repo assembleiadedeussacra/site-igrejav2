@@ -32,6 +32,7 @@ export interface Leader {
     name: string;
     title: string; // Pastor, Diácono, Presbítero, etc.
     image_url: string;
+    department: string | null; // Departamento opcional
     order: number;
     active: boolean;
     created_at: string;
@@ -50,6 +51,14 @@ export interface Post {
     published: boolean;
     created_at: string;
     updated_at: string;
+    related_posts?: Post[]; // Optional, for queries with relations
+}
+
+export interface PostRelation {
+    id: string;
+    post_id: string;
+    related_post_id: string;
+    created_at: string;
 }
 
 export interface Event {

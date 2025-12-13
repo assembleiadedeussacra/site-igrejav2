@@ -106,7 +106,7 @@ export default function HeroSection({ banners = [] }: HeroSectionProps) {
                                         className="mb-8"
                                     >
                                         {currentBanner.logo_url && (
-                                            <div className="relative w-24 h-24 md:w-32 md:h-32 mx-auto rounded-[20px] overflow-hidden border-4 border-white/30 shadow-2xl">
+                                            <div className="relative w-24 h-24 md:w-32 md:h-32 mx-auto rounded-[10px] overflow-hidden border-4 border-white/30 shadow-2xl">
                                                 <Image
                                                     src={currentBanner.logo_url}
                                                     alt="Logo"

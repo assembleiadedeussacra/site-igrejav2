@@ -65,20 +65,20 @@ export default function TestimonialsSection({ testimonials = [] }: TestimonialsS
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    className="relative"
+                    className="relative px-4 md:px-8"
                 >
                     {/* Navigation Buttons */}
-                    <div className="hidden md:flex absolute -left-4 -right-4 top-1/2 -translate-y-1/2 justify-between pointer-events-none z-10">
+                    <div className="hidden md:flex absolute -left-2 -right-2 top-1/2 -translate-y-1/2 justify-between pointer-events-none z-10">
                         <button
                             onClick={() => swiperRef.current?.slidePrev()}
-                            className="w-12 h-12 rounded-[20px] bg-white shadow-lg flex items-center justify-center text-[var(--color-accent)] hover:bg-[var(--color-accent)] hover:text-white transition-colors pointer-events-auto"
+                            className="w-12 h-12 rounded-[10px] bg-white shadow-lg flex items-center justify-center text-[var(--color-accent)] hover:bg-[var(--color-accent)] hover:text-white transition-colors pointer-events-auto"
                             aria-label="Anterior"
                         >
                             <ChevronLeft className="w-6 h-6" />
                         </button>
                         <button
                             onClick={() => swiperRef.current?.slideNext()}
-                            className="w-12 h-12 rounded-[20px] bg-white shadow-lg flex items-center justify-center text-[var(--color-accent)] hover:bg-[var(--color-accent)] hover:text-white transition-colors pointer-events-auto"
+                            className="w-12 h-12 rounded-[10px] bg-white shadow-lg flex items-center justify-center text-[var(--color-accent)] hover:bg-[var(--color-accent)] hover:text-white transition-colors pointer-events-auto"
                             aria-label="Próximo"
                         >
                             <ChevronRight className="w-6 h-6" />
@@ -103,9 +103,11 @@ export default function TestimonialsSection({ testimonials = [] }: TestimonialsS
                         breakpoints={{
                             640: {
                                 slidesPerView: 2,
+                                spaceBetween: 20,
                             },
                             1024: {
                                 slidesPerView: 3,
+                                spaceBetween: 24,
                             },
                         }}
                         className="pb-12"
@@ -119,9 +121,9 @@ export default function TestimonialsSection({ testimonials = [] }: TestimonialsS
                                     transition={{ delay: index * 0.1 }}
                                     className="h-full"
                                 >
-                                    <div className="bg-white rounded-[20px] p-6 shadow-lg hover:shadow-xl transition-shadow h-full flex flex-col min-h-[280px]">
+                                    <div className="bg-white rounded-[10px] p-6 md:p-8 shadow-lg hover:shadow-xl transition-shadow h-full flex flex-col min-h-[280px] mx-2">
                                         {/* Quote Icon */}
-                                        <div className="w-10 h-10 rounded-[20px] bg-[var(--color-primary)]/20 flex items-center justify-center mb-4 flex-shrink-0">
+                                        <div className="w-10 h-10 rounded-[10px] bg-[var(--color-primary)]/20 flex items-center justify-center mb-4 flex-shrink-0">
                                             <Quote className="w-5 h-5 text-[var(--color-accent)]" />
                                         </div>
 
@@ -138,7 +140,7 @@ export default function TestimonialsSection({ testimonials = [] }: TestimonialsS
                                         {/* Author */}
                                         <div className="flex items-center gap-3 pt-4 border-t border-gray-100 flex-shrink-0">
                                             {testimonial.avatar_url ? (
-                                                <div className="w-12 h-12 rounded-[20px] overflow-hidden">
+                                                <div className="w-12 h-12 rounded-[10px] overflow-hidden">
                                                     {/* eslint-disable-next-line @next/next/no-img-element */}
                                                     <img
                                                         src={testimonial.avatar_url}
@@ -147,7 +149,7 @@ export default function TestimonialsSection({ testimonials = [] }: TestimonialsS
                                                     />
                                                 </div>
                                             ) : (
-                                                <div className="w-12 h-12 rounded-[20px] bg-gradient-to-br from-[var(--color-accent)] to-[var(--color-accent-light)] flex items-center justify-center text-white font-bold">
+                                                <div className="w-12 h-12 rounded-[10px] bg-gradient-to-br from-[var(--color-accent)] to-[var(--color-accent-light)] flex items-center justify-center text-white font-bold">
                                                     {getInitials(testimonial.name)}
                                                 </div>
                                             )}

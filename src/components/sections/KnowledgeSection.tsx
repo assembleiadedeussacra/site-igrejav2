@@ -109,7 +109,7 @@ export default function KnowledgeSection({ posts = [] }: KnowledgeSectionProps) 
                             >
                                 {activeTab === 'blog' && post.cover_image ? (
                                     // Blog Card with Image
-                                    <div className="bg-white rounded-[20px] overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 card-hover">
+                                    <div className="bg-white rounded-[10px] overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 card-hover">
                                         <div className="relative h-48 overflow-hidden">
                                             <Image
                                                 src={post.cover_image}
@@ -117,6 +117,7 @@ export default function KnowledgeSection({ posts = [] }: KnowledgeSectionProps) 
                                                 fill
                                                 className="object-cover group-hover:scale-105 transition-transform duration-500"
                                                 sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                                                loading="lazy"
                                             />
                                             <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
                                             <div className="absolute bottom-4 left-4 right-4">
@@ -151,8 +152,8 @@ export default function KnowledgeSection({ posts = [] }: KnowledgeSectionProps) 
                                     </div>
                                 ) : (
                                     // Study Card (no image)
-                                    <div className="bg-white rounded-[20px] p-6 shadow-lg hover:shadow-xl transition-all duration-300 card-hover h-full flex flex-col">
-                                        <div className="w-12 h-12 rounded-[20px] bg-gradient-to-br from-[var(--color-accent)] to-[var(--color-accent-light)] flex items-center justify-center mb-4 text-white">
+                                    <div className="bg-white rounded-[10px] p-6 shadow-lg hover:shadow-xl transition-all duration-300 card-hover h-full flex flex-col">
+                                        <div className="w-12 h-12 rounded-[10px] bg-gradient-to-br from-[var(--color-accent)] to-[var(--color-accent-light)] flex items-center justify-center mb-4 text-white">
                                             <BookOpen className="w-6 h-6" />
                                         </div>
                                         <div className="flex items-center gap-2 text-sm text-[var(--color-text-muted)] mb-3">
@@ -169,7 +170,7 @@ export default function KnowledgeSection({ posts = [] }: KnowledgeSectionProps) 
                                             {post.tags.map((tag) => (
                                                 <span
                                                     key={tag}
-                                                    className="inline-flex items-center gap-1 text-xs text-[var(--color-accent)] bg-[var(--color-primary)]/20 px-2 py-1 rounded-[20px]"
+                                                    className="inline-flex items-center gap-1 text-xs text-[var(--color-accent)] bg-[var(--color-primary)]/20 px-2 py-1 rounded-[10px]"
                                                 >
                                                     <Tag className="w-3 h-3" />
                                                     {tag}

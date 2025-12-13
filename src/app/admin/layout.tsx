@@ -120,8 +120,8 @@ export default function AdminLayout({
                 <div className="flex flex-col h-full">
                     {/* Logo */}
                     <div className="flex items-center justify-between p-4 border-b border-white/10">
-                        <Link href="/admin" className="flex items-center gap-3">
-                            <div className="relative w-10 h-10 rounded-[20px] overflow-hidden border-2 border-white/30">
+                        <Link href="/admin" className="flex items-center gap-3 flex-1 min-w-0">
+                            <div className="relative w-12 h-12 rounded-[10px] overflow-hidden border-2 border-white/30 flex-shrink-0">
                                 <Image
                                     src="/images/logo-igreja.jpg"
                                     alt="Logo"
@@ -129,14 +129,15 @@ export default function AdminLayout({
                                     className="object-cover"
                                 />
                             </div>
-                            <div>
-                                <h1 className="font-bold text-white text-xs leading-tight">AD Missão</h1>
-                                <p className="text-white/60 text-[10px] leading-tight">Admin</p>
+                            <div className="flex-1 min-w-0">
+                                <div className="font-bold text-white text-base leading-tight truncate">AD Missão</div>
+                                <div className="text-white/70 text-xs leading-tight">Admin</div>
                             </div>
                         </Link>
                         <button
                             onClick={() => setIsSidebarOpen(false)}
-                            className="lg:hidden text-white/80 hover:text-white"
+                            className="lg:hidden text-white/80 hover:text-white flex-shrink-0 ml-2"
+                            aria-label="Fechar menu"
                         >
                             <X className="w-6 h-6" />
                         </button>
@@ -152,7 +153,7 @@ export default function AdminLayout({
                                         <Link
                                             href={item.href}
                                             onClick={() => setIsSidebarOpen(false)}
-                                            className={`flex items-center gap-3 px-3 py-2.5 rounded-[20px] transition-all w-full ${isActive
+                                            className={`flex items-center gap-3 px-3 py-2.5 rounded-[10px] transition-all w-full ${isActive
                                                     ? 'bg-white/30 text-white shadow-lg font-semibold'
                                                     : 'text-white hover:bg-white/20 hover:text-white font-medium'
                                                 }`}
@@ -172,7 +173,7 @@ export default function AdminLayout({
                     {/* User */}
                     <div className="p-4 border-t border-white/10">
                         <div className="flex items-center gap-3 mb-4">
-                            <div className="w-10 h-10 rounded-[20px] bg-white/20 flex items-center justify-center text-white font-bold">
+                            <div className="w-10 h-10 rounded-[10px] bg-white/20 flex items-center justify-center text-white font-bold">
                                 {user?.email?.[0]?.toUpperCase() || 'A'}
                             </div>
                             <div className="flex-1 min-w-0">
@@ -184,7 +185,7 @@ export default function AdminLayout({
                         </div>
                         <button
                             onClick={handleLogout}
-                            className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-white/10 text-white rounded-[20px] hover:bg-white/20 transition-colors"
+                            className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-white/10 text-white rounded-[10px] hover:bg-white/20 transition-colors"
                         >
                             <LogOut className="w-4 h-4" />
                             Sair
@@ -213,7 +214,7 @@ export default function AdminLayout({
                     <div className="flex items-center justify-between px-4 py-3">
                         <button
                             onClick={() => setIsSidebarOpen(true)}
-                            className="lg:hidden p-2 rounded-[20px] hover:bg-gray-100"
+                            className="lg:hidden p-2 rounded-[10px] hover:bg-gray-100"
                         >
                             <Menu className="w-6 h-6 text-gray-600" />
                         </button>
@@ -234,7 +235,7 @@ export default function AdminLayout({
                 </header>
 
                 {/* Page Content */}
-                <main className="p-4 md:p-6 lg:p-8">{children}</main>
+                <main className="p-4 md:p-6 lg:p-8 admin-panel">{children}</main>
             </div>
         </div>
     );

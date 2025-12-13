@@ -60,7 +60,7 @@ export default function GallerySection({ items = [] }: GallerySectionProps) {
                                 viewport={{ once: true }}
                                 transition={{ delay: index * 0.1 }}
                                 whileHover={{ y: -8 }}
-                                className="group relative bg-white rounded-[20px] overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300"
+                                className="group relative bg-white rounded-[10px] overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300"
                             >
                                 {/* Image */}
                                 <div className="relative h-64 overflow-hidden">
@@ -70,13 +70,14 @@ export default function GallerySection({ items = [] }: GallerySectionProps) {
                                         fill
                                         className="object-cover group-hover:scale-110 transition-transform duration-500"
                                         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                                        loading="lazy"
                                     />
                                     <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-accent)]/90 via-[var(--color-accent)]/40 to-transparent" />
 
                                     {/* Hover Overlay */}
                                     <div className="absolute inset-0 bg-[var(--color-accent)]/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                                         <div className="text-center text-white">
-                                            <div className="w-16 h-16 mx-auto mb-4 rounded-[20px] bg-white/20 flex items-center justify-center backdrop-blur-sm">
+                                            <div className="w-16 h-16 mx-auto mb-4 rounded-[10px] bg-white/20 flex items-center justify-center backdrop-blur-sm">
                                                 <Images className="w-8 h-8" />
                                             </div>
                                             <span className="font-semibold">Ver Álbum</span>
@@ -88,7 +89,7 @@ export default function GallerySection({ items = [] }: GallerySectionProps) {
                                 {/* Content */}
                                 <div className="p-6">
                                     <div className="flex items-center gap-3">
-                                        <div className="w-12 h-12 rounded-[20px] bg-gradient-to-br from-[var(--color-accent)] to-[var(--color-accent-light)] flex items-center justify-center text-white">
+                                        <div className="w-12 h-12 rounded-[10px] bg-gradient-to-br from-[var(--color-accent)] to-[var(--color-accent-light)] flex items-center justify-center text-white">
                                             <IconComponent className="w-6 h-6" />
                                         </div>
                                         <div>

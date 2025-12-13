@@ -59,10 +59,10 @@ export default function AdminLoginPage() {
                 transition={{ duration: 0.5 }}
                 className="relative w-full max-w-md"
             >
-                <div className="bg-white rounded-[20px] shadow-2xl p-8 md:p-10">
+                <div className="bg-white rounded-[10px] shadow-2xl p-8 md:p-10">
                     {/* Logo */}
                     <div className="text-center mb-8">
-                        <div className="relative w-20 h-20 mx-auto mb-4 rounded-[20px] overflow-hidden border-4 border-[var(--color-primary)] shadow-lg">
+                        <div className="relative w-20 h-20 mx-auto mb-4 rounded-[10px] overflow-hidden border-4 border-[var(--color-primary)] shadow-lg">
                             <Image
                                 src="/images/logo-igreja.jpg"
                                 alt="Logo"
@@ -95,7 +95,7 @@ export default function AdminLoginPage() {
                                     id="email"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
-                                    className="w-full pl-12 pr-4 py-3 rounded-[20px] border border-gray-200 focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/20 outline-none transition-all"
+                                    className="w-full pl-12 pr-4 py-3 rounded-[10px] border border-gray-200 focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/20 outline-none transition-all"
                                     placeholder="seu@email.com"
                                     required
                                 />
@@ -117,7 +117,7 @@ export default function AdminLoginPage() {
                                     id="password"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    className="w-full pl-12 pr-12 py-3 rounded-[20px] border border-gray-200 focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/20 outline-none transition-all"
+                                    className="w-full pl-12 pr-12 py-3 rounded-[10px] border border-gray-200 focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/20 outline-none transition-all"
                                     placeholder="••••••••"
                                     required
                                 />
@@ -140,7 +140,7 @@ export default function AdminLoginPage() {
                             <motion.div
                                 initial={{ opacity: 0, y: -10 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                className="p-4 rounded-[20px] bg-red-50 text-red-600 text-sm"
+                                className="p-4 rounded-[10px] bg-red-50 text-red-600 text-sm"
                             >
                                 {error}
                             </motion.div>
@@ -150,7 +150,7 @@ export default function AdminLoginPage() {
                         <button
                             type="submit"
                             disabled={isLoading}
-                            className="w-full py-3 px-6 bg-gradient-to-r from-[var(--color-accent)] to-[var(--color-accent-light)] text-white font-semibold rounded-[20px] hover:shadow-lg transition-all disabled:opacity-70 flex items-center justify-center gap-2"
+                            className="w-full py-3 px-6 bg-gradient-to-r from-[var(--color-accent)] to-[var(--color-accent-light)] text-white font-semibold rounded-[10px] hover:shadow-lg transition-all disabled:opacity-70 flex items-center justify-center gap-2"
                         >
                             {isLoading ? (
                                 <>

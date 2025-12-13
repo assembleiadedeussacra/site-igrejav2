@@ -18,6 +18,7 @@ import {
 import { api } from '@/services/api';
 import { Banner } from '@/lib/database.types';
 import { uploadImage, generateBannerImagePath, getFileExtension } from '@/lib/supabase/storage';
+import toast from 'react-hot-toast';
 import { Upload, X as XIcon } from 'lucide-react';
 
 export default function AdminBannersPage() {
@@ -59,7 +60,7 @@ export default function AdminBannersPage() {
             setBanners(data);
         } catch (error) {
             console.error('Error loading banners:', error);
-            alert('Erro ao carregar banners. Tente novamente.');
+            toast.error('Erro ao carregar banners. Tente novamente.');
         } finally {
             setIsLoading(false);
         }
@@ -161,7 +162,7 @@ export default function AdminBannersPage() {
         
         // Validate that at least one image is provided
         if (!desktopFile && !formData.image_desktop_url && !mobileFile && !formData.image_mobile_url) {
-            alert('Por favor, envie pelo menos uma imagem (desktop ou mobile).');
+            toast.error('Por favor, envie pelo menos uma imagem (desktop ou mobile).');
             return;
         }
 
@@ -219,10 +220,11 @@ export default function AdminBannersPage() {
             // For now, we'll keep the uploaded URLs as they are
 
             await loadBanners();
+            toast.success(editingBanner ? 'Banner atualizado com sucesso!' : 'Banner criado com sucesso!');
             closeModal();
         } catch (error: any) {
             console.error('Error saving banner:', error);
-            alert(`Erro ao salvar banner: ${error.message || 'Verifique os dados e tente novamente.'}`);
+            toast.error(`Erro ao salvar banner: ${error.message || 'Verifique os dados e tente novamente.'}`);
         } finally {
             setIsSaving(false);
             setUploading(null);
@@ -243,14 +245,15 @@ export default function AdminBannersPage() {
     };
 
     const deleteBanner = async (id: string) => {
-        if (!confirm('Tem certeza que deseja excluir este banner?')) return;
+        if (!confirm('Tem certeza que deseja excluir este banner? Esta ação não pode ser desfeita.')) return;
 
         try {
             setBanners((prev) => prev.filter((b) => b.id !== id)); // Optimistic
             await api.deleteBanner(id);
+            toast.success('Banner excluído com sucesso!');
         } catch (error) {
             console.error('Error deleting banner:', error);
-            alert('Erro ao excluir banner.');
+            toast.error('Erro ao excluir banner.');
             loadBanners();
         }
     };
@@ -260,7 +263,7 @@ export default function AdminBannersPage() {
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
-                    <h1 className="text-lg font-bold text-[var(--color-accent)]">
+                    <h1 className="text-2xl md:text-[28px] font-bold text-[var(--color-accent)]">
                         Gerenciar Banners
                     </h1>
                     <p className="text-[var(--color-text-secondary)]">
@@ -277,7 +280,7 @@ export default function AdminBannersPage() {
             </div>
 
             {/* Banners List */}
-            <div className="bg-white rounded-[20px] shadow-lg overflow-hidden">
+            <div className="bg-white rounded-[10px] shadow-lg overflow-hidden">
                 {isLoading ? (
                     <div className="p-12 text-center">
                         <Loader2 className="w-8 h-8 mx-auto animate-spin text-[var(--color-accent)]" />
@@ -313,12 +316,12 @@ export default function AdminBannersPage() {
                                 </button>
 
                                 {/* Position */}
-                                <span className="w-8 h-8 rounded-[20px] bg-[var(--color-accent)] text-white flex items-center justify-center text-sm font-bold">
+                                <span className="w-8 h-8 rounded-[10px] bg-[var(--color-accent)] text-white flex items-center justify-center text-sm font-bold">
                                     {index + 1}
                                 </span>
 
                                 {/* Thumbnail */}
-                                <div className="relative w-32 h-20 rounded-[20px] overflow-hidden bg-gray-100 flex-shrink-0">
+                                <div className="relative w-32 h-20 rounded-[10px] overflow-hidden bg-gray-100 flex-shrink-0">
                                     <Image
                                         src={banner.image_desktop_url}
                                         alt={banner.alt_text}
@@ -341,7 +344,7 @@ export default function AdminBannersPage() {
                                 <div className="flex items-center gap-2">
                                     <button
                                         onClick={() => toggleActive(banner.id, banner.active)}
-                                        className={`p-2 rounded-[20px] transition-colors ${banner.active
+                                        className={`p-2 rounded-[10px] transition-colors ${banner.active
                                             ? 'text-green-600 hover:bg-green-50'
                                             : 'text-gray-400 hover:bg-gray-100'
                                             }`}
@@ -355,14 +358,14 @@ export default function AdminBannersPage() {
                                     </button>
                                     <button
                                         onClick={() => openModal(banner)}
-                                        className="p-2 rounded-[20px] text-blue-600 hover:bg-blue-50 transition-colors"
+                                        className="p-2 rounded-[10px] text-blue-600 hover:bg-blue-50 transition-colors"
                                         title="Editar"
                                     >
                                         <Pencil className="w-5 h-5" />
                                     </button>
                                     <button
                                         onClick={() => deleteBanner(banner.id)}
-                                        className="p-2 rounded-[20px] text-red-600 hover:bg-red-50 transition-colors"
+                                        className="p-2 rounded-[10px] text-red-600 hover:bg-red-50 transition-colors"
                                         title="Excluir"
                                     >
                                         <Trash2 className="w-5 h-5" />
@@ -392,15 +395,15 @@ export default function AdminBannersPage() {
                             initial={{ opacity: 0, scale: 0.95 }}
                             animate={{ opacity: 1, scale: 1 }}
                             exit={{ opacity: 0, scale: 0.95 }}
-                            className="fixed inset-4 md:inset-auto md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:max-w-2xl md:w-full bg-white rounded-[20px] shadow-2xl z-50 overflow-hidden flex flex-col max-h-[90vh]"
+                            className="fixed inset-4 md:inset-auto md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:max-w-2xl md:w-full bg-white rounded-[10px] shadow-2xl z-50 overflow-hidden flex flex-col max-h-[90vh]"
                         >
                             <div className="flex items-center justify-between p-4 border-b flex-shrink-0">
-                                <h2 className="text-lg font-bold text-[var(--color-accent)]">
+                                <h2 className="text-xl md:text-[24px] font-bold text-[var(--color-accent)]">
                                     {editingBanner ? 'Editar Banner' : 'Novo Banner'}
                                 </h2>
                                 <button
                                     onClick={closeModal}
-                                    className="p-2 rounded-[20px] hover:bg-gray-100"
+                                    className="p-2 rounded-[10px] hover:bg-gray-100"
                                 >
                                     <X className="w-5 h-5" />
                                 </button>
@@ -420,10 +423,10 @@ export default function AdminBannersPage() {
                                                 const file = e.target.files?.[0] || null;
                                                 handleFileChange(file, 'desktop', setDesktopFile, setDesktopPreview);
                                             }}
-                                            className="w-full px-4 py-2 rounded-[20px] border border-gray-200 focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/20 outline-none"
+                                            className="w-full px-4 py-2 rounded-[10px] border border-gray-200 focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/20 outline-none"
                                         />
                                         {desktopPreview && (
-                                            <div className="relative w-full h-32 rounded-[20px] overflow-hidden border border-gray-200">
+                                            <div className="relative w-full h-32 rounded-[10px] overflow-hidden border border-gray-200">
                                                 <Image
                                                     src={desktopPreview}
                                                     alt="Preview desktop"
@@ -461,10 +464,10 @@ export default function AdminBannersPage() {
                                                 const file = e.target.files?.[0] || null;
                                                 handleFileChange(file, 'mobile', setMobileFile, setMobilePreview);
                                             }}
-                                            className="w-full px-4 py-2 rounded-[20px] border border-gray-200 focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/20 outline-none"
+                                            className="w-full px-4 py-2 rounded-[10px] border border-gray-200 focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/20 outline-none"
                                         />
                                         {mobilePreview && (
-                                            <div className="relative w-full h-32 rounded-[20px] overflow-hidden border border-gray-200">
+                                            <div className="relative w-full h-32 rounded-[10px] overflow-hidden border border-gray-200">
                                                 <Image
                                                     src={mobilePreview}
                                                     alt="Preview mobile"
@@ -502,10 +505,10 @@ export default function AdminBannersPage() {
                                                 const file = e.target.files?.[0] || null;
                                                 handleFileChange(file, 'logo', setLogoFile, setLogoPreview);
                                             }}
-                                            className="w-full px-4 py-2 rounded-[20px] border border-gray-200 focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/20 outline-none"
+                                            className="w-full px-4 py-2 rounded-[10px] border border-gray-200 focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/20 outline-none"
                                         />
                                         {logoPreview && (
-                                            <div className="relative w-24 h-24 rounded-[20px] overflow-hidden border border-gray-200">
+                                            <div className="relative w-24 h-24 rounded-[10px] overflow-hidden border border-gray-200">
                                                 <Image
                                                     src={logoPreview}
                                                     alt="Preview logo"
@@ -541,7 +544,7 @@ export default function AdminBannersPage() {
                                         onChange={(e) =>
                                             setFormData((p) => ({ ...p, title: e.target.value }))
                                         }
-                                        className="w-full px-4 py-2 rounded-[20px] border border-gray-200 focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/20 outline-none"
+                                        className="w-full px-4 py-2 rounded-[10px] border border-gray-200 focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/20 outline-none"
                                         placeholder="Título do banner"
                                     />
                                 </div>
@@ -557,7 +560,7 @@ export default function AdminBannersPage() {
                                             setFormData((p) => ({ ...p, description: e.target.value }))
                                         }
                                         rows={3}
-                                        className="w-full px-4 py-2 rounded-[20px] border border-gray-200 focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/20 outline-none resize-none"
+                                        className="w-full px-4 py-2 rounded-[10px] border border-gray-200 focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/20 outline-none resize-none"
                                         placeholder="Descrição do banner"
                                     />
                                 </div>
@@ -574,7 +577,7 @@ export default function AdminBannersPage() {
                                             onChange={(e) =>
                                                 setFormData((p) => ({ ...p, button1_text: e.target.value }))
                                             }
-                                            className="px-4 py-2 rounded-[20px] border border-gray-200 focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/20 outline-none"
+                                            className="px-4 py-2 rounded-[10px] border border-gray-200 focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/20 outline-none"
                                             placeholder="Texto do botão"
                                         />
                                         <input
@@ -583,7 +586,7 @@ export default function AdminBannersPage() {
                                             onChange={(e) =>
                                                 setFormData((p) => ({ ...p, button1_link: e.target.value }))
                                             }
-                                            className="px-4 py-2 rounded-[20px] border border-gray-200 focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/20 outline-none"
+                                            className="px-4 py-2 rounded-[10px] border border-gray-200 focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/20 outline-none"
                                             placeholder="Link do botão"
                                         />
                                     </div>
@@ -601,7 +604,7 @@ export default function AdminBannersPage() {
                                             onChange={(e) =>
                                                 setFormData((p) => ({ ...p, button2_text: e.target.value }))
                                             }
-                                            className="px-4 py-2 rounded-[20px] border border-gray-200 focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/20 outline-none"
+                                            className="px-4 py-2 rounded-[10px] border border-gray-200 focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/20 outline-none"
                                             placeholder="Texto do botão"
                                         />
                                         <input
@@ -610,7 +613,7 @@ export default function AdminBannersPage() {
                                             onChange={(e) =>
                                                 setFormData((p) => ({ ...p, button2_link: e.target.value }))
                                             }
-                                            className="px-4 py-2 rounded-[20px] border border-gray-200 focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/20 outline-none"
+                                            className="px-4 py-2 rounded-[10px] border border-gray-200 focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/20 outline-none"
                                             placeholder="Link do botão"
                                         />
                                     </div>
@@ -627,7 +630,7 @@ export default function AdminBannersPage() {
                                         onChange={(e) =>
                                             setFormData((p) => ({ ...p, alt_text: e.target.value }))
                                         }
-                                        className="w-full px-4 py-2 rounded-[20px] border border-gray-200 focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/20 outline-none"
+                                        className="w-full px-4 py-2 rounded-[10px] border border-gray-200 focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/20 outline-none"
                                         placeholder="Descrição da imagem"
                                         required
                                     />
@@ -644,7 +647,7 @@ export default function AdminBannersPage() {
                                         onChange={(e) =>
                                             setFormData((p) => ({ ...p, link: e.target.value }))
                                         }
-                                        className="w-full px-4 py-2 rounded-[20px] border border-gray-200 focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/20 outline-none"
+                                        className="w-full px-4 py-2 rounded-[10px] border border-gray-200 focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/20 outline-none"
                                         placeholder="https://..."
                                     />
                                 </div>

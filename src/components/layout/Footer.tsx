@@ -87,7 +87,7 @@ export default function Footer({ settings }: FooterProps) {
                         className="lg:col-span-1"
                     >
                         <Link href="/" className="inline-flex items-center gap-3 mb-6">
-                            <div className="relative w-14 h-14 rounded-[20px] overflow-hidden border-2 border-white/30 shadow-lg">
+                            <div className="relative w-14 h-14 rounded-[10px] overflow-hidden border-2 border-white/30 shadow-lg">
                                 <Image
                                     src="/images/logo-igreja.jpg"
                                     alt="Logo Assembleia de Deus Missão"
@@ -242,7 +242,7 @@ export default function Footer({ settings }: FooterProps) {
             {/* Back to Top Button */}
             <button
                 onClick={scrollToTop}
-                className="fixed bottom-6 right-6 w-12 h-12 bg-[var(--color-primary)] text-[var(--color-accent)] rounded-[20px] shadow-lg flex items-center justify-center hover:scale-110 transition-transform z-40"
+                className="fixed bottom-6 right-6 w-12 h-12 bg-[var(--color-primary)] text-[var(--color-accent)] rounded-[10px] shadow-lg flex items-center justify-center hover:scale-110 transition-transform z-40"
                 aria-label="Voltar ao topo"
             >
                 <ChevronUp className="w-6 h-6" />

@@ -59,7 +59,7 @@ export default async function BlogPage() {
                 {/* Hero Section */}
                 <section className="bg-gradient-to-br from-[var(--color-accent)] to-[var(--color-accent-light)] py-16 md:py-24">
                     <div className="container-custom text-center text-white">
-                        <div className="w-16 h-16 mx-auto mb-6 rounded-[20px] bg-white/10 flex items-center justify-center">
+                        <div className="w-16 h-16 mx-auto mb-6 rounded-[10px] bg-white/10 flex items-center justify-center">
                             <FileText className="w-8 h-8" />
                         </div>
                         <h1 className="text-4xl md:text-5xl font-bold mb-4">Blog</h1>
@@ -79,7 +79,7 @@ export default async function BlogPage() {
                                 <input
                                     type="text"
                                     placeholder="Buscar artigos..."
-                                    className="w-full pl-12 pr-4 py-3 rounded-[20px] border border-gray-200 focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/20 outline-none transition-all"
+                                    className="w-full pl-12 pr-4 py-3 rounded-[10px] border border-gray-200 focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/20 outline-none transition-all"
                                 />
                             </div>
                         </div>
@@ -93,7 +93,7 @@ export default async function BlogPage() {
                             {posts.map((post) => (
                                 <article
                                     key={post.id}
-                                    className="bg-white rounded-[20px] overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 card-hover group"
+                                    className="bg-white rounded-[10px] overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 card-hover group"
                                 >
                                     {post.cover_image && (
                                         <div className="relative h-48 overflow-hidden">
@@ -103,6 +103,7 @@ export default async function BlogPage() {
                                                 fill
                                                 className="object-cover group-hover:scale-105 transition-transform duration-500"
                                                 sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                                                loading="lazy"
                                             />
                                             <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
                                             <div className="absolute bottom-4 left-4 right-4">

@@ -34,7 +34,7 @@ export default function VerseSection({ verse }: VerseSectionProps) {
             await navigator.clipboard.writeText(
                 `"${verse.text}" - ${verse.reference}\n${verse.bible_link || ''}`
             );
-            alert('Versículo copiado para a área de transferência!');
+            // Feedback visual já existe no botão de compartilhar
         }
     };
 
@@ -64,10 +64,10 @@ export default function VerseSection({ verse }: VerseSectionProps) {
                     transition={{ delay: 0.2 }}
                     className="max-w-4xl mx-auto"
                 >
-                    <div className="relative bg-gradient-to-br from-[var(--color-primary)]/20 via-white to-[var(--color-primary)]/10 rounded-[20px] p-8 md:p-12 shadow-xl overflow-hidden">
+                    <div className="relative bg-gradient-to-br from-[var(--color-primary)]/20 via-white to-[var(--color-primary)]/10 rounded-[10px] p-8 md:p-12 shadow-xl overflow-hidden">
                         {/* Decorative Elements */}
-                        <div className="absolute top-0 right-0 w-40 h-40 bg-[var(--color-accent)]/5 rounded-[20px] -translate-y-1/2 translate-x-1/2" />
-                        <div className="absolute bottom-0 left-0 w-32 h-32 bg-[var(--color-primary)]/30 rounded-[20px] translate-y-1/2 -translate-x-1/2" />
+                        <div className="absolute top-0 right-0 w-40 h-40 bg-[var(--color-accent)]/5 rounded-[10px] -translate-y-1/2 translate-x-1/2" />
+                        <div className="absolute bottom-0 left-0 w-32 h-32 bg-[var(--color-primary)]/30 rounded-[10px] translate-y-1/2 -translate-x-1/2" />
 
                         {/* Quote Icon */}
                         <div className="absolute top-6 left-6 text-[var(--color-accent)]/10">
@@ -110,11 +110,11 @@ export default function VerseSection({ verse }: VerseSectionProps) {
                                         href={verse.bible_link}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="inline-flex items-center gap-2 px-6 py-3 bg-[var(--color-accent)] text-white rounded-[30px] font-medium hover:bg-[var(--color-accent-light)] transition-colors shadow-lg"
+                                        className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-[var(--color-accent)] text-white rounded-[30px] font-medium hover:bg-[var(--color-accent-light)] transition-colors shadow-lg"
                                     >
-                                        <BookOpen className="w-5 h-5" />
-                                        Ler na Bíblia
-                                        <ExternalLink className="w-4 h-4" />
+                                        <BookOpen className="w-5 h-5 text-white" />
+                                        <span className="text-white">Ler na Bíblia</span>
+                                        <ExternalLink className="w-4 h-4 text-white" />
                                     </a>
                                 )}
 

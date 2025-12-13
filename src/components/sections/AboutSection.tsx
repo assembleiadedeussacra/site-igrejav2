@@ -115,9 +115,9 @@ export default function AboutSection({ leaders = [] }: AboutSectionProps) {
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
                                 transition={{ delay: index * 0.1 }}
-                                className="bg-white rounded-[20px] p-6 shadow-lg hover:shadow-xl transition-shadow group"
+                                className="bg-white rounded-[10px] p-6 shadow-lg hover:shadow-xl transition-shadow group"
                             >
-                                <div className="w-12 h-12 rounded-[20px] bg-gradient-to-br from-[var(--color-accent)] to-[var(--color-accent-light)] flex items-center justify-center mb-4 text-white group-hover:scale-110 transition-transform">
+                                <div className="w-12 h-12 rounded-[10px] bg-gradient-to-br from-[var(--color-accent)] to-[var(--color-accent-light)] flex items-center justify-center mb-4 text-white group-hover:scale-110 transition-transform">
                                     <feature.icon className="w-6 h-6" />
                                 </div>
                                 <h3 className="font-bold text-[var(--color-accent)] mb-2">
@@ -154,14 +154,14 @@ export default function AboutSection({ leaders = [] }: AboutSectionProps) {
                         <div className="hidden md:flex items-center gap-2">
                             <button
                                 onClick={() => swiperRef.current?.slidePrev()}
-                                className="w-10 h-10 rounded-[20px] bg-white shadow-md flex items-center justify-center text-[var(--color-accent)] hover:bg-[var(--color-accent)] hover:text-white transition-colors"
+                                className="w-10 h-10 rounded-[10px] bg-white shadow-md flex items-center justify-center text-[var(--color-accent)] hover:bg-[var(--color-accent)] hover:text-white transition-colors"
                                 aria-label="Anterior"
                             >
                                 <ChevronLeft className="w-5 h-5" />
                             </button>
                             <button
                                 onClick={() => swiperRef.current?.slideNext()}
-                                className="w-10 h-10 rounded-[20px] bg-white shadow-md flex items-center justify-center text-[var(--color-accent)] hover:bg-[var(--color-accent)] hover:text-white transition-colors"
+                                className="w-10 h-10 rounded-[10px] bg-white shadow-md flex items-center justify-center text-[var(--color-accent)] hover:bg-[var(--color-accent)] hover:text-white transition-colors"
                                 aria-label="Próximo"
                             >
                                 <ChevronRight className="w-5 h-5" />
@@ -199,7 +199,7 @@ export default function AboutSection({ leaders = [] }: AboutSectionProps) {
                                     whileInView={{ opacity: 1, scale: 1 }}
                                     viewport={{ once: true }}
                                     transition={{ delay: index * 0.1 }}
-                                    className="bg-white rounded-[20px] overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 group"
+                                    className="bg-white rounded-[10px] overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 group"
                                 >
                                     {/* Image */}
                                     <div className="relative h-56 md:h-64 overflow-hidden">

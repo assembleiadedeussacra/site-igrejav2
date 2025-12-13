@@ -30,13 +30,13 @@
   --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
   --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
   
-  /* Border Radius - Padronizado para 20px (elementos), 30px (botões) */
-  --radius-sm: 20px;
-  --radius-md: 20px;
+  /* Border Radius - Padronizado para 10px (elementos), 30px (botões) */
+  --radius-sm: 10px;
+  --radius-md: 10px;
   --radius-lg: 30px;
-  --radius-xl: 20px;
-  --radius-2xl: 20px;
-  --radius-standard: 20px; /* Padrão para todas as bordas arredondadas */
+  --radius-xl: 10px;
+  --radius-2xl: 10px;
+  --radius-standard: 10px; /* Padrão para todas as bordas arredondadas */
   --radius-button: 30px; /* Específico para botões */
   
   /* Transitions */
@@ -77,12 +77,12 @@ body {
 
 ::-webkit-scrollbar-track {
   background: var(--color-primary-light);
-  border-radius: 20px;
+  border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb {
   background: var(--color-accent);
-  border-radius: 20px;
+  border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -239,7 +239,7 @@ img {
   background: rgba(255, 255, 255, 0.9);
   width: 44px !important;
   height: 44px !important;
-  border-radius: 20px;
+  border-radius: 10px;
   box-shadow: var(--shadow-md);
 }
 
@@ -347,7 +347,7 @@ img {
   width: 60px;
   height: 4px;
   background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-accent) 100%);
-  border-radius: 20px;
+  border-radius: 10px;
 }
 
 /* Quote Decoration */
@@ -372,7 +372,7 @@ img {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  border-radius: 20px;
+  border-radius: 10px;
   background: var(--color-primary-light);
   color: var(--color-accent);
 }
@@ -418,7 +418,7 @@ img {
   display: block;
 }
 
-/* Responsive Typography */
+/* Responsive Typography - Site Público */
 h1 {
   font-size: clamp(2rem, 5vw, 3.5rem);
   line-height: 1.1;
@@ -434,9 +434,107 @@ h3 {
   line-height: 1.3;
 }
 
+/* Tipografia Admin - Sobrescreve regras globais apenas no painel */
+/* Aplicado via classe específica para garantir prioridade */
+/* Exclui H1 do sidebar (logo) */
+.admin-panel h1:not(aside h1):not([class*="sidebar"]),
+.admin-panel h1[class*="text-"]:not(aside h1):not([class*="sidebar"]),
+.admin-panel h1[class*="font-bold"]:not(aside h1):not([class*="sidebar"]),
+main.admin-panel h1,
+main.admin-panel h1[class*="text-"],
+div.admin-panel h1:not(aside h1),
+div.admin-panel h1[class*="text-"]:not(aside h1) {
+  font-size: 28px !important;
+  line-height: 1.2 !important;
+  font-weight: 700 !important;
+}
+
+/* Garantir que H1 do sidebar não seja afetado */
+aside h1,
+aside[class*="bg-"] h1 {
+  font-size: inherit !important;
+  line-height: inherit !important;
+}
+
+.admin-panel h2,
+.admin-panel h2[class*="text-"],
+.admin-panel h2[class*="font-bold"],
+main.admin-panel h2,
+main.admin-panel h2[class*="text-"],
+div.admin-panel h2,
+div.admin-panel h2[class*="text-"] {
+  font-size: 24px !important;
+  line-height: 1.3 !important;
+  font-weight: 700 !important;
+}
+
+/* Responsive: manter proporção em mobile */
+@media (max-width: 768px) {
+  .admin-panel h1,
+  .admin-panel h1[class*="text-"] {
+    font-size: 24px !important;
+  }
+  
+  .admin-panel h2,
+  .admin-panel h2[class*="text-"] {
+    font-size: 20px !important;
+  }
+}
+
 /* Print Styles */
 @media print {
   .no-print {
     display: none !important;
   }
+}
+
+/* TipTap Editor Styles */
+.ProseMirror {
+  outline: none;
+}
+
+.ProseMirror p {
+  margin: 0.75rem 0;
+}
+
+.ProseMirror h1 {
+  font-size: 2rem;
+  font-weight: bold;
+  margin: 1rem 0;
+}
+
+.ProseMirror h2 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 0.875rem 0;
+}
+
+.ProseMirror ul,
+.ProseMirror ol {
+  padding-left: 1.5rem;
+  margin: 0.75rem 0;
+}
+
+.ProseMirror li {
+  margin: 0.25rem 0;
+}
+
+.ProseMirror a {
+  color: var(--color-accent);
+  text-decoration: underline;
+}
+
+.ProseMirror img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 10px;
+  margin: 1rem 0;
+}
+
+.ProseMirror strong {
+  font-weight: bold;
+}
+
+.ProseMirror em {
+  font-style: italic;
 }

@@ -69,7 +69,7 @@ export default function Header({ settings }: HeaderProps) {
                     <div className="flex items-center justify-between">
                         {/* Logo */}
                         <Link href="/" className="flex items-center gap-3 group">
-                            <div className="relative w-12 h-12 rounded-[20px] overflow-hidden transition-transform group-hover:scale-105">
+                            <div className="relative w-12 h-12 rounded-[10px] overflow-hidden transition-transform group-hover:scale-105">
                                 <Image
                                     src="/images/logo-igreja.jpg"
                                     alt="Logo Assembleia de Deus Missão Sacramento"
@@ -95,7 +95,7 @@ export default function Header({ settings }: HeaderProps) {
                                 <Link
                                     key={link.href}
                                     href={link.href}
-                                    className="px-4 py-2 rounded-[20px] font-medium transition-all hover:bg-[var(--color-accent)]/10 text-[var(--color-accent)]"
+                                    className="px-4 py-2 rounded-[10px] font-medium transition-all hover:bg-[var(--color-accent)]/10 text-[var(--color-accent)]"
                                 >
                                     {link.label}
                                 </Link>
@@ -108,7 +108,7 @@ export default function Header({ settings }: HeaderProps) {
                                 onMouseLeave={() => setIsDropdownOpen(false)}
                             >
                                 <button
-                                    className="flex items-center gap-1 px-4 py-2 rounded-[20px] font-medium transition-all hover:bg-[var(--color-accent)]/10 text-[var(--color-accent)]"
+                                    className="flex items-center gap-1 px-4 py-2 rounded-[10px] font-medium transition-all hover:bg-[var(--color-accent)]/10 text-[var(--color-accent)]"
                                 >
                                     <BookOpen className="w-4 h-4" />
                                     Conhecimento
@@ -125,7 +125,7 @@ export default function Header({ settings }: HeaderProps) {
                                             animate={{ opacity: 1, y: 0 }}
                                             exit={{ opacity: 0, y: 10 }}
                                             transition={{ duration: 0.2 }}
-                                            className="absolute top-full left-0 mt-2 w-56 bg-white rounded-[20px] shadow-xl overflow-hidden border border-[var(--color-primary)]/20"
+                                            className="absolute top-full left-0 mt-2 w-56 bg-white rounded-[10px] shadow-xl overflow-hidden border border-[var(--color-primary)]/20"
                                         >
                                             {knowledgeLinks.map((link) => (
                                                 <Link
@@ -146,7 +146,7 @@ export default function Header({ settings }: HeaderProps) {
                                 <Link
                                     key={link.href}
                                     href={link.href}
-                                    className="px-4 py-2 rounded-[20px] font-medium transition-all hover:bg-[var(--color-accent)]/10 text-[var(--color-accent)]"
+                                    className="px-4 py-2 rounded-[10px] font-medium transition-all hover:bg-[var(--color-accent)]/10 text-[var(--color-accent)]"
                                 >
                                     {link.label}
                                 </Link>
@@ -163,7 +163,7 @@ export default function Header({ settings }: HeaderProps) {
                         {/* Mobile Menu Toggle */}
                         <button
                             onClick={() => setIsMobileMenuOpen(true)}
-                            className="lg:hidden p-2 rounded-[20px] transition-colors text-[var(--color-accent)] hover:bg-[var(--color-accent)]/10"
+                            className="lg:hidden p-2 rounded-[10px] transition-colors text-[var(--color-accent)] hover:bg-[var(--color-accent)]/10"
                             aria-label="Abrir menu"
                         >
                             <Menu className="w-6 h-6" />
@@ -197,7 +197,7 @@ export default function Header({ settings }: HeaderProps) {
                                 {/* Header */}
                                 <div className="flex items-center justify-between p-4 border-b border-[var(--color-primary)]/20">
                                     <div className="flex items-center gap-3">
-                                        <div className="relative w-10 h-10 rounded-[20px] overflow-hidden">
+                                        <div className="relative w-10 h-10 rounded-[10px] overflow-hidden">
                                             <Image
                                                 src="/images/logo-igreja.jpg"
                                                 alt="Logo"
@@ -211,7 +211,7 @@ export default function Header({ settings }: HeaderProps) {
                                     </div>
                                     <button
                                         onClick={() => setIsMobileMenuOpen(false)}
-                                        className="p-2 rounded-[20px] text-[var(--color-accent)] hover:bg-[var(--color-accent)]/10"
+                                        className="p-2 rounded-[10px] text-[var(--color-accent)] hover:bg-[var(--color-accent)]/10"
                                         aria-label="Fechar menu"
                                     >
                                         <X className="w-6 h-6" />

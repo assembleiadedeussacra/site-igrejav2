@@ -76,7 +76,7 @@ export default function ScheduleSection({ events = [] }: ScheduleSectionProps) {
                     viewport={{ once: true }}
                     className="mb-12"
                 >
-                    <div className="bg-white rounded-[20px] shadow-lg overflow-hidden">
+                    <div className="bg-white rounded-[10px] shadow-lg overflow-hidden">
                         <div className="aspect-[16/14] md:aspect-[21/9]">
                             <iframe
                                 src={googleCalendarUrl}
@@ -120,11 +120,11 @@ export default function ScheduleSection({ events = [] }: ScheduleSectionProps) {
                                     whileInView={{ opacity: 1, y: 0 }}
                                     viewport={{ once: true }}
                                     transition={{ delay: index * 0.1 }}
-                                    className="bg-white rounded-[20px] p-6 shadow-lg hover:shadow-xl transition-all duration-300 card-hover group"
+                                    className="bg-white rounded-[10px] p-6 shadow-lg hover:shadow-xl transition-all duration-300 card-hover group"
                                 >
                                     {/* Badge */}
                                     <span
-                                        className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-[20px] text-xs font-semibold ${config.badge} mb-4`}
+                                        className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-[10px] text-xs font-semibold ${config.badge} mb-4`}
                                     >
                                         <IconComponent className="w-3.5 h-3.5" />
                                         {config.label}
