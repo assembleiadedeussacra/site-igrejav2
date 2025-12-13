@@ -76,7 +76,7 @@ export default function Header({ settings }: HeaderProps) {
                         <Link href="/" className="flex items-center gap-3 group">
                             <div className="relative w-12 h-12 rounded-[10px] overflow-hidden transition-transform group-hover:scale-105">
                                 <Image
-                                    src="/images/logo-igreja.jpg"
+                                    src="/images/logo-igreja.png"
                                     alt="Logo Assembleia de Deus Missão Sacramento"
                                     fill
                                     sizes="48px"
@@ -242,7 +242,7 @@ export default function Header({ settings }: HeaderProps) {
                                     <div className="flex items-center gap-3">
                                         <div className="relative w-10 h-10 rounded-[10px] overflow-hidden">
                                             <Image
-                                                src="/images/logo-igreja.jpg"
+                                                src="/images/logo-igreja.png"
                                                 alt="Logo"
                                                 fill
                                                 className="object-contain"

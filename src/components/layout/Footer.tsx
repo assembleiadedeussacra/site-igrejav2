@@ -89,7 +89,7 @@ export default function Footer({ settings }: FooterProps) {
                         <Link href="/" className="inline-flex items-center gap-3 mb-6">
                             <div className="relative w-14 h-14 rounded-[10px] overflow-hidden border-2 border-white/30 shadow-lg">
                                 <Image
-                                    src="/images/logo-igreja.jpg"
+                                    src="/images/logo-igreja.png"
                                     alt="Logo Assembleia de Deus Missão"
                                     fill
                                     className="object-cover"

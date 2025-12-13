@@ -76,6 +76,17 @@ export const metadata: Metadata = {
     canonical: process.env.NEXT_PUBLIC_SITE_URL || 'https://assembleiasacramento.vercel.app',
   },
   category: 'religion',
+  icons: {
+    icon: [
+      { url: '/images/logo-igreja.png', type: 'image/png' },
+      { url: '/images/logo-igreja.png', sizes: '32x32', type: 'image/png' },
+      { url: '/images/logo-igreja.png', sizes: '16x16', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/images/logo-igreja.png', sizes: '180x180', type: 'image/png' },
+    ],
+    shortcut: '/images/logo-igreja.png',
+  },
 };
 
 export default function RootLayout({
@@ -86,8 +97,9 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" className={inter.variable}>
       <head>
-        <link rel="icon" href="/images/logo-igreja.jpg" type="image/jpeg" sizes="any" />
-        <link rel="apple-touch-icon" href="/images/logo-igreja.jpg" />
+        <link rel="icon" href="/images/logo-igreja.png" type="image/png" />
+        <link rel="shortcut icon" href="/images/logo-igreja.png" type="image/png" />
+        <link rel="apple-touch-icon" href="/images/logo-igreja.png" />
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#232d82" />
         <meta name="mobile-web-app-capable" content="yes" />
@@ -112,7 +124,7 @@ export default function RootLayout({
                 addressCountry: 'BR',
               },
               url: process.env.NEXT_PUBLIC_SITE_URL || 'https://assembleiasacramento.vercel.app',
-              logo: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://assembleiasacramento.vercel.app'}/images/logo-igreja.jpg`,
+              logo: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://assembleiasacramento.vercel.app'}/images/logo-igreja.png`,
               sameAs: ['https://www.instagram.com/assembleiasacramento/'],
               telephone: '+55-34-98432-7019',
               openingHoursSpecification: [

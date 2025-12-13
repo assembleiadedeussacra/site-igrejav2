@@ -64,7 +64,7 @@ export default function AdminLoginPage() {
                     <div className="text-center mb-8">
                         <div className="relative w-20 h-20 mx-auto mb-4 rounded-[10px] overflow-hidden border-4 border-[var(--color-primary)] shadow-lg">
                             <Image
-                                src="/images/logo-igreja.jpg"
+                                src="/images/logo-igreja.png"
                                 alt="Logo"
                                 fill
                                 className="object-cover"

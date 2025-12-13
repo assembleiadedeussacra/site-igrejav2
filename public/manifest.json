@@ -12,15 +12,15 @@
   "dir": "ltr",
   "icons": [
     {
-      "src": "/images/logo-igreja.jpg",
+      "src": "/images/logo-igreja.png",
       "sizes": "192x192",
-      "type": "image/jpeg",
+      "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/images/logo-igreja.jpg",
+      "src": "/images/logo-igreja.png",
       "sizes": "512x512",
-      "type": "image/jpeg",
+      "type": "image/png",
       "purpose": "any maskable"
     }
   ],
@@ -32,14 +32,14 @@
       "short_name": "Blog",
       "description": "Acessar artigos e estudos",
       "url": "/blog",
-      "icons": [{ "src": "/images/logo-igreja.jpg", "sizes": "96x96" }]
+      "icons": [{ "src": "/images/logo-igreja.png", "sizes": "96x96" }]
     },
     {
       "name": "Estudos",
       "short_name": "Estudos",
       "description": "Acessar estudos bíblicos",
       "url": "/estudos",
-      "icons": [{ "src": "/images/logo-igreja.jpg", "sizes": "96x96" }]
+      "icons": [{ "src": "/images/logo-igreja.png", "sizes": "96x96" }]
     }
   ],
   "share_target": {

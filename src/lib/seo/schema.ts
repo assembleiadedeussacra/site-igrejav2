@@ -32,7 +32,7 @@ export function generateArticleSchema(post: Post): object {
             name: 'Assembleia de Deus Missão - Sacramento/MG',
             logo: {
                 '@type': 'ImageObject',
-                url: `${SITE_URL}/images/logo-igreja.jpg`,
+                url: `${SITE_URL}/images/logo-igreja.png`,
             },
         },
         mainEntityOfPage: {

@@ -143,7 +143,7 @@ export default function AdminLayout({
                         <Link href="/admin" className="flex items-center gap-3 flex-1 min-w-0">
                             <div className="relative w-12 h-12 rounded-[10px] overflow-hidden border-2 border-white/30 flex-shrink-0">
                                 <Image
-                                    src="/images/logo-igreja.jpg"
+                                    src="/images/logo-igreja.png"
                                     alt="Logo"
                                     fill
                                     className="object-cover"
