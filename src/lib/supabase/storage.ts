@@ -31,6 +31,10 @@ export async function uploadImage(file: File, path: string): Promise<string> {
         });
 
     if (error) {
+        // Mensagem mais clara para erro de bucket não encontrado
+        if (error.message?.includes('Bucket not found') || error.message?.includes('not found')) {
+            throw new Error(`Bucket '${BUCKET_NAME}' não encontrado. Por favor, execute o script 'create_bucket_banners.sql' no Supabase Dashboard.`);
+        }
         throw new Error(`Upload failed: ${error.message}`);
     }
 

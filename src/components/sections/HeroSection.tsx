@@ -18,6 +18,66 @@ interface HeroSectionProps {
     banners: Banner[];
 }
 
+// Helper function to get button styles
+const getButtonStyles = (
+    banner: Banner,
+    buttonNumber: 1 | 2
+): {
+    className: string;
+    style: React.CSSProperties;
+} => {
+    const isButton1 = buttonNumber === 1;
+    const prefix = isButton1 ? 'button1' : 'button2';
+    
+    // Get values or use defaults
+    const bgColor = banner[`${prefix}_bg_color` as keyof Banner] as string || (isButton1 ? '#ffffff' : 'rgba(255, 255, 255, 0.1)');
+    const textColor = banner[`${prefix}_text_color` as keyof Banner] as string || (isButton1 ? '#1a1a1a' : '#ffffff');
+    const hoverBgColor = banner[`${prefix}_hover_bg_color` as keyof Banner] as string || (isButton1 ? '#f0f0f0' : 'rgba(255, 255, 255, 0.2)');
+    const hoverTextColor = banner[`${prefix}_hover_text_color` as keyof Banner] as string || textColor;
+    const size = (banner[`${prefix}_size` as keyof Banner] as 'sm' | 'md' | 'lg') || 'md';
+    const style = (banner[`${prefix}_style` as keyof Banner] as 'solid' | 'outline' | 'ghost') || (isButton1 ? 'solid' : 'outline');
+    
+    // Size classes
+    const sizeClasses = {
+        sm: 'px-4 py-2 text-sm',
+        md: 'px-8 py-4 text-base',
+        lg: 'px-12 py-6 text-lg',
+    };
+    
+    // Base classes (border-radius será aplicado via inline style)
+    const baseClasses = 'inline-flex items-center justify-center gap-2 font-semibold transition-all';
+    
+    // Style-specific classes
+    let styleClasses = '';
+    if (style === 'solid') {
+        styleClasses = 'shadow-lg hover:shadow-xl';
+    } else if (style === 'outline') {
+        styleClasses = 'border-2 backdrop-blur-sm';
+    } else if (style === 'ghost') {
+        styleClasses = 'bg-transparent';
+    }
+    
+    // Get border radius
+    const borderRadius = (banner[`${prefix}_border_radius` as keyof Banner] as number) || 10;
+    
+    const className = `${baseClasses} ${sizeClasses[size]} ${styleClasses}`;
+    
+    // Inline styles
+    const inlineStyle: React.CSSProperties & {
+        '--hover-bg'?: string;
+        '--hover-text'?: string;
+    } = {
+        backgroundColor: style === 'ghost' ? 'transparent' : bgColor,
+        color: textColor,
+        borderColor: style === 'outline' ? (bgColor.includes('rgba') ? bgColor : `${bgColor}80`) : 'transparent',
+        borderRadius: `${borderRadius}px`,
+        '--hover-bg': hoverBgColor,
+        '--hover-text': hoverTextColor,
+    };
+    
+    return { className, style: inlineStyle };
+};
+
 export default function HeroSection({ banners = [] }: HeroSectionProps) {
     const [isMobile, setIsMobile] = useState(false);
     const [activeIndex, setActiveIndex] = useState(0);
@@ -70,7 +130,43 @@ export default function HeroSection({ banners = [] }: HeroSectionProps) {
                                     sizes="100vw"
                                 />
                                 {/* Gradient Overlay */}
-                                <div className="absolute inset-0 bg-gradient-to-b from-[var(--color-accent)]/40 via-[var(--color-accent)]/30 to-[var(--color-accent)]/80" />
+                                {(() => {
+                                    const opacity = banner.overlay_opacity || 50;
+                                    const overlayColor = banner.overlay_color || '#232d82';
+                                    
+                                    // Converter cor hex para RGB
+                                    const hexToRgb = (hex: string) => {
+                                        const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+                                        return result ? {
+                                            r: parseInt(result[1], 16),
+                                            g: parseInt(result[2], 16),
+                                            b: parseInt(result[3], 16)
+                                        } : { r: 35, g: 45, b: 130 }; // fallback para cor padrão
+                                    };
+                                    
+                                    const rgb = hexToRgb(overlayColor);
+                                    
+                                    // Converter 0-100 para 0-1 e aplicar nas opacidades do gradient
+                                    const opacityValue = opacity / 100;
+                                    // Topo: 40% da opacidade configurada
+                                    const fromOpacity = 0.4 * opacityValue;
+                                    // Meio: 30% da opacidade configurada
+                                    const viaOpacity = 0.3 * opacityValue;
+                                    // Base: 80% da opacidade configurada
+                                    const toOpacity = 0.8 * opacityValue;
+                                    
+                                    return (
+                                        <div 
+                                            className="absolute inset-0"
+                                            style={{
+                                                background: `linear-gradient(to bottom, 
+                                                    rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${fromOpacity}) 0%, 
+                                                    rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${viaOpacity}) 50%, 
+                                                    rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${toOpacity}) 100%)`
+                                            }}
+                                        />
+                                    );
+                                })()}
                             </div>
                         </SwiperSlide>
                     ))}
@@ -172,22 +268,79 @@ export default function HeroSection({ banners = [] }: HeroSectionProps) {
                                         transition={{ delay: 0.5, duration: 0.5 }}
                                         className="flex flex-col sm:flex-row gap-4 justify-center"
                                     >
-                                        {hasButton1 && (
-                                            <Link
-                                                href={currentBanner.button1_link!}
-                                                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-[var(--color-primary)] text-[var(--color-accent)] font-semibold rounded-[30px] hover:bg-white transition-all shadow-lg hover:shadow-xl"
-                                            >
-                                                {currentBanner.button1_text}
-                                            </Link>
-                                        )}
-                                        {hasButton2 && (
-                                            <Link
-                                                href={currentBanner.button2_link!}
-                                                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white/10 backdrop-blur-sm text-white font-semibold rounded-[30px] border-2 border-white/30 hover:bg-white/20 transition-all"
-                                            >
-                                                {currentBanner.button2_text}
-                                            </Link>
-                                        )}
+                                        {hasButton1 && (() => {
+                                            const buttonStyles = getButtonStyles(currentBanner, 1);
+                                            const prefix = 'button1';
+                                            const bgColor = currentBanner[`${prefix}_bg_color` as keyof Banner] as string || '#ffffff';
+                                            const textColor = currentBanner[`${prefix}_text_color` as keyof Banner] as string || '#1a1a1a';
+                                            const hoverBgColor = currentBanner[`${prefix}_hover_bg_color` as keyof Banner] as string || '#f0f0f0';
+                                            const hoverTextColor = currentBanner[`${prefix}_hover_text_color` as keyof Banner] as string || textColor;
+                                            const style = (currentBanner[`${prefix}_style` as keyof Banner] as 'solid' | 'outline' | 'ghost') || 'solid';
+                                            const openNewTab = currentBanner.button1_open_new_tab || false;
+                                            
+                                            return (
+                                                <Link
+                                                    href={currentBanner.button1_link!}
+                                                    className={buttonStyles.className}
+                                                    style={buttonStyles.style}
+                                                    target={openNewTab ? '_blank' : undefined}
+                                                    rel={openNewTab ? 'noopener noreferrer' : undefined}
+                                                    onMouseEnter={(e) => {
+                                                        const target = e.currentTarget;
+                                                        target.style.backgroundColor = style === 'ghost' ? 'transparent' : hoverBgColor;
+                                                        target.style.color = hoverTextColor;
+                                                    }}
+                                                    onMouseLeave={(e) => {
+                                                        const target = e.currentTarget;
+                                                        target.style.backgroundColor = style === 'ghost' ? 'transparent' : bgColor;
+                                                        target.style.color = textColor;
+                                                    }}
+                                                >
+                                                    {currentBanner.button1_text}
+                                                </Link>
+                                            );
+                                        })()}
+                                        {hasButton2 && (() => {
+                                            const globalStyle = currentBanner.buttons_global_style || 'individual';
+                                            const buttonStyles = globalStyle === 'unified' 
+                                                ? getButtonStyles(currentBanner, 1) 
+                                                : getButtonStyles(currentBanner, 2);
+                                            
+                                            const prefix = globalStyle === 'unified' ? 'button1' : 'button2';
+                                            const bgColor = currentBanner[`${prefix}_bg_color` as keyof Banner] as string || (globalStyle === 'unified' ? '#ffffff' : 'rgba(255, 255, 255, 0.1)');
+                                            const textColor = currentBanner[`${prefix}_text_color` as keyof Banner] as string || (globalStyle === 'unified' ? '#1a1a1a' : '#ffffff');
+                                            const hoverBgColor = currentBanner[`${prefix}_hover_bg_color` as keyof Banner] as string || (globalStyle === 'unified' ? '#f0f0f0' : 'rgba(255, 255, 255, 0.2)');
+                                            const hoverTextColor = currentBanner[`${prefix}_hover_text_color` as keyof Banner] as string || textColor;
+                                            const style = (currentBanner[`${prefix}_style` as keyof Banner] as 'solid' | 'outline' | 'ghost') || (globalStyle === 'unified' ? 'solid' : 'outline');
+                                            const openNewTab = currentBanner.button2_open_new_tab || false;
+                                            
+                                            // Se unificado, usar border-radius do botão 1, senão usar do botão 2
+                                            const borderRadius = globalStyle === 'unified' 
+                                                ? (currentBanner.button1_border_radius || 10)
+                                                : (currentBanner.button2_border_radius || 10);
+                                            
+                                            return (
+                                                <Link
+                                                    href={currentBanner.button2_link!}
+                                                    className={buttonStyles.className}
+                                                    style={{ ...buttonStyles.style, borderRadius: `${borderRadius}px` }}
+                                                    target={openNewTab ? '_blank' : undefined}
+                                                    rel={openNewTab ? 'noopener noreferrer' : undefined}
+                                                    onMouseEnter={(e) => {
+                                                        const target = e.currentTarget;
+                                                        target.style.backgroundColor = style === 'ghost' ? 'transparent' : hoverBgColor;
+                                                        target.style.color = hoverTextColor;
+                                                    }}
+                                                    onMouseLeave={(e) => {
+                                                        const target = e.currentTarget;
+                                                        target.style.backgroundColor = style === 'ghost' ? 'transparent' : bgColor;
+                                                        target.style.color = textColor;
+                                                    }}
+                                                >
+                                                    {currentBanner.button2_text}
+                                                </Link>
+                                            );
+                                        })()}
                                     </motion.div>
                                 ) : (
                                     <motion.div

@@ -46,8 +46,27 @@ export default function AdminBannersPage() {
         description: '',
         button1_text: '',
         button1_link: '',
+        button1_bg_color: '#ffffff',
+        button1_text_color: '#1a1a1a',
+        button1_hover_bg_color: '#f0f0f0',
+        button1_hover_text_color: '#1a1a1a',
+        button1_size: 'md' as 'sm' | 'md' | 'lg',
+        button1_style: 'solid' as 'solid' | 'outline' | 'ghost',
+        button1_open_new_tab: false,
+        button1_border_radius: 10,
         button2_text: '',
         button2_link: '',
+        button2_bg_color: 'rgba(255, 255, 255, 0.1)',
+        button2_text_color: '#ffffff',
+        button2_hover_bg_color: 'rgba(255, 255, 255, 0.2)',
+        button2_hover_text_color: '#ffffff',
+        button2_size: 'md' as 'sm' | 'md' | 'lg',
+        button2_style: 'outline' as 'solid' | 'outline' | 'ghost',
+        button2_open_new_tab: false,
+        button2_border_radius: 10,
+        buttons_global_style: 'individual' as 'individual' | 'unified',
+        overlay_opacity: 50,
+        overlay_color: '#232d82',
         link: '',
         alt_text: '',
         active: true,
@@ -81,8 +100,27 @@ export default function AdminBannersPage() {
                 description: banner.description || '',
                 button1_text: banner.button1_text || '',
                 button1_link: banner.button1_link || '',
+                button1_bg_color: banner.button1_bg_color || '#ffffff',
+                button1_text_color: banner.button1_text_color || '#1a1a1a',
+                button1_hover_bg_color: banner.button1_hover_bg_color || '#f0f0f0',
+                button1_hover_text_color: banner.button1_hover_text_color || '#1a1a1a',
+                button1_size: (banner.button1_size as 'sm' | 'md' | 'lg') || 'md',
+                button1_style: (banner.button1_style as 'solid' | 'outline' | 'ghost') || 'solid',
+                button1_open_new_tab: banner.button1_open_new_tab || false,
+                button1_border_radius: banner.button1_border_radius || 10,
                 button2_text: banner.button2_text || '',
                 button2_link: banner.button2_link || '',
+                button2_bg_color: banner.button2_bg_color || 'rgba(255, 255, 255, 0.1)',
+                button2_text_color: banner.button2_text_color || '#ffffff',
+                button2_hover_bg_color: banner.button2_hover_bg_color || 'rgba(255, 255, 255, 0.2)',
+                button2_hover_text_color: banner.button2_hover_text_color || '#ffffff',
+                button2_size: (banner.button2_size as 'sm' | 'md' | 'lg') || 'md',
+                button2_style: (banner.button2_style as 'solid' | 'outline' | 'ghost') || 'outline',
+                button2_open_new_tab: banner.button2_open_new_tab || false,
+                button2_border_radius: banner.button2_border_radius || 10,
+                buttons_global_style: (banner.buttons_global_style as 'individual' | 'unified') || 'individual',
+                overlay_opacity: banner.overlay_opacity || 50,
+                overlay_color: banner.overlay_color || '#232d82',
                 link: banner.link || '',
                 alt_text: banner.alt_text,
                 active: banner.active,
@@ -100,8 +138,27 @@ export default function AdminBannersPage() {
                 description: '',
                 button1_text: '',
                 button1_link: '',
+                button1_bg_color: '#ffffff',
+                button1_text_color: '#1a1a1a',
+                button1_hover_bg_color: '#f0f0f0',
+                button1_hover_text_color: '#1a1a1a',
+                button1_size: 'md',
+                button1_style: 'solid',
+                button1_open_new_tab: false,
+                button1_border_radius: 10,
                 button2_text: '',
                 button2_link: '',
+                button2_bg_color: 'rgba(255, 255, 255, 0.1)',
+                button2_text_color: '#ffffff',
+                button2_hover_bg_color: 'rgba(255, 255, 255, 0.2)',
+                button2_hover_text_color: '#ffffff',
+                button2_size: 'md',
+                button2_style: 'outline',
+                button2_open_new_tab: false,
+                button2_border_radius: 10,
+                buttons_global_style: 'individual',
+                overlay_opacity: 50,
+                overlay_color: '#232d82',
                 link: '',
                 alt_text: '',
                 active: true,
@@ -151,8 +208,18 @@ export default function AdminBannersPage() {
             const url = await uploadImage(file, path);
             setUploading(null);
             return url;
-        } catch (error) {
+        } catch (error: any) {
             setUploading(null);
+            // Re-throw com mensagem melhorada
+            const errorMessage = error?.message || 'Erro ao fazer upload da imagem';
+            if (errorMessage.includes('Bucket') && errorMessage.includes('não encontrado')) {
+                toast.error(
+                    `Erro: ${errorMessage}. Execute o script 'create_bucket_banners.sql' no Supabase Dashboard.`,
+                    { duration: 6000 }
+                );
+            } else {
+                toast.error(`Erro ao fazer upload: ${errorMessage}`);
+            }
             throw error;
         }
     };
@@ -198,8 +265,27 @@ export default function AdminBannersPage() {
                 description: formData.description || null,
                 button1_text: formData.button1_text || null,
                 button1_link: formData.button1_link || null,
+                button1_bg_color: formData.button1_bg_color || null,
+                button1_text_color: formData.button1_text_color || null,
+                button1_hover_bg_color: formData.button1_hover_bg_color || null,
+                button1_hover_text_color: formData.button1_hover_text_color || null,
+                button1_size: formData.button1_size || null,
+                button1_style: formData.button1_style || null,
+                button1_open_new_tab: formData.button1_open_new_tab || null,
+                button1_border_radius: formData.button1_border_radius || null,
                 button2_text: formData.button2_text || null,
                 button2_link: formData.button2_link || null,
+                button2_bg_color: formData.button2_bg_color || null,
+                button2_text_color: formData.button2_text_color || null,
+                button2_hover_bg_color: formData.button2_hover_bg_color || null,
+                button2_hover_text_color: formData.button2_hover_text_color || null,
+                button2_size: formData.button2_size || null,
+                button2_style: formData.button2_style || null,
+                button2_open_new_tab: formData.button2_open_new_tab || null,
+                button2_border_radius: formData.button2_border_radius || null,
+                buttons_global_style: formData.buttons_global_style || null,
+                overlay_opacity: formData.overlay_opacity || null,
+                overlay_color: formData.overlay_color || null,
                 link: formData.link || null,
                 alt_text: formData.alt_text,
                 active: formData.active,
@@ -224,7 +310,45 @@ export default function AdminBannersPage() {
             closeModal();
         } catch (error: any) {
             console.error('Error saving banner:', error);
-            toast.error(`Erro ao salvar banner: ${error.message || 'Verifique os dados e tente novamente.'}`);
+            
+            // Extrair mensagem de erro de diferentes formatos
+            let errorMessage = 'Erro desconhecido ao salvar banner';
+            
+            if (error) {
+                if (typeof error === 'string') {
+                    errorMessage = error;
+                } else if (error?.message) {
+                    errorMessage = error.message;
+                } else if (error?.details) {
+                    errorMessage = error.details;
+                } else if (error?.error?.message) {
+                    errorMessage = error.error.message;
+                } else if (typeof error === 'object') {
+                    // Tentar extrair informações úteis do objeto
+                    const errorStr = JSON.stringify(error);
+                    if (errorStr !== '{}') {
+                        errorMessage = errorStr;
+                    } else {
+                        errorMessage = 'Erro ao salvar banner. Verifique os dados e tente novamente.';
+                    }
+                } else {
+                    errorMessage = String(error);
+                }
+            }
+            
+            // Mensagem mais específica para erro de bucket
+            if (errorMessage.includes('Bucket') && errorMessage.includes('não encontrado')) {
+                toast.error(
+                    `Erro: ${errorMessage}. Execute o script 'create_bucket_banners.sql' no Supabase Dashboard.`,
+                    { duration: 6000 }
+                );
+            } else if (errorMessage.includes('duplicate key') || errorMessage.includes('unique constraint')) {
+                toast.error('Erro: Já existe um banner com essas informações. Verifique os dados e tente novamente.');
+            } else if (errorMessage.includes('null value') || errorMessage.includes('violates not-null')) {
+                toast.error('Erro: Algum campo obrigatório está faltando. Verifique todos os campos e tente novamente.');
+            } else {
+                toast.error(`Erro ao salvar banner: ${errorMessage}`);
+            }
         } finally {
             setIsSaving(false);
             setUploading(null);
@@ -565,6 +689,71 @@ export default function AdminBannersPage() {
                                     />
                                 </div>
 
+                                {/* Overlay Opacity Control */}
+                                <div className="p-4 bg-purple-50 rounded-[10px] border border-purple-200 space-y-4">
+                                    <div>
+                                        <label className="block text-sm font-medium text-[var(--color-text)] mb-2">
+                                            Cor do Overlay
+                                        </label>
+                                        <input
+                                            type="color"
+                                            value={formData.overlay_color}
+                                            onChange={(e) => setFormData((p) => ({ ...p, overlay_color: e.target.value }))}
+                                            className="w-full h-12 rounded-[10px] border border-gray-200 cursor-pointer"
+                                        />
+                                        <p className="text-xs text-gray-500 mt-1">
+                                            Escolha a cor do overlay que será aplicado sobre a imagem do banner.
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-[var(--color-text)] mb-2">
+                                            Escuridão do Fundo (Overlay)
+                                        </label>
+                                        <div className="space-y-2">
+                                            <input
+                                                type="range"
+                                                min="0"
+                                                max="100"
+                                                value={formData.overlay_opacity}
+                                                onChange={(e) => setFormData((p) => ({ ...p, overlay_opacity: parseInt(e.target.value) || 50 }))}
+                                                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-[var(--color-accent)]"
+                                            />
+                                            <div className="flex justify-between items-center">
+                                                <span className="text-xs text-gray-600">Transparente (0%)</span>
+                                                <span className="text-sm font-semibold text-[var(--color-accent)]">
+                                                    {formData.overlay_opacity}%
+                                                </span>
+                                                <span className="text-xs text-gray-600">Muito Escuro (100%)</span>
+                                            </div>
+                                            <p className="text-xs text-gray-500">
+                                                Controla o quanto escuro fica o overlay sobre a imagem do banner para melhorar a legibilidade do texto.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Global Button Style */}
+                                {(formData.button1_text || formData.button2_text) && (
+                                    <div className="p-4 bg-blue-50 rounded-[10px] border border-blue-200">
+                                        <label className="block text-sm font-medium text-[var(--color-text)] mb-2">
+                                            Estilo Global dos Botões
+                                        </label>
+                                        <select
+                                            value={formData.buttons_global_style}
+                                            onChange={(e) => setFormData((p) => ({ ...p, buttons_global_style: e.target.value as 'individual' | 'unified' }))}
+                                            className="w-full px-4 py-2 rounded-[10px] border border-gray-200 focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/20 outline-none"
+                                        >
+                                            <option value="individual">Individual (cada botão com seu próprio estilo)</option>
+                                            <option value="unified">Unificado (todos os botões com o mesmo estilo do botão 1)</option>
+                                        </select>
+                                        <p className="text-xs text-gray-500 mt-1">
+                                            {formData.buttons_global_style === 'unified' 
+                                                ? 'Quando unificado, o botão 2 usará as mesmas configurações do botão 1'
+                                                : 'Cada botão pode ter suas próprias configurações de cor, tamanho e estilo'}
+                                        </p>
+                                    </div>
+                                )}
+
                                 {/* Button 1 */}
                                 <div className="space-y-2">
                                     <label className="block text-sm font-medium text-[var(--color-text)] mb-1">
@@ -590,6 +779,97 @@ export default function AdminBannersPage() {
                                             placeholder="Link do botão"
                                         />
                                     </div>
+                                    
+                                    {/* Button 1 Style Options */}
+                                    {(formData.button1_text || formData.button1_link) && (
+                                        <div className="mt-4 p-4 bg-gray-50 rounded-[10px] space-y-3">
+                                            <h4 className="text-sm font-semibold text-gray-700">Personalização do Botão 1</h4>
+                                            <div className="grid grid-cols-2 gap-3">
+                                                <div>
+                                                    <label className="block text-xs text-gray-600 mb-1">Cor de Fundo</label>
+                                                    <input
+                                                        type="color"
+                                                        value={formData.button1_bg_color}
+                                                        onChange={(e) => setFormData((p) => ({ ...p, button1_bg_color: e.target.value }))}
+                                                        className="w-full h-10 rounded-[10px] border border-gray-200"
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label className="block text-xs text-gray-600 mb-1">Cor do Texto</label>
+                                                    <input
+                                                        type="color"
+                                                        value={formData.button1_text_color}
+                                                        onChange={(e) => setFormData((p) => ({ ...p, button1_text_color: e.target.value }))}
+                                                        className="w-full h-10 rounded-[10px] border border-gray-200"
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label className="block text-xs text-gray-600 mb-1">Hover - Fundo</label>
+                                                    <input
+                                                        type="color"
+                                                        value={formData.button1_hover_bg_color}
+                                                        onChange={(e) => setFormData((p) => ({ ...p, button1_hover_bg_color: e.target.value }))}
+                                                        className="w-full h-10 rounded-[10px] border border-gray-200"
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label className="block text-xs text-gray-600 mb-1">Hover - Texto</label>
+                                                    <input
+                                                        type="color"
+                                                        value={formData.button1_hover_text_color}
+                                                        onChange={(e) => setFormData((p) => ({ ...p, button1_hover_text_color: e.target.value }))}
+                                                        className="w-full h-10 rounded-[10px] border border-gray-200"
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label className="block text-xs text-gray-600 mb-1">Tamanho</label>
+                                                    <select
+                                                        value={formData.button1_size}
+                                                        onChange={(e) => setFormData((p) => ({ ...p, button1_size: e.target.value as 'sm' | 'md' | 'lg' }))}
+                                                        className="w-full px-3 py-2 rounded-[10px] border border-gray-200 focus:border-[var(--color-accent)] outline-none text-sm"
+                                                    >
+                                                        <option value="sm">Pequeno</option>
+                                                        <option value="md">Médio</option>
+                                                        <option value="lg">Grande</option>
+                                                    </select>
+                                                </div>
+                                                <div>
+                                                    <label className="block text-xs text-gray-600 mb-1">Estilo</label>
+                                                    <select
+                                                        value={formData.button1_style}
+                                                        onChange={(e) => setFormData((p) => ({ ...p, button1_style: e.target.value as 'solid' | 'outline' | 'ghost' }))}
+                                                        className="w-full px-3 py-2 rounded-[10px] border border-gray-200 focus:border-[var(--color-accent)] outline-none text-sm"
+                                                    >
+                                                        <option value="solid">Sólido</option>
+                                                        <option value="outline">Contorno</option>
+                                                        <option value="ghost">Transparente</option>
+                                                    </select>
+                                                </div>
+                                                <div>
+                                                    <label className="block text-xs text-gray-600 mb-1">Border Radius (px)</label>
+                                                    <input
+                                                        type="number"
+                                                        min="0"
+                                                        max="50"
+                                                        value={formData.button1_border_radius}
+                                                        onChange={(e) => setFormData((p) => ({ ...p, button1_border_radius: parseInt(e.target.value) || 10 }))}
+                                                        className="w-full px-3 py-2 rounded-[10px] border border-gray-200 focus:border-[var(--color-accent)] outline-none text-sm"
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label className="flex items-center gap-2 text-xs text-gray-600 cursor-pointer">
+                                                        <input
+                                                            type="checkbox"
+                                                            checked={formData.button1_open_new_tab}
+                                                            onChange={(e) => setFormData((p) => ({ ...p, button1_open_new_tab: e.target.checked }))}
+                                                            className="rounded border-gray-300"
+                                                        />
+                                                        Abrir em nova aba
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
 
                                 {/* Button 2 */}
@@ -617,6 +897,103 @@ export default function AdminBannersPage() {
                                             placeholder="Link do botão"
                                         />
                                     </div>
+                                    
+                                    {/* Button 2 Style Options */}
+                                    {(formData.button2_text || formData.button2_link) && (
+                                        <div className="mt-4 p-4 bg-gray-50 rounded-[10px] space-y-3">
+                                            <h4 className="text-sm font-semibold text-gray-700">Personalização do Botão 2</h4>
+                                            <div className="grid grid-cols-2 gap-3">
+                                                <div>
+                                                    <label className="block text-xs text-gray-600 mb-1">Cor de Fundo</label>
+                                                    <input
+                                                        type="color"
+                                                        value={formData.button2_bg_color}
+                                                        onChange={(e) => setFormData((p) => ({ ...p, button2_bg_color: e.target.value }))}
+                                                        disabled={formData.buttons_global_style === 'unified'}
+                                                        className="w-full h-10 rounded-[10px] border border-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label className="block text-xs text-gray-600 mb-1">Cor do Texto</label>
+                                                    <input
+                                                        type="color"
+                                                        value={formData.button2_text_color}
+                                                        onChange={(e) => setFormData((p) => ({ ...p, button2_text_color: e.target.value }))}
+                                                        disabled={formData.buttons_global_style === 'unified'}
+                                                        className="w-full h-10 rounded-[10px] border border-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label className="block text-xs text-gray-600 mb-1">Hover - Fundo</label>
+                                                    <input
+                                                        type="color"
+                                                        value={formData.button2_hover_bg_color}
+                                                        onChange={(e) => setFormData((p) => ({ ...p, button2_hover_bg_color: e.target.value }))}
+                                                        disabled={formData.buttons_global_style === 'unified'}
+                                                        className="w-full h-10 rounded-[10px] border border-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label className="block text-xs text-gray-600 mb-1">Hover - Texto</label>
+                                                    <input
+                                                        type="color"
+                                                        value={formData.button2_hover_text_color}
+                                                        onChange={(e) => setFormData((p) => ({ ...p, button2_hover_text_color: e.target.value }))}
+                                                        disabled={formData.buttons_global_style === 'unified'}
+                                                        className="w-full h-10 rounded-[10px] border border-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label className="block text-xs text-gray-600 mb-1">Tamanho</label>
+                                                    <select
+                                                        value={formData.button2_size}
+                                                        onChange={(e) => setFormData((p) => ({ ...p, button2_size: e.target.value as 'sm' | 'md' | 'lg' }))}
+                                                        disabled={formData.buttons_global_style === 'unified'}
+                                                        className="w-full px-3 py-2 rounded-[10px] border border-gray-200 focus:border-[var(--color-accent)] outline-none text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                                                    >
+                                                        <option value="sm">Pequeno</option>
+                                                        <option value="md">Médio</option>
+                                                        <option value="lg">Grande</option>
+                                                    </select>
+                                                </div>
+                                                <div>
+                                                    <label className="block text-xs text-gray-600 mb-1">Estilo</label>
+                                                    <select
+                                                        value={formData.button2_style}
+                                                        onChange={(e) => setFormData((p) => ({ ...p, button2_style: e.target.value as 'solid' | 'outline' | 'ghost' }))}
+                                                        disabled={formData.buttons_global_style === 'unified'}
+                                                        className="w-full px-3 py-2 rounded-[10px] border border-gray-200 focus:border-[var(--color-accent)] outline-none text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                                                    >
+                                                        <option value="solid">Sólido</option>
+                                                        <option value="outline">Contorno</option>
+                                                        <option value="ghost">Transparente</option>
+                                                    </select>
+                                                </div>
+                                                <div>
+                                                    <label className="block text-xs text-gray-600 mb-1">Border Radius (px)</label>
+                                                    <input
+                                                        type="number"
+                                                        min="0"
+                                                        max="50"
+                                                        value={formData.button2_border_radius}
+                                                        onChange={(e) => setFormData((p) => ({ ...p, button2_border_radius: parseInt(e.target.value) || 10 }))}
+                                                        className="w-full px-3 py-2 rounded-[10px] border border-gray-200 focus:border-[var(--color-accent)] outline-none text-sm"
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label className="flex items-center gap-2 text-xs text-gray-600 cursor-pointer">
+                                                        <input
+                                                            type="checkbox"
+                                                            checked={formData.button2_open_new_tab}
+                                                            onChange={(e) => setFormData((p) => ({ ...p, button2_open_new_tab: e.target.checked }))}
+                                                            className="rounded border-gray-300"
+                                                        />
+                                                        Abrir em nova aba
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
 
                                 {/* Alt Text */}

@@ -158,7 +158,11 @@ export const api = {
             .select()
             .single();
 
-        if (error) throw error;
+        if (error) {
+            // Garantir que o erro tenha uma mensagem legível
+            const errorMessage = error.message || error.details || JSON.stringify(error) || 'Erro ao criar banner';
+            throw new Error(errorMessage);
+        }
         return data;
     },
 
@@ -171,7 +175,11 @@ export const api = {
             .select()
             .single();
 
-        if (error) throw error;
+        if (error) {
+            // Garantir que o erro tenha uma mensagem legível
+            const errorMessage = error.message || error.details || JSON.stringify(error) || 'Erro ao atualizar banner';
+            throw new Error(errorMessage);
+        }
         return data;
     },
 
