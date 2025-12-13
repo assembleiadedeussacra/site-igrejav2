@@ -113,7 +113,7 @@ export default function KnowledgeSection({ posts = [] }: KnowledgeSectionProps) 
                                         <div className="relative h-48 overflow-hidden">
                                             <Image
                                                 src={post.cover_image}
-                                                alt={post.title}
+                                                alt={`Imagem de capa do artigo: ${post.title}`}
                                                 fill
                                                 className="object-cover group-hover:scale-105 transition-transform duration-500"
                                                 sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"

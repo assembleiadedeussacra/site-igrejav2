@@ -1,5 +1,6 @@
-import { createClient } from '../lib/supabase/server';
+import { createClient, createClientForBuild } from '../lib/supabase/server';
 import { fetchDailyVerse } from './verse-api';
+import type { Post } from '../lib/database.types';
 
 export const serverApi = {
     getBanners: async () => {
@@ -213,9 +214,10 @@ export const serverApi = {
         }
     },
 
-    getTopPostsThisMonth: async (type: 'blog' | 'study', limit = 8) => {
+    getTopPostsThisMonth: async (type: 'blog' | 'study', limit = 8, useBuildClient = false) => {
         try {
-            const supabase = await createClient();
+            // Use build client if specified (for generateStaticParams)
+            const supabase = useBuildClient ? createClientForBuild() : await createClient();
             const startOfMonth = new Date();
             startOfMonth.setDate(1);
             startOfMonth.setHours(0, 0, 0, 0);
@@ -231,6 +233,25 @@ export const serverApi = {
             return data || [];
         } catch (error) {
             console.error('Error fetching top posts:', error);
+            return [];
+        }
+    },
+
+    getTopPostsAllTime: async (type: 'blog' | 'study', limit = 20, useBuildClient = false) => {
+        try {
+            // Use build client if specified (for generateStaticParams)
+            const supabase = useBuildClient ? createClientForBuild() : await createClient();
+
+            const { data } = await supabase
+                .from('posts')
+                .select('*')
+                .eq('type', type)
+                .eq('published', true)
+                .order('views', { ascending: false })
+                .limit(limit);
+            return data || [];
+        } catch (error) {
+            console.error('Error fetching top posts all time:', error);
             return [];
         }
     },
@@ -367,13 +388,16 @@ export const serverApi = {
             const supabase = await createClient();
             
             // First, get the current post to check its tags
-            const { data: currentPost } = await supabase
+            const { data: currentPostData } = await supabase
                 .from('posts')
                 .select('tags')
                 .eq('id', postId)
                 .single();
 
-            if (!currentPost || !currentPost.tags || currentPost.tags.length === 0) {
+            const currentPost = currentPostData as { tags?: string[] } | null;
+            const postTags = currentPost?.tags;
+
+            if (!currentPost || !postTags || postTags.length === 0) {
                 // If no tags, get recent posts of same type
                 const { data } = await supabase
                     .from('posts')
@@ -383,7 +407,7 @@ export const serverApi = {
                     .neq('id', postId)
                     .order('created_at', { ascending: false })
                     .limit(limit);
-                return data || [];
+                return (data as Post[]) || [];
             }
 
             // Find posts with matching tags
@@ -393,13 +417,15 @@ export const serverApi = {
                 .eq('type', type)
                 .eq('published', true)
                 .neq('id', postId)
-                .overlaps('tags', currentPost.tags)
+                .overlaps('tags', postTags)
                 .order('created_at', { ascending: false })
                 .limit(limit);
 
+            const postsData = (data as Post[]) || [];
+
             // If not enough posts with matching tags, fill with recent posts
-            if (data && data.length < limit) {
-                const excludeIds = [...(data || []).map(p => p.id), postId];
+            if (postsData.length < limit) {
+                const excludeIds = [...postsData.map((p: Post) => p.id), postId];
                 let query = supabase
                     .from('posts')
                     .select('*')
@@ -414,12 +440,12 @@ export const serverApi = {
                 
                 const { data: recentPosts } = await query
                     .order('created_at', { ascending: false })
-                    .limit(limit - data.length);
+                    .limit(limit - postsData.length);
                 
-                return [...(data || []), ...(recentPosts || [])].slice(0, limit);
+                return [...postsData, ...((recentPosts as Post[]) || [])].slice(0, limit);
             }
 
-            return data || [];
+            return postsData;
         } catch (error) {
             console.error('Error fetching related posts:', error);
             return [];

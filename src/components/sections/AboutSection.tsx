@@ -205,10 +205,11 @@ export default function AboutSection({ leaders = [] }: AboutSectionProps) {
                                     <div className="relative h-56 md:h-64 overflow-hidden">
                                         <Image
                                             src={leader.image_url}
-                                            alt={leader.name}
+                                            alt={`Foto de ${leader.name}, ${leader.title}`}
                                             fill
                                             className="object-cover group-hover:scale-105 transition-transform duration-500"
                                             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                                            loading="lazy"
                                         />
                                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                                     </div>

@@ -36,7 +36,7 @@ export default function RelatedPosts({ posts, type }: RelatedPostsProps) {
                             <div className="relative h-40 overflow-hidden">
                                 <Image
                                     src={post.cover_image}
-                                    alt={post.title}
+                                    alt={`Imagem de capa: ${post.title}`}
                                     fill
                                     className="object-cover group-hover:scale-105 transition-transform duration-500"
                                     sizes="(max-width: 768px) 100vw, 33vw"

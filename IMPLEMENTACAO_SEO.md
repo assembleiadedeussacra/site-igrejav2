@@ -62,8 +62,9 @@
 - [x] Configurar revalidação automática quando posts são atualizados
 
 ### 5. Implementar generateStaticParams
-- Para posts mais populares/acessados
-- Gerar páginas estáticas no build time
+- [x] Para posts mais populares/acessados
+- [x] Gerar páginas estáticas no build time
+- [x] Implementado em `blog/[slug]/page.tsx` e `estudos/[slug]/page.tsx`
 
 ### 6. Integrar Validação de Conteúdo no Admin
 - [x] Mostrar warnings de SEO ao salvar posts
@@ -85,8 +86,9 @@
 ```
 
 ### 9. Posts Relacionados
-- Adicionar seção de posts relacionados nas páginas de artigo
-- Usar dados de `related_posts` ou buscar por tags
+- [x] Adicionar seção de posts relacionados nas páginas de artigo
+- [x] Usar dados de `related_posts` ou buscar por tags
+- [x] Componente `RelatedPosts` implementado e integrado
 
 ### 10. Melhorias Adicionais de Schema.org
 - [x] Adicionar BreadcrumbList nas páginas (via script separado)
@@ -95,14 +97,14 @@
 - [ ] Adicionar Review/Rating se aplicável (futuro)
 
 ### 11. Performance
-- Adicionar `loading="lazy"` em imagens abaixo do fold
-- Implementar preload de fontes críticas
-- Otimizar bundle size
+- [x] Adicionar `loading="lazy"` em imagens abaixo do fold
+- [ ] Implementar preload de fontes críticas (melhoria opcional)
+- [ ] Otimizar bundle size (melhoria opcional)
 
 ### 12. Acessibilidade
-- Validar alt texts em todas as imagens
-- Verificar contraste de cores (WCAG AA)
-- Adicionar aria-labels onde necessário
+- [x] Validar alt texts em todas as imagens (melhorados com descrições mais descritivas)
+- [x] Adicionar aria-labels onde necessário (botões de navegação, controles)
+- [ ] Verificar contraste de cores (WCAG AA) - requer teste visual
 
 ## 📋 Próximos Passos Imediatos
 
@@ -114,9 +116,12 @@
 6. ✅ **Adicionar posts relacionados** - CONCLUÍDO
 7. ✅ **Validação de conteúdo no admin** - CONCLUÍDO
 8. ✅ **Melhorias de Schema.org** - CONCLUÍDO
-9. ⚠️ **Configurar variáveis de ambiente** - Adicionar REVALIDATE_SECRET ao .env.local
+9. ✅ **Configurar variáveis de ambiente** - CONCLUÍDO (pelo usuário)
+10. ✅ **Implementar generateStaticParams** - CONCLUÍDO
+11. ✅ **Otimizações de Performance** - CONCLUÍDO (lazy loading)
+12. ✅ **Melhorias de Acessibilidade** - CONCLUÍDO (alt texts, aria-labels)
 
-**Status: ~98% Completo**
+**Status: ~99% Completo**
 
 ## 🎯 Prioridades
 
@@ -127,9 +132,9 @@
 4. Configurar ISR
 
 ### Média Prioridade
-5. Integrar validação no admin
-6. Adicionar posts relacionados
-7. Implementar generateStaticParams
+5. ✅ Integrar validação no admin - CONCLUÍDO
+6. ✅ Adicionar posts relacionados - CONCLUÍDO
+7. ✅ Implementar generateStaticParams - CONCLUÍDO
 
 ### Baixa Prioridade
 8. Páginas dinâmicas programáticas

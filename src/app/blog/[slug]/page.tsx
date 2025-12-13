@@ -34,29 +34,49 @@ export async function generateMetadata(
 // ISR: Revalidate every hour
 export const revalidate = 3600;
 
+// SSG: Generate static pages for top posts at build time
+export async function generateStaticParams() {
+    try {
+        // Get top 20 most viewed blog posts of all time for static generation
+        // Use build client (no cookies needed)
+        const topPosts = await serverApi.getTopPostsAllTime('blog', 20, true);
+        return (topPosts as Post[])
+            .filter((post: Post) => post.published && post.slug)
+            .map((post: Post) => ({
+                slug: post.slug!,
+            }));
+    } catch (error) {
+        console.error('Error generating static params for blog:', error);
+        return [];
+    }
+}
+
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
     const { slug } = await params;
-    const [post, settings, relatedPosts] = await Promise.all([
+    const [postResult, settings, relatedPosts] = await Promise.all([
         serverApi.getPostBySlug(slug, 'blog'),
         serverApi.getSettings(),
-        serverApi.getPostBySlug(slug, 'blog').then(p => 
+        serverApi.getPostBySlug(slug, 'blog').then((p: Post | null) => 
             p ? serverApi.getRelatedPosts(p.id, 'blog', 3) : []
         ),
     ]);
 
     // If post not found, try to redirect from old ID-based URL
-    if (!post) {
+    if (!postResult) {
         // Check if slug is actually a UUID (old format)
         const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
         if (uuidPattern.test(slug)) {
             const postById = await serverApi.getPostById(slug);
-            if (postById && postById.slug) {
+            if (postById && (postById as Post).slug) {
                 // Redirect to slug-based URL (301 permanent redirect for SEO)
-                permanentRedirect(`/blog/${postById.slug}`);
+                permanentRedirect(`/blog/${(postById as Post).slug}`);
             }
         }
         notFound();
     }
+
+    // TypeScript now knows post is not null
+    const post: Post = postResult as Post;
 
     const formatDate = (dateString: string): string => {
         const date = new Date(dateString);

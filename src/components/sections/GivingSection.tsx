@@ -131,9 +131,10 @@ export default function GivingSection({ financials }: GivingSectionProps) {
                                         <div className="relative w-48 h-48">
                                             <Image
                                                 src={financials.pix_qrcode_url}
-                                                alt="QR Code PIX"
+                                                alt="QR Code PIX para doações"
                                                 fill
                                                 className="object-contain"
+                                                loading="lazy"
                                             />
                                         </div>
                                     </motion.div>

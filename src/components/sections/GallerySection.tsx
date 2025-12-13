@@ -66,7 +66,7 @@ export default function GallerySection({ items = [] }: GallerySectionProps) {
                                 <div className="relative h-64 overflow-hidden">
                                     <Image
                                         src={item.cover_image_url}
-                                        alt={item.title}
+                                        alt={`Capa do álbum: ${item.title}`}
                                         fill
                                         className="object-cover group-hover:scale-110 transition-transform duration-500"
                                         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { serverApi } from '@/services/server';
+import type { Post } from '@/lib/database.types';
 
 /**
  * API REST endpoint for Headless CMS integration
@@ -27,23 +28,32 @@ export async function GET(request: NextRequest) {
         const order = searchParams.get('order') || 'desc';
 
         // Get posts
-        let posts;
+        // Note: getPostsByType and getAllPostsByType only return published posts
+        // If unpublished posts are needed, we'd need a different API method
+        let posts: Post[] = [];
         if (type) {
-            posts = await serverApi.getPostsByType(type, limit, offset);
+            if (published) {
+                posts = await serverApi.getPostsByType(type, limit, offset);
+            } else {
+                // Since getAllPostsByType also filters by published=true,
+                // we cannot get unpublished posts with current API methods
+                // Return empty array for now
+                posts = [];
+            }
         } else {
             // Get all posts (both blog and study)
-            const [blogPosts, studyPosts] = await Promise.all([
-                serverApi.getPostsByType('blog', limit, offset),
-                serverApi.getPostsByType('study', limit, offset),
-            ]);
-            posts = [...blogPosts, ...studyPosts];
-        }
-
-        // Filter by published status if needed
-        if (!published) {
-            // Note: getPostsByType only returns published posts
-            // For unpublished posts, we'd need a different API method
-            posts = posts.filter(p => p.published === false);
+            if (published) {
+                const [blogPosts, studyPosts] = await Promise.all([
+                    serverApi.getPostsByType('blog', limit, offset),
+                    serverApi.getPostsByType('study', limit, offset),
+                ]);
+                posts = [...blogPosts, ...studyPosts];
+            } else {
+                // Since getAllPostsByType also filters by published=true,
+                // we cannot get unpublished posts with current API methods
+                // Return empty array for now
+                posts = [];
+            }
         }
 
         // Filter by tags if provided
