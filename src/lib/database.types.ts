@@ -128,6 +128,7 @@ export interface SiteSettings {
     id: string;
     church_name: string;
     church_address: string;
+    church_city: string;
     church_cep: string;
     phone: string;
     email: string;
@@ -135,6 +136,42 @@ export interface SiteSettings {
     instagram_handle: string;
     google_maps_embed: string;
     google_calendar_embed: string;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface AboutPageCover {
+    id: string;
+    title: string;
+    description: string;
+    image_url: string;
+    church_text_part1?: string | null;
+    church_image_url?: string | null;
+    church_text_part2?: string | null;
+    active: boolean;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface Department {
+    id: string;
+    name: string;
+    description: string | null;
+    image_url: string | null;
+    order: number;
+    active: boolean;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface DepartmentMember {
+    id: string;
+    department_id: string;
+    name: string;
+    role: string;
+    image_url: string;
+    order: number;
+    active: boolean;
     created_at: string;
     updated_at: string;
 }
@@ -187,6 +224,21 @@ export interface Database {
                 Row: SiteSettings;
                 Insert: Omit<SiteSettings, 'id' | 'created_at' | 'updated_at'>;
                 Update: Partial<Omit<SiteSettings, 'id' | 'created_at'>>;
+            };
+            about_page_cover: {
+                Row: AboutPageCover;
+                Insert: Omit<AboutPageCover, 'id' | 'created_at' | 'updated_at'>;
+                Update: Partial<Omit<AboutPageCover, 'id' | 'created_at'>>;
+            };
+            departments: {
+                Row: Department;
+                Insert: Omit<Department, 'id' | 'created_at' | 'updated_at'>;
+                Update: Partial<Omit<Department, 'id' | 'created_at'>>;
+            };
+            department_members: {
+                Row: DepartmentMember;
+                Insert: Omit<DepartmentMember, 'id' | 'created_at' | 'updated_at'>;
+                Update: Partial<Omit<DepartmentMember, 'id' | 'created_at'>>;
             };
         };
     };

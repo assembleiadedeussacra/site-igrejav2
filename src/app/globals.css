@@ -233,6 +233,27 @@ img {
   opacity: 1;
 }
 
+/* Swiper Pagination for Hero Section */
+#inicio .swiper-pagination {
+  bottom: 20px !important;
+  z-index: 10;
+}
+
+#inicio .swiper-pagination-bullet {
+  width: 10px !important;
+  height: 10px !important;
+  background: rgba(255, 255, 255, 0.5) !important;
+  opacity: 1 !important;
+  margin: 0 6px !important;
+  transition: all 0.3s ease !important;
+}
+
+#inicio .swiper-pagination-bullet-active {
+  background: white !important;
+  width: 24px !important;
+  border-radius: 10px !important;
+}
+
 .swiper-button-next,
 .swiper-button-prev {
   color: var(--color-accent) !important;
@@ -542,4 +563,67 @@ div.admin-panel h2[class*="text-"] {
 
 .ProseMirror em {
   font-style: italic;
+}
+
+/* Rich Text Content Styles (for rendered HTML) */
+.prose a {
+  color: var(--color-accent);
+  text-decoration: underline;
+  transition: color 0.2s;
+}
+
+.prose a:hover {
+  color: var(--color-accent-dark);
+}
+
+.prose h1,
+.prose h2,
+.prose h3 {
+  color: var(--color-text);
+  font-weight: 700;
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.prose h1 {
+  font-size: 2rem;
+}
+
+.prose h2 {
+  font-size: 1.5rem;
+}
+
+.prose h3 {
+  font-size: 1.25rem;
+}
+
+.prose p {
+  margin-bottom: 1rem;
+  line-height: 1.7;
+}
+
+.prose ul,
+.prose ol {
+  margin: 1rem 0;
+  padding-left: 1.5rem;
+}
+
+.prose li {
+  margin: 0.5rem 0;
+}
+
+.prose strong {
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.prose em {
+  font-style: italic;
+}
+
+.prose img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 10px;
+  margin: 1.5rem 0;
 }

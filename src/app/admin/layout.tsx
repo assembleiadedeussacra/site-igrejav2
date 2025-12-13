@@ -70,6 +70,21 @@ const menuItems = [
         icon: MessageSquare,
     },
     {
+        href: '/admin/sobre',
+        label: 'Página Sobre',
+        icon: FileText,
+    },
+    {
+        href: '/admin/departamentos',
+        label: 'Departamentos',
+        icon: Users,
+    },
+    {
+        href: '/admin/integrantes',
+        label: 'Integrantes',
+        icon: Users,
+    },
+    {
         href: '/admin/configuracoes',
         label: 'Configurações',
         icon: Settings,

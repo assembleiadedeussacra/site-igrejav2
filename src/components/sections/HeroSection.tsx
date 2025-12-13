@@ -1,16 +1,18 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Autoplay, Pagination, EffectFade } from 'swiper/modules';
-import { ChevronDown, MapPin, Info } from 'lucide-react';
+import type { Swiper as SwiperType } from 'swiper';
+import { Autoplay, Pagination, EffectFade, Navigation } from 'swiper/modules';
+import { ChevronDown, MapPin, Info, ChevronLeft, ChevronRight } from 'lucide-react';
 
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/effect-fade';
+import 'swiper/css/navigation';
 
 import { Banner } from '@/lib/database.types';
 
@@ -81,6 +83,7 @@ const getButtonStyles = (
 export default function HeroSection({ banners = [] }: HeroSectionProps) {
     const [isMobile, setIsMobile] = useState(false);
     const [activeIndex, setActiveIndex] = useState(0);
+    const swiperRef = useRef<SwiperType | null>(null);
 
     useEffect(() => {
         const checkMobile = () => {
@@ -104,7 +107,7 @@ export default function HeroSection({ banners = [] }: HeroSectionProps) {
             {/* Background Slider */}
             <div className="absolute inset-0">
                 <Swiper
-                    modules={[Autoplay, Pagination, EffectFade]}
+                    modules={[Autoplay, Pagination, EffectFade, Navigation]}
                     effect="fade"
                     autoplay={{
                         delay: 6000,
@@ -116,6 +119,9 @@ export default function HeroSection({ banners = [] }: HeroSectionProps) {
                     }}
                     loop={banners.length > 1}
                     onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
+                    onBeforeInit={(swiper) => {
+                        swiperRef.current = swiper;
+                    }}
                     className="h-full w-full"
                 >
                     {banners.map((banner, index) => (
@@ -171,6 +177,26 @@ export default function HeroSection({ banners = [] }: HeroSectionProps) {
                         </SwiperSlide>
                     ))}
                 </Swiper>
+                
+                {/* Custom Navigation Arrows */}
+                {banners.length > 1 && (
+                    <>
+                        <button
+                            onClick={() => swiperRef.current?.slidePrev()}
+                            className="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm hover:bg-white/30 transition-all flex items-center justify-center text-white border-2 border-white/30 hover:border-white/50"
+                            aria-label="Slide anterior"
+                        >
+                            <ChevronLeft className="w-6 h-6" />
+                        </button>
+                        <button
+                            onClick={() => swiperRef.current?.slideNext()}
+                            className="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm hover:bg-white/30 transition-all flex items-center justify-center text-white border-2 border-white/30 hover:border-white/50"
+                            aria-label="Próximo slide"
+                        >
+                            <ChevronRight className="w-6 h-6" />
+                        </button>
+                    </>
+                )}
             </div>
 
             {/* Content Overlay */}

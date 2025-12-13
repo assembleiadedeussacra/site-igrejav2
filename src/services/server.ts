@@ -187,5 +187,52 @@ export const serverApi = {
             console.error('Error fetching leaders:', error);
             return [];
         }
+    },
+
+    getAboutPageCover: async () => {
+        try {
+            const supabase = await createClient();
+            const { data } = await supabase
+                .from('about_page_cover')
+                .select('*')
+                .eq('active', true)
+                .limit(1)
+                .single();
+            return data || null;
+        } catch (error) {
+            console.error('Error fetching about page cover:', error);
+            return null;
+        }
+    },
+
+    getDepartments: async () => {
+        try {
+            const supabase = await createClient();
+            const { data } = await supabase
+                .from('departments')
+                .select('*')
+                .eq('active', true)
+                .order('order', { ascending: true });
+            return data || [];
+        } catch (error) {
+            console.error('Error fetching departments:', error);
+            return [];
+        }
+    },
+
+    getDepartmentMembers: async (departmentId: string) => {
+        try {
+            const supabase = await createClient();
+            const { data } = await supabase
+                .from('department_members')
+                .select('*')
+                .eq('department_id', departmentId)
+                .eq('active', true)
+                .order('order', { ascending: true });
+            return data || [];
+        } catch (error) {
+            console.error('Error fetching department members:', error);
+            return [];
+        }
     }
 };

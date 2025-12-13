@@ -92,10 +92,10 @@ export default function AboutSection({ leaders = [] }: AboutSectionProps) {
                         </p>
 
                         <Link
-                            href="#contato"
+                            href="/sobre-nos"
                             className="inline-flex items-center gap-2 btn-primary"
                         >
-                            Entre em Contato
+                            Saiba mais
                             <ArrowRight className="w-5 h-5" />
                         </Link>
                     </motion.div>

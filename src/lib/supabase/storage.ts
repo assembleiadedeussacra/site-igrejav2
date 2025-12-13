@@ -86,6 +86,13 @@ export function getFileExtension(filename: string): string {
     return filename.split('.').pop()?.toLowerCase() || 'jpg';
 }
 
+// Re-export functions from storage_about.ts for convenience
+export { 
+    uploadAboutPageCover, 
+    uploadDepartmentImage, 
+    uploadDepartmentMemberImage 
+} from './storage_about';
+
 /**
  * Uploads a leader image to Supabase Storage
  * @param file - The image file to upload

@@ -14,7 +14,7 @@ import {
 
 const quickLinks = [
     { href: '/', label: 'Home' },
-    { href: '/#sobre', label: 'Sobre Nós' },
+    { href: '/sobre-nos', label: 'Sobre Nós' },
     { href: '/#agenda', label: 'Agenda' },
     { href: '/#contato', label: 'Contato' },
 ];

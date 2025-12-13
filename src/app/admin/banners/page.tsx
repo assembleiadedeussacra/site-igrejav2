@@ -14,6 +14,7 @@ import {
     Save,
     Loader2,
     ImageIcon,
+    Copy,
 } from 'lucide-react';
 import { api } from '@/services/api';
 import { Banner } from '@/lib/database.types';
@@ -382,6 +383,49 @@ export default function AdminBannersPage() {
         }
     };
 
+    const duplicateBanner = (banner: Banner) => {
+        // Abrir modal com os dados do banner duplicado, mas como novo banner
+        setEditingBanner(null); // Não está editando, é um novo banner
+        setFormData({
+            image_desktop_url: banner.image_desktop_url,
+            image_mobile_url: banner.image_mobile_url,
+            logo_url: banner.logo_url || '',
+            title: banner.title ? `${banner.title} (Cópia)` : '',
+            description: banner.description || '',
+            button1_text: banner.button1_text || '',
+            button1_link: banner.button1_link || '',
+            button1_bg_color: banner.button1_bg_color || '#ffffff',
+            button1_text_color: banner.button1_text_color || '#1a1a1a',
+            button1_hover_bg_color: banner.button1_hover_bg_color || '#f0f0f0',
+            button1_hover_text_color: banner.button1_hover_text_color || '#1a1a1a',
+            button1_size: (banner.button1_size as 'sm' | 'md' | 'lg') || 'md',
+            button1_style: (banner.button1_style as 'solid' | 'outline' | 'ghost') || 'solid',
+            button1_open_new_tab: banner.button1_open_new_tab || false,
+            button1_border_radius: banner.button1_border_radius || 10,
+            button2_text: banner.button2_text || '',
+            button2_link: banner.button2_link || '',
+            button2_bg_color: banner.button2_bg_color || 'rgba(255, 255, 255, 0.1)',
+            button2_text_color: banner.button2_text_color || '#ffffff',
+            button2_hover_bg_color: banner.button2_hover_bg_color || 'rgba(255, 255, 255, 0.2)',
+            button2_hover_text_color: banner.button2_hover_text_color || '#ffffff',
+            button2_size: (banner.button2_size as 'sm' | 'md' | 'lg') || 'md',
+            button2_style: (banner.button2_style as 'solid' | 'outline' | 'ghost') || 'outline',
+            button2_open_new_tab: banner.button2_open_new_tab || false,
+            button2_border_radius: banner.button2_border_radius || 10,
+            buttons_global_style: (banner.buttons_global_style as 'individual' | 'unified') || 'individual',
+            overlay_opacity: banner.overlay_opacity || 50,
+            overlay_color: banner.overlay_color || '#232d82',
+            link: banner.link || '',
+            alt_text: banner.alt_text ? `${banner.alt_text} (Cópia)` : '',
+            active: false, // Novo banner começa desativado
+        });
+        setDesktopPreview(banner.image_desktop_url);
+        setMobilePreview(banner.image_mobile_url);
+        setLogoPreview(banner.logo_url || '');
+        setIsModalOpen(true);
+        toast.success('Banner duplicado! Revise os dados e salve.');
+    };
+
     return (
         <div className="space-y-6">
             {/* Header */}
@@ -479,6 +523,13 @@ export default function AdminBannersPage() {
                                         ) : (
                                             <EyeOff className="w-5 h-5" />
                                         )}
+                                    </button>
+                                    <button
+                                        onClick={() => duplicateBanner(banner)}
+                                        className="p-2 rounded-[10px] text-purple-600 hover:bg-purple-50 transition-colors"
+                                        title="Duplicar"
+                                    >
+                                        <Copy className="w-5 h-5" />
                                     </button>
                                     <button
                                         onClick={() => openModal(banner)}

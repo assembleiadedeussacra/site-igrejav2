@@ -605,4 +605,220 @@ export const api = {
             return data;
         }
     },
+
+    // About Page Cover
+    getAboutPageCover: async () => {
+        const supabase = createClient();
+        const { data, error } = await supabase
+            .from('about_page_cover')
+            .select('*')
+            .eq('active', true)
+            .limit(1)
+            .single();
+
+        if (error) {
+            console.error('Error fetching about page cover:', error);
+            return null;
+        }
+        return data;
+    },
+
+    getAdminAboutPageCover: async () => {
+        const supabase = createClient();
+        const { data, error } = await supabase
+            .from('about_page_cover')
+            .select('*')
+            .limit(1)
+            .single();
+
+        if (error && error.code !== 'PGRST116') throw error; // PGRST116 = no rows returned
+        return data;
+    },
+
+    createAboutPageCover: async (cover: Database['public']['Tables']['about_page_cover']['Insert']) => {
+        const supabase = createClient();
+        const { data, error } = await (supabase as any)
+            .from('about_page_cover')
+            .insert([cover])
+            .select()
+            .single();
+
+        if (error) throw error;
+        return data;
+    },
+
+    updateAboutPageCover: async (id: string, updates: Database['public']['Tables']['about_page_cover']['Update']) => {
+        const supabase = createClient();
+        const { data, error } = await (supabase as any)
+            .from('about_page_cover')
+            .update(updates)
+            .eq('id', id)
+            .select()
+            .single();
+
+        if (error) throw error;
+        return data;
+    },
+
+    // Departments
+    getDepartments: async () => {
+        const supabase = createClient();
+        const { data, error } = await supabase
+            .from('departments')
+            .select('*')
+            .eq('active', true)
+            .order('order', { ascending: true });
+
+        if (error) {
+            console.error('Error fetching departments:', error);
+            return [];
+        }
+        return data;
+    },
+
+    getAdminDepartments: async () => {
+        const supabase = createClient();
+        const { data, error } = await supabase
+            .from('departments')
+            .select('*')
+            .order('order', { ascending: true });
+
+        if (error) throw error;
+        return data;
+    },
+
+    createDepartment: async (department: Database['public']['Tables']['departments']['Insert']) => {
+        const supabase = createClient();
+        const { data, error } = await (supabase as any)
+            .from('departments')
+            .insert([department])
+            .select()
+            .single();
+
+        if (error) throw error;
+        return data;
+    },
+
+    updateDepartment: async (id: string, updates: Database['public']['Tables']['departments']['Update']) => {
+        const supabase = createClient();
+        const { data, error } = await (supabase as any)
+            .from('departments')
+            .update(updates)
+            .eq('id', id)
+            .select()
+            .single();
+
+        if (error) throw error;
+        return data;
+    },
+
+    deleteDepartment: async (id: string) => {
+        const supabase = createClient();
+        const { error } = await (supabase as any)
+            .from('departments')
+            .delete()
+            .eq('id', id);
+
+        if (error) throw error;
+    },
+
+    updateDepartmentOrder: async (id: string, newOrder: number) => {
+        const supabase = createClient();
+        const { data, error } = await (supabase as any)
+            .from('departments')
+            .update({ order: newOrder })
+            .eq('id', id)
+            .select()
+            .single();
+
+        if (error) throw error;
+        return data;
+    },
+
+    // Department Members
+    getDepartmentMembers: async (departmentId?: string) => {
+        const supabase = createClient();
+        let query = supabase
+            .from('department_members')
+            .select('*')
+            .eq('active', true)
+            .order('order', { ascending: true });
+
+        if (departmentId) {
+            query = query.eq('department_id', departmentId);
+        }
+
+        const { data, error } = await query;
+
+        if (error) {
+            console.error('Error fetching department members:', error);
+            return [];
+        }
+        return data;
+    },
+
+    getAdminDepartmentMembers: async (departmentId?: string) => {
+        const supabase = createClient();
+        let query = supabase
+            .from('department_members')
+            .select('*')
+            .order('order', { ascending: true });
+
+        if (departmentId) {
+            query = query.eq('department_id', departmentId);
+        }
+
+        const { data, error } = await query;
+
+        if (error) throw error;
+        return data;
+    },
+
+    createDepartmentMember: async (member: Database['public']['Tables']['department_members']['Insert']) => {
+        const supabase = createClient();
+        const { data, error } = await (supabase as any)
+            .from('department_members')
+            .insert([member])
+            .select()
+            .single();
+
+        if (error) throw error;
+        return data;
+    },
+
+    updateDepartmentMember: async (id: string, updates: Database['public']['Tables']['department_members']['Update']) => {
+        const supabase = createClient();
+        const { data, error } = await (supabase as any)
+            .from('department_members')
+            .update(updates)
+            .eq('id', id)
+            .select()
+            .single();
+
+        if (error) throw error;
+        return data;
+    },
+
+    deleteDepartmentMember: async (id: string) => {
+        const supabase = createClient();
+        const { error } = await (supabase as any)
+            .from('department_members')
+            .delete()
+            .eq('id', id);
+
+        if (error) throw error;
+    },
+
+    updateDepartmentMemberOrder: async (id: string, newOrder: number) => {
+        const supabase = createClient();
+        const { data, error } = await (supabase as any)
+            .from('department_members')
+            .update({ order: newOrder })
+            .eq('id', id)
+            .select()
+            .single();
+
+        if (error) throw error;
+        return data;
+    },
 };

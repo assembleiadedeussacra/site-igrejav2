@@ -19,9 +19,13 @@ import {
 
 const navLinks = [
     { href: '/', label: 'Home', icon: Home },
-    { href: '/#sobre', label: 'Sobre', icon: Users },
     { href: '/#agenda', label: 'Agenda', icon: Calendar },
     { href: '/#contato', label: 'Contato', icon: Mail },
+];
+
+const sobreLinks = [
+    { href: '/sobre-nos', label: 'Sobre a Igreja', icon: Users },
+    { href: '/sobre-nos#departamentos', label: 'Departamentos', icon: Users },
 ];
 
 const knowledgeLinks = [
@@ -39,6 +43,7 @@ export default function Header({ settings }: HeaderProps) {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [isSobreDropdownOpen, setIsSobreDropdownOpen] = useState(false);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -91,15 +96,53 @@ export default function Header({ settings }: HeaderProps) {
 
                         {/* Desktop Navigation */}
                         <nav className="hidden lg:flex items-center gap-1">
-                            {navLinks.slice(0, 2).map((link) => (
-                                <Link
-                                    key={link.href}
-                                    href={link.href}
-                                    className="px-4 py-2 rounded-[10px] font-medium transition-all hover:bg-[var(--color-accent)]/10 text-[var(--color-accent)]"
+                            <Link
+                                href="/"
+                                className="px-4 py-2 rounded-[10px] font-medium transition-all hover:bg-[var(--color-accent)]/10 text-[var(--color-accent)]"
+                            >
+                                Home
+                            </Link>
+
+                            {/* Dropdown - Sobre */}
+                            <div
+                                className="relative"
+                                onMouseEnter={() => setIsSobreDropdownOpen(true)}
+                                onMouseLeave={() => setIsSobreDropdownOpen(false)}
+                            >
+                                <button
+                                    className="flex items-center gap-1 px-4 py-2 rounded-[10px] font-medium transition-all hover:bg-[var(--color-accent)]/10 text-[var(--color-accent)]"
                                 >
-                                    {link.label}
-                                </Link>
-                            ))}
+                                    <Users className="w-4 h-4" />
+                                    Sobre
+                                    <ChevronDown
+                                        className={`w-4 h-4 transition-transform ${isSobreDropdownOpen ? 'rotate-180' : ''
+                                            }`}
+                                    />
+                                </button>
+
+                                <AnimatePresence>
+                                    {isSobreDropdownOpen && (
+                                        <motion.div
+                                            initial={{ opacity: 0, y: 10 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            exit={{ opacity: 0, y: 10 }}
+                                            transition={{ duration: 0.2 }}
+                                            className="absolute top-full left-0 mt-2 w-56 bg-white rounded-[10px] shadow-xl overflow-hidden border border-[var(--color-primary)]/20"
+                                        >
+                                            {sobreLinks.map((link) => (
+                                                <Link
+                                                    key={link.href}
+                                                    href={link.href}
+                                                    className="flex items-center gap-3 px-4 py-3 text-[var(--color-accent)] hover:bg-[var(--color-primary)]/20 transition-colors"
+                                                >
+                                                    <link.icon className="w-5 h-5" />
+                                                    {link.label}
+                                                </Link>
+                                            ))}
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
+                            </div>
 
                             {/* Dropdown - Conhecimento */}
                             <div
@@ -220,12 +263,51 @@ export default function Header({ settings }: HeaderProps) {
 
                                 {/* Navigation */}
                                 <nav className="flex-1 overflow-y-auto py-4">
-                                    {navLinks.map((link, index) => (
+                                    <motion.div
+                                        initial={{ opacity: 0, x: 20 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        transition={{ delay: 0 }}
+                                    >
+                                        <Link
+                                            href="/"
+                                            onClick={() => setIsMobileMenuOpen(false)}
+                                            className="flex items-center gap-3 px-6 py-4 text-[var(--color-accent)] hover:bg-[var(--color-primary)]/20 transition-colors"
+                                        >
+                                            <Home className="w-5 h-5" />
+                                            Home
+                                        </Link>
+                                    </motion.div>
+
+                                    {/* Sobre Section */}
+                                    <div className="px-6 py-2">
+                                        <p className="text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider">
+                                            Sobre
+                                        </p>
+                                    </div>
+                                    {sobreLinks.map((link, index) => (
                                         <motion.div
                                             key={link.href}
                                             initial={{ opacity: 0, x: 20 }}
                                             animate={{ opacity: 1, x: 0 }}
-                                            transition={{ delay: index * 0.1 }}
+                                            transition={{ delay: (1 + index) * 0.1 }}
+                                        >
+                                            <Link
+                                                href={link.href}
+                                                onClick={() => setIsMobileMenuOpen(false)}
+                                                className="flex items-center gap-3 px-6 py-4 text-[var(--color-accent)] hover:bg-[var(--color-primary)]/20 transition-colors"
+                                            >
+                                                <link.icon className="w-5 h-5" />
+                                                {link.label}
+                                            </Link>
+                                        </motion.div>
+                                    ))}
+
+                                    {navLinks.slice(1).map((link, index) => (
+                                        <motion.div
+                                            key={link.href}
+                                            initial={{ opacity: 0, x: 20 }}
+                                            animate={{ opacity: 1, x: 0 }}
+                                            transition={{ delay: (3 + index) * 0.1 }}
                                         >
                                             <Link
                                                 href={link.href}
