@@ -972,6 +972,37 @@ export const api = {
         return data as Post | null;
     },
 
+    getPostBySlug: async (slug: string, type?: 'blog' | 'study'): Promise<Post | null> => {
+        const supabase = createClient();
+        let query = supabase
+            .from('posts')
+            .select('*')
+            .eq('slug', slug)
+            .eq('published', true);
+        
+        if (type) {
+            query = query.eq('type', type);
+        }
+        
+        const { data, error } = await query.single();
+
+        if (error) {
+            console.error('Error fetching post by slug:', error);
+            return null;
+        }
+        return data as Post | null;
+    },
+
+    // Helper function that tries slug first, then falls back to ID (for backward compatibility)
+    getPostByIdOrSlug: async (identifier: string, type?: 'blog' | 'study'): Promise<Post | null> => {
+        // Try slug first (more common case)
+        const postBySlug = await api.getPostBySlug(identifier, type);
+        if (postBySlug) return postBySlug;
+        
+        // Fallback to ID (for backward compatibility)
+        return await api.getPostById(identifier);
+    },
+
     incrementPostViews: async (postId: string) => {
         const supabase = createClient();
         // First get current views

@@ -8,6 +8,9 @@ import { api } from '@/services/api';
 import { uploadPostCover, uploadPostInlineImage } from '@/lib/supabase/storage';
 import RichTextEditor from '@/components/admin/RichTextEditor';
 import { Post } from '@/lib/database.types';
+import { generateSlug, validateSlug } from '@/lib/utils/slug';
+import { validateSemanticStructure, validateContentLength } from '@/lib/content/validator';
+import { validateTitleLength, validateDescriptionLength } from '@/lib/seo/optimizers';
 import toast from 'react-hot-toast';
 
 export default function AdminPostsPage() {
@@ -22,7 +25,30 @@ export default function AdminPostsPage() {
     const [coverPreview, setCoverPreview] = useState<string>('');
     const [relatedPosts, setRelatedPosts] = useState<string[]>([]);
     const [searchQuery, setSearchQuery] = useState('');
-    const [formData, setFormData] = useState({ title: '', description: '', cover_image: '', type: 'blog' as Post['type'], tags: '', content: '', published: true });
+    const [formData, setFormData] = useState({ 
+        title: '', 
+        description: '', 
+        cover_image: '', 
+        type: 'blog' as Post['type'], 
+        tags: '', 
+        content: '', 
+        published: true,
+        slug: '',
+        excerpt: '',
+        meta_title: '',
+        meta_description: '',
+        keywords: '',
+        canonical_url: '',
+        noindex: false,
+        nofollow: false,
+        og_title: '',
+        og_description: '',
+        og_image: '',
+        schema_type: 'Article' as 'Article' | 'BlogPosting' | 'Study',
+    });
+    const [slugError, setSlugError] = useState<string>('');
+    const [isGeneratingSlug, setIsGeneratingSlug] = useState(false);
+    const [seoWarnings, setSeoWarnings] = useState<string[]>([]);
 
     useEffect(() => {
         loadPosts();
@@ -54,7 +80,19 @@ export default function AdminPostsPage() {
                 type: post.type, 
                 tags: post.tags.join(', '), 
                 content: post.content, 
-                published: post.published 
+                published: post.published,
+                slug: post.slug || '',
+                excerpt: post.excerpt || '',
+                meta_title: post.meta_title || '',
+                meta_description: post.meta_description || '',
+                keywords: post.keywords?.join(', ') || '',
+                canonical_url: post.canonical_url || '',
+                noindex: post.noindex || false,
+                nofollow: post.nofollow || false,
+                og_title: post.og_title || '',
+                og_description: post.og_description || '',
+                og_image: post.og_image || '',
+                schema_type: post.schema_type || 'Article',
             });
             setCoverPreview(post.cover_image || '');
             // Load related posts from API
@@ -75,10 +113,32 @@ export default function AdminPostsPage() {
         }
         else { 
             setEditingPost(null); 
-            setFormData({ title: '', description: '', cover_image: '', type: 'blog', tags: '', content: '', published: true });
+            setFormData({ 
+                title: '', 
+                description: '', 
+                cover_image: '', 
+                type: 'blog', 
+                tags: '', 
+                content: '', 
+                published: true,
+                slug: '',
+                excerpt: '',
+                meta_title: '',
+                meta_description: '',
+                keywords: '',
+                canonical_url: '',
+                noindex: false,
+                nofollow: false,
+                og_title: '',
+                og_description: '',
+                og_image: '',
+                schema_type: 'Article',
+            });
             setCoverPreview('');
             setRelatedPosts([]);
         }
+        setSlugError('');
+        setSeoWarnings([]);
         setCoverFile(null);
         setSearchQuery('');
         setIsModalOpen(true);
@@ -147,11 +207,108 @@ export default function AdminPostsPage() {
         setRelatedPosts(relatedPosts.filter(id => id !== postId));
     };
 
+    const handleGenerateSlug = () => {
+        if (!formData.title) {
+            toast.error('Digite um título primeiro');
+            return;
+        }
+        setIsGeneratingSlug(true);
+        const generatedSlug = generateSlug(formData.title);
+        setFormData(prev => ({ ...prev, slug: generatedSlug }));
+        setSlugError('');
+        setIsGeneratingSlug(false);
+    };
+
+    const handleSlugChange = (value: string) => {
+        setFormData(prev => ({ ...prev, slug: value }));
+        if (value && !validateSlug(value)) {
+            setSlugError('Slug inválido. Use apenas letras minúsculas, números e hífens.');
+        } else {
+            setSlugError('');
+        }
+    };
+
+    const validateSEO = () => {
+        const warnings: string[] = [];
+
+        // Validate title length
+        const titleValidation = validateTitleLength(formData.title);
+        if (!titleValidation.isValid) {
+            warnings.push(`Título: ${titleValidation.recommendation}`);
+        }
+
+        // Validate description length
+        const descValidation = validateDescriptionLength(formData.description);
+        if (!descValidation.isValid) {
+            warnings.push(`Descrição: ${descValidation.recommendation}`);
+        }
+
+        // Validate meta title if provided
+        if (formData.meta_title) {
+            const metaTitleValidation = validateTitleLength(formData.meta_title);
+            if (!metaTitleValidation.isValid) {
+                warnings.push(`Meta Title: ${metaTitleValidation.recommendation}`);
+            }
+        }
+
+        // Validate meta description if provided
+        if (formData.meta_description) {
+            const metaDescValidation = validateDescriptionLength(formData.meta_description);
+            if (!metaDescValidation.isValid) {
+                warnings.push(`Meta Description: ${metaDescValidation.recommendation}`);
+            }
+        }
+
+        // Validate content structure
+        if (formData.content) {
+            const contentValidation = validateSemanticStructure(formData.content);
+            contentValidation.errors.forEach(err => {
+                warnings.push(`Erro no conteúdo: ${err.message}`);
+            });
+            contentValidation.warnings.forEach(warn => {
+                warnings.push(`Aviso no conteúdo: ${warn.message}`);
+            });
+
+            // Validate content length
+            const lengthValidation = validateContentLength(formData.content);
+            lengthValidation.errors.forEach(err => {
+                warnings.push(`Erro: ${err.message}`);
+            });
+            lengthValidation.warnings.forEach(warn => {
+                warnings.push(`Aviso: ${warn.message}`);
+            });
+        }
+
+        // Check for slug
+        if (!formData.slug && formData.title) {
+            warnings.push('Slug não definido. Será gerado automaticamente do título.');
+        }
+
+        setSeoWarnings(warnings);
+        return warnings.length === 0;
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsSaving(true);
 
         try {
+            // Validate slug if provided
+            if (formData.slug && !validateSlug(formData.slug)) {
+                toast.error('Slug inválido. Corrija antes de salvar.');
+                setIsSaving(false);
+                return;
+            }
+
+            // Validate SEO
+            const isValid = validateSEO();
+            if (!isValid && seoWarnings.length > 0) {
+                // Show warnings but allow saving
+                toast.error(`Atenção: ${seoWarnings.length} aviso(s) de SEO encontrado(s). Verifique os avisos abaixo.`, {
+                    duration: 5000,
+                });
+            }
+
             let coverImageUrl = formData.cover_image;
 
             // Upload cover image if a new file was selected
@@ -163,12 +320,31 @@ export default function AdminPostsPage() {
             }
 
             const tagsArray = formData.tags.split(',').map((t) => t.trim()).filter(Boolean);
-            const postData = {
-                ...formData,
+            const keywordsArray = formData.keywords.split(',').map((k) => k.trim()).filter(Boolean);
+            
+            const postData: any = {
+                title: formData.title,
+                description: formData.description,
                 cover_image: coverImageUrl || null,
+                type: formData.type,
                 tags: tagsArray,
+                content: formData.content,
+                published: formData.published,
                 author: null,
                 views: editingPost?.views ?? 0,
+                // SEO fields
+                slug: formData.slug || null,
+                excerpt: formData.excerpt || null,
+                meta_title: formData.meta_title || null,
+                meta_description: formData.meta_description || null,
+                keywords: keywordsArray,
+                canonical_url: formData.canonical_url || null,
+                noindex: formData.noindex,
+                nofollow: formData.nofollow,
+                og_title: formData.og_title || null,
+                og_description: formData.og_description || null,
+                og_image: formData.og_image || null,
+                schema_type: formData.schema_type,
             };
 
             let savedPostId: string;
@@ -285,9 +461,80 @@ export default function AdminPostsPage() {
                         <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} className="fixed inset-4 md:inset-auto md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:max-w-2xl md:w-full bg-white rounded-[10px] shadow-2xl z-50 overflow-auto max-h-[90vh]">
                             <div className="flex items-center justify-between p-4 border-b sticky top-0 bg-white z-10"><h2 className="text-xl md:text-[24px] font-bold text-[var(--color-accent)]">{editingPost ? 'Editar' : 'Novo'} Post</h2><button onClick={closeModal} className="p-2 rounded-[10px] hover:bg-gray-100"><X className="w-5 h-5" /></button></div>
                             <form onSubmit={handleSubmit} className="p-4 space-y-4">
+                                {/* SEO Warnings */}
+                                {seoWarnings.length > 0 && (
+                                    <div className="bg-yellow-50 border border-yellow-200 rounded-[10px] p-4 mb-4">
+                                        <h3 className="font-semibold text-yellow-800 mb-2">⚠️ Avisos de SEO</h3>
+                                        <ul className="list-disc list-inside space-y-1 text-sm text-yellow-700">
+                                            {seoWarnings.map((warning, index) => (
+                                                <li key={index}>{warning}</li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                )}
                                 <div className="grid md:grid-cols-2 gap-4">
-                                    <div className="md:col-span-2"><label className="block text-sm font-medium mb-1">Título *</label><input type="text" value={formData.title} onChange={(e) => setFormData((p) => ({ ...p, title: e.target.value }))} className="w-full px-4 py-2 rounded-[10px] border focus:border-[var(--color-accent)] outline-none" required /></div>
-                                    <div><label className="block text-sm font-medium mb-1">Tipo *</label><select value={formData.type} onChange={(e) => setFormData((p) => ({ ...p, type: e.target.value as Post['type'] }))} className="w-full px-4 py-2 rounded-[10px] border focus:border-[var(--color-accent)] outline-none"><option value="blog">Blog</option><option value="study">Estudo</option></select></div>
+                                    <div className="md:col-span-2">
+                                        <label className="block text-sm font-medium mb-1">
+                                            Título *
+                                            {formData.title && (
+                                                <span className={`ml-2 text-xs ${validateTitleLength(formData.title).isValid ? 'text-green-600' : 'text-yellow-600'}`}>
+                                                    ({formData.title.length}/60 caracteres)
+                                                </span>
+                                            )}
+                                        </label>
+                                        <input 
+                                            type="text" 
+                                            value={formData.title} 
+                                            onChange={(e) => {
+                                                setFormData((p) => ({ ...p, title: e.target.value }));
+                                                setTimeout(() => validateSEO(), 100);
+                                            }} 
+                                            className="w-full px-4 py-2 rounded-[10px] border focus:border-[var(--color-accent)] outline-none" 
+                                            required 
+                                            maxLength={60}
+                                        />
+                                    </div>
+                                    <div className="md:col-span-2">
+                                        <label className="block text-sm font-medium mb-1">
+                                            Slug (URL amigável)
+                                            <button
+                                                type="button"
+                                                onClick={handleGenerateSlug}
+                                                disabled={isGeneratingSlug || !formData.title}
+                                                className="ml-2 text-xs text-[var(--color-accent)] hover:underline disabled:opacity-50"
+                                            >
+                                                {isGeneratingSlug ? 'Gerando...' : 'Gerar do título'}
+                                            </button>
+                                        </label>
+                                        <input 
+                                            type="text" 
+                                            value={formData.slug} 
+                                            onChange={(e) => {
+                                                handleSlugChange(e.target.value);
+                                                // Re-validate SEO when slug changes
+                                                setTimeout(() => validateSEO(), 100);
+                                            }} 
+                                            placeholder="exemplo-de-slug-amigavel"
+                                            className={`w-full px-4 py-2 rounded-[10px] border focus:border-[var(--color-accent)] outline-none ${slugError ? 'border-red-500' : ''}`}
+                                        />
+                                        {slugError && <p className="text-xs text-red-500 mt-1">{slugError}</p>}
+                                        <p className="text-xs text-gray-500 mt-1">Deixe vazio para gerar automaticamente do título</p>
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium mb-1">Tipo *</label>
+                                        <select value={formData.type} onChange={(e) => setFormData((p) => ({ ...p, type: e.target.value as Post['type'] }))} className="w-full px-4 py-2 rounded-[10px] border focus:border-[var(--color-accent)] outline-none">
+                                            <option value="blog">Blog</option>
+                                            <option value="study">Estudo</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium mb-1">Tipo de Schema</label>
+                                        <select value={formData.schema_type} onChange={(e) => setFormData((p) => ({ ...p, schema_type: e.target.value as 'Article' | 'BlogPosting' | 'Study' }))} className="w-full px-4 py-2 rounded-[10px] border focus:border-[var(--color-accent)] outline-none">
+                                            <option value="Article">Article</option>
+                                            <option value="BlogPosting">BlogPosting</option>
+                                            <option value="Study">Study</option>
+                                        </select>
+                                    </div>
                                     <div>
                                         <label className="block text-sm font-medium mb-1">Imagem de Capa</label>
                                         <div className="space-y-2">
@@ -315,15 +562,98 @@ export default function AdminPostsPage() {
                                         </div>
                                     </div>
                                 </div>
-                                <div><label className="block text-sm font-medium mb-1">Descrição *</label><textarea value={formData.description} onChange={(e) => setFormData((p) => ({ ...p, description: e.target.value }))} rows={2} className="w-full px-4 py-2 rounded-[10px] border focus:border-[var(--color-accent)] outline-none resize-none" required /></div>
+                                <div>
+                                    <label className="block text-sm font-medium mb-1">
+                                        Descrição *
+                                        {formData.description && (
+                                            <span className={`ml-2 text-xs ${validateDescriptionLength(formData.description).isValid ? 'text-green-600' : 'text-yellow-600'}`}>
+                                                ({formData.description.length}/160 caracteres)
+                                            </span>
+                                        )}
+                                    </label>
+                                    <textarea 
+                                        value={formData.description} 
+                                        onChange={(e) => {
+                                            setFormData((p) => ({ ...p, description: e.target.value }));
+                                            setTimeout(() => validateSEO(), 100);
+                                        }} 
+                                        rows={2} 
+                                        className="w-full px-4 py-2 rounded-[10px] border focus:border-[var(--color-accent)] outline-none resize-none" 
+                                        required 
+                                        maxLength={200}
+                                    />
+                                </div>
+                                <div><label className="block text-sm font-medium mb-1">Excerpt (Resumo para SEO)</label><textarea value={formData.excerpt} onChange={(e) => setFormData((p) => ({ ...p, excerpt: e.target.value }))} rows={2} className="w-full px-4 py-2 rounded-[10px] border focus:border-[var(--color-accent)] outline-none resize-none" placeholder="Resumo otimizado para SEO (150-160 caracteres)" /></div>
+                                
+                                {/* SEO Section */}
+                                <div className="md:col-span-2 border-t pt-4 mt-4">
+                                    <h3 className="text-lg font-bold text-[var(--color-accent)] mb-4">Configurações SEO</h3>
+                                    <div className="grid md:grid-cols-2 gap-4">
+                                        <div>
+                                            <label className="block text-sm font-medium mb-1">Meta Title (opcional)</label>
+                                            <input type="text" value={formData.meta_title} onChange={(e) => setFormData((p) => ({ ...p, meta_title: e.target.value }))} className="w-full px-4 py-2 rounded-[10px] border focus:border-[var(--color-accent)] outline-none" placeholder="Título para SEO (50-60 caracteres)" maxLength={60} />
+                                            <p className="text-xs text-gray-500 mt-1">{formData.meta_title.length}/60 caracteres</p>
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium mb-1">Meta Description (opcional)</label>
+                                            <textarea value={formData.meta_description} onChange={(e) => setFormData((p) => ({ ...p, meta_description: e.target.value }))} rows={2} className="w-full px-4 py-2 rounded-[10px] border focus:border-[var(--color-accent)] outline-none resize-none" placeholder="Descrição para SEO (150-160 caracteres)" maxLength={160} />
+                                            <p className="text-xs text-gray-500 mt-1">{formData.meta_description.length}/160 caracteres</p>
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium mb-1">Keywords (separadas por vírgula)</label>
+                                            <input type="text" value={formData.keywords} onChange={(e) => setFormData((p) => ({ ...p, keywords: e.target.value }))} className="w-full px-4 py-2 rounded-[10px] border focus:border-[var(--color-accent)] outline-none" placeholder="palavra-chave-1, palavra-chave-2" />
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium mb-1">Canonical URL (opcional)</label>
+                                            <input type="url" value={formData.canonical_url} onChange={(e) => setFormData((p) => ({ ...p, canonical_url: e.target.value }))} className="w-full px-4 py-2 rounded-[10px] border focus:border-[var(--color-accent)] outline-none" placeholder="https://exemplo.com/artigo" />
+                                        </div>
+                                        <div className="flex gap-4">
+                                            <label className="flex items-center gap-2">
+                                                <input type="checkbox" checked={formData.noindex} onChange={(e) => setFormData((p) => ({ ...p, noindex: e.target.checked }))} className="w-5 h-5 rounded" />
+                                                <span className="text-sm">Noindex (não indexar)</span>
+                                            </label>
+                                            <label className="flex items-center gap-2">
+                                                <input type="checkbox" checked={formData.nofollow} onChange={(e) => setFormData((p) => ({ ...p, nofollow: e.target.checked }))} className="w-5 h-5 rounded" />
+                                                <span className="text-sm">Nofollow (não seguir links)</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Open Graph Section */}
+                                <div className="md:col-span-2 border-t pt-4 mt-4">
+                                    <h3 className="text-lg font-bold text-[var(--color-accent)] mb-4">Open Graph (Redes Sociais)</h3>
+                                    <div className="grid md:grid-cols-2 gap-4">
+                                        <div>
+                                            <label className="block text-sm font-medium mb-1">OG Title (opcional)</label>
+                                            <input type="text" value={formData.og_title} onChange={(e) => setFormData((p) => ({ ...p, og_title: e.target.value }))} className="w-full px-4 py-2 rounded-[10px] border focus:border-[var(--color-accent)] outline-none" placeholder="Título para compartilhamento" />
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium mb-1">OG Description (opcional)</label>
+                                            <textarea value={formData.og_description} onChange={(e) => setFormData((p) => ({ ...p, og_description: e.target.value }))} rows={2} className="w-full px-4 py-2 rounded-[10px] border focus:border-[var(--color-accent)] outline-none resize-none" placeholder="Descrição para compartilhamento" />
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium mb-1">OG Image URL (opcional)</label>
+                                            <input type="url" value={formData.og_image} onChange={(e) => setFormData((p) => ({ ...p, og_image: e.target.value }))} className="w-full px-4 py-2 rounded-[10px] border focus:border-[var(--color-accent)] outline-none" placeholder="https://exemplo.com/imagem-og.jpg" />
+                                            <p className="text-xs text-gray-500 mt-1">Recomendado: 1200x630px. Deixe vazio para usar imagem de capa.</p>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <div><label className="block text-sm font-medium mb-1">Tags (separadas por vírgula)</label><input type="text" value={formData.tags} onChange={(e) => setFormData((p) => ({ ...p, tags: e.target.value }))} className="w-full px-4 py-2 rounded-[10px] border focus:border-[var(--color-accent)] outline-none" placeholder="Ex: Oração, Vida Cristã" /></div>
                                 <div>
                                     <label className="block text-sm font-medium mb-1">Conteúdo *</label>
                                     <RichTextEditor 
                                         content={formData.content} 
-                                        onChange={(content) => setFormData((p) => ({ ...p, content }))}
+                                        onChange={(content) => {
+                                            setFormData((p) => ({ ...p, content }));
+                                            setTimeout(() => validateSEO(), 300);
+                                        }}
                                         onImageUpload={handleImageUpload}
                                     />
+                                    <p className="text-xs text-gray-500 mt-2">
+                                        Dica: Use apenas um H1 por artigo. Use H2, H3, H4 para hierarquia.
+                                    </p>
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium mb-1">Conteúdos Relacionados</label>

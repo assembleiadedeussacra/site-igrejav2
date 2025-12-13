@@ -329,4 +329,100 @@ export const serverApi = {
             return null;
         }
     },
+
+    getPostBySlug: async (slug: string, type?: 'blog' | 'study') => {
+        try {
+            const supabase = await createClient();
+            let query = supabase
+                .from('posts')
+                .select('*')
+                .eq('slug', slug)
+                .eq('published', true);
+            
+            if (type) {
+                query = query.eq('type', type);
+            }
+            
+            const { data } = await query.single();
+            return data || null;
+        } catch (error) {
+            console.error('Error fetching post by slug:', error);
+            return null;
+        }
+    },
+
+    // Helper function that tries slug first, then falls back to ID (for backward compatibility)
+    getPostByIdOrSlug: async (identifier: string, type?: 'blog' | 'study') => {
+        // Try slug first (more common case)
+        const postBySlug = await serverApi.getPostBySlug(identifier, type);
+        if (postBySlug) return postBySlug;
+        
+        // Fallback to ID (for backward compatibility)
+        return await serverApi.getPostById(identifier);
+    },
+
+    // Get related posts by tags or explicit relations
+    getRelatedPosts: async (postId: string, type: 'blog' | 'study', limit = 3) => {
+        try {
+            const supabase = await createClient();
+            
+            // First, get the current post to check its tags
+            const { data: currentPost } = await supabase
+                .from('posts')
+                .select('tags')
+                .eq('id', postId)
+                .single();
+
+            if (!currentPost || !currentPost.tags || currentPost.tags.length === 0) {
+                // If no tags, get recent posts of same type
+                const { data } = await supabase
+                    .from('posts')
+                    .select('*')
+                    .eq('type', type)
+                    .eq('published', true)
+                    .neq('id', postId)
+                    .order('created_at', { ascending: false })
+                    .limit(limit);
+                return data || [];
+            }
+
+            // Find posts with matching tags
+            const { data } = await supabase
+                .from('posts')
+                .select('*')
+                .eq('type', type)
+                .eq('published', true)
+                .neq('id', postId)
+                .overlaps('tags', currentPost.tags)
+                .order('created_at', { ascending: false })
+                .limit(limit);
+
+            // If not enough posts with matching tags, fill with recent posts
+            if (data && data.length < limit) {
+                const excludeIds = [...(data || []).map(p => p.id), postId];
+                let query = supabase
+                    .from('posts')
+                    .select('*')
+                    .eq('type', type)
+                    .eq('published', true)
+                    .neq('id', postId);
+                
+                // Exclude already found posts
+                if (excludeIds.length > 1) {
+                    query = query.not('id', 'in', `(${excludeIds.map(id => `'${id}'`).join(',')})`);
+                }
+                
+                const { data: recentPosts } = await query
+                    .order('created_at', { ascending: false })
+                    .limit(limit - data.length);
+                
+                return [...(data || []), ...(recentPosts || [])].slice(0, limit);
+            }
+
+            return data || [];
+        } catch (error) {
+            console.error('Error fetching related posts:', error);
+            return [];
+        }
+    },
 };

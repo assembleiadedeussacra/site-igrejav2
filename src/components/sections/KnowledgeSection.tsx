@@ -142,7 +142,7 @@ export default function KnowledgeSection({ posts = [] }: KnowledgeSectionProps) 
                                                 {post.description}
                                             </p>
                                             <Link
-                                                href={`/blog/${post.id}`}
+                                                href={`/blog/${post.slug || post.id}`}
                                                 className="inline-flex items-center gap-2 text-[var(--color-accent)] font-semibold hover:gap-3 transition-all"
                                             >
                                                 Ler Artigo
@@ -178,7 +178,7 @@ export default function KnowledgeSection({ posts = [] }: KnowledgeSectionProps) 
                                             ))}
                                         </div>
                                         <Link
-                                            href={`/estudos/${post.id}`}
+                                            href={`/estudos/${post.slug || post.id}`}
                                             className="inline-flex items-center gap-2 text-[var(--color-accent)] font-semibold hover:gap-3 transition-all"
                                         >
                                             Ler Estudo

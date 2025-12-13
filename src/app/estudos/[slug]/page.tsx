@@ -1,80 +1,61 @@
-'use client';
-
-import { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
+import type { Metadata } from 'next';
+import { notFound, permanentRedirect } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Header, Footer } from '@/components';
 import PostViewTracker from '@/components/posts/PostViewTracker';
-import { api } from '@/services/api';
+import { serverApi } from '@/services/server';
+import { generatePostMetadata } from '@/lib/seo/generateMetadata';
+import { generateArticleSchema } from '@/lib/seo/schema';
+import Breadcrumbs from '@/components/seo/Breadcrumbs';
+import RelatedPosts from '@/components/posts/RelatedPosts';
 import type { Post, SiteSettings } from '@/lib/database.types';
 import { Calendar, Tag, ArrowLeft, Eye } from 'lucide-react';
-import { motion } from 'framer-motion';
 
-export default function EstudoPostPage() {
-    const params = useParams();
-    const id = params.id as string;
-    const [post, setPost] = useState<Post | null>(null);
-    const [settings, setSettings] = useState<SiteSettings | null>(null);
-    const [isLoading, setIsLoading] = useState(true);
+interface EstudoPostPageProps {
+    params: Promise<{ slug: string }>;
+}
 
-    useEffect(() => {
-        const loadData = async () => {
-            try {
-                setIsLoading(true);
-                const results = await Promise.allSettled([
-                    api.getPostById(id),
-                    api.getSettings(),
-                ]);
-
-                setPost(results[0].status === 'fulfilled' ? results[0].value : null);
-                setSettings(results[1].status === 'fulfilled' ? results[1].value : null);
-            } catch (error) {
-                console.error('Error loading post:', error);
-            } finally {
-                setIsLoading(false);
-            }
+export async function generateMetadata(
+    { params }: EstudoPostPageProps
+): Promise<Metadata> {
+    const { slug } = await params;
+    const post = await serverApi.getPostBySlug(slug, 'study');
+    
+    if (!post) {
+        return {
+            title: 'Estudo não encontrado',
         };
-
-        if (id) {
-            loadData();
-        }
-    }, [id]);
-
-    if (isLoading) {
-        return (
-            <>
-                <Header settings={settings} />
-                <main className="pt-24 min-h-screen flex items-center justify-center">
-                    <div className="text-center">
-                        <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--color-accent)]"></div>
-                    </div>
-                </main>
-                <Footer settings={settings} />
-            </>
-        );
     }
 
+    return generatePostMetadata(post, 'study');
+}
+
+// ISR: Revalidate every hour
+export const revalidate = 3600;
+
+export default async function EstudoPostPage({ params }: EstudoPostPageProps) {
+    const { slug } = await params;
+    const [post, settings, relatedPosts] = await Promise.all([
+        serverApi.getPostBySlug(slug, 'study'),
+        serverApi.getSettings(),
+        serverApi.getPostBySlug(slug, 'study').then(p => 
+            p ? serverApi.getRelatedPosts(p.id, 'study', 3) : []
+        ),
+    ]);
+
+    // If post not found, try to redirect from old ID-based URL
     if (!post) {
-        return (
-            <>
-                <Header settings={settings} />
-                <main className="pt-24 min-h-screen flex items-center justify-center">
-                    <div className="text-center">
-                        <h1 className="text-2xl font-bold text-[var(--color-text)] mb-4">
-                            Estudo não encontrado
-                        </h1>
-                        <Link
-                            href="/estudos"
-                            className="text-[var(--color-accent)] hover:underline"
-                        >
-                            Voltar para Estudos
-                        </Link>
-                    </div>
-                </main>
-                <Footer settings={settings} />
-            </>
-        );
+        // Check if slug is actually a UUID (old format)
+        const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+        if (uuidPattern.test(slug)) {
+            const postById = await serverApi.getPostById(slug);
+            if (postById && postById.slug) {
+                // Redirect to slug-based URL (301 permanent redirect for SEO)
+                permanentRedirect(`/estudos/${postById.slug}`);
+            }
+        }
+        notFound();
     }
 
     const formatDate = (dateString: string): string => {
@@ -86,10 +67,39 @@ export default function EstudoPostPage() {
         });
     };
 
+    const schema = generateArticleSchema(post);
+
+    // Breadcrumbs data
+    const breadcrumbItems = [
+        { label: 'Home', href: '/' },
+        { label: 'Estudos', href: '/estudos' },
+        { label: post.title, href: `/estudos/${post.slug || post.id}` },
+    ];
+
+    // Enhanced Schema with BreadcrumbList
+    const breadcrumbSchema = {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: breadcrumbItems.map((item, index) => ({
+            '@type': 'ListItem',
+            position: index + 1,
+            name: item.label,
+            item: item.href.startsWith('http') ? item.href : `${process.env.NEXT_PUBLIC_SITE_URL || 'https://assembleiasacramento.com.br'}${item.href}`,
+        })),
+    };
+
     return (
         <>
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+            />
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+            />
             <Header settings={settings} />
-            <PostViewTracker postId={id} />
+            <PostViewTracker postId={post.id} />
             <main className="pt-24">
                 <article>
                     {/* Cover Image */}
@@ -108,6 +118,9 @@ export default function EstudoPostPage() {
 
                     <div className="container-custom py-12 bg-[var(--color-background)]">
                         <div className="max-w-4xl mx-auto">
+                            {/* Breadcrumbs */}
+                            <Breadcrumbs items={breadcrumbItems} />
+
                             {/* Back Link */}
                             <Link
                                 href="/estudos"
@@ -118,11 +131,7 @@ export default function EstudoPostPage() {
                             </Link>
 
                             {/* Header */}
-                            <motion.div
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                className="mb-8"
-                            >
+                            <div className="mb-8">
                                 <div className="flex flex-wrap items-center gap-4 text-sm text-[var(--color-text-muted)] mb-4">
                                     <div className="flex items-center gap-2">
                                         <Calendar className="w-4 h-4" />
@@ -144,7 +153,7 @@ export default function EstudoPostPage() {
                                 </h1>
 
                                 <p className="text-xl text-[var(--color-text-secondary)] mb-6">
-                                    {post.description}
+                                    {post.excerpt || post.description}
                                 </p>
 
                                 {post.tags && post.tags.length > 0 && (
@@ -160,20 +169,20 @@ export default function EstudoPostPage() {
                                         ))}
                                     </div>
                                 )}
-                            </motion.div>
+                            </div>
 
                             {/* Content */}
-                            <motion.div
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.1 }}
-                                className="prose prose-lg max-w-none bg-white rounded-[10px] p-8 md:p-12 shadow-sm"
-                            >
+                            <div className="prose prose-lg max-w-none bg-white rounded-[10px] p-8 md:p-12 shadow-sm">
                                 <div
                                     dangerouslySetInnerHTML={{ __html: post.content }}
                                     className="text-[var(--color-text-secondary)] leading-relaxed"
                                 />
-                            </motion.div>
+                            </div>
+
+                            {/* Related Posts */}
+                            {relatedPosts && relatedPosts.length > 0 && (
+                                <RelatedPosts posts={relatedPosts} type="study" />
+                            )}
                         </div>
                     </div>
                 </article>
