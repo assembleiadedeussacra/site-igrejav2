@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import type { Post } from '@/lib/database.types';
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://assembleiasacramento.com.br';
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://assembleiasacramento.vercel.app';
 const SITE_NAME = 'Assembleia de Deus Missão - Sacramento/MG';
 
 /**

@@ -13,7 +13,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://assembleiasacramento.com.br'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://assembleiasacramento.vercel.app'),
   title: {
     default: 'Assembleia de Deus Missão - Sacramento/MG',
     template: '%s | Assembleia de Deus Missão Sacramento',
@@ -48,7 +48,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'pt_BR',
-    url: 'https://assembleiasacramento.com.br',
+    url: process.env.NEXT_PUBLIC_SITE_URL || 'https://assembleiasacramento.vercel.app',
     siteName: 'Assembleia de Deus Missão - Sacramento/MG',
     title: 'Assembleia de Deus Missão - Sacramento/MG',
     description:
@@ -73,7 +73,7 @@ export const metadata: Metadata = {
     // google: 'your-google-verification-code',
   },
   alternates: {
-    canonical: 'https://assembleiasacramento.com.br',
+    canonical: process.env.NEXT_PUBLIC_SITE_URL || 'https://assembleiasacramento.vercel.app',
   },
   category: 'religion',
 };
@@ -111,8 +111,8 @@ export default function RootLayout({
                 postalCode: '38190-000',
                 addressCountry: 'BR',
               },
-              url: 'https://assembleiasacramento.com.br',
-              logo: 'https://assembleiasacramento.com.br/images/logo-igreja.jpg',
+              url: process.env.NEXT_PUBLIC_SITE_URL || 'https://assembleiasacramento.vercel.app',
+              logo: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://assembleiasacramento.vercel.app'}/images/logo-igreja.jpg`,
               sameAs: ['https://www.instagram.com/assembleiasacramento/'],
               telephone: '+55-34-98432-7019',
               openingHoursSpecification: [

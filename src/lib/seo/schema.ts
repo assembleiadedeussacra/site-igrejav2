@@ -1,6 +1,6 @@
 import type { Post } from '@/lib/database.types';
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://assembleiasacramento.com.br';
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://assembleiasacramento.vercel.app';
 
 /**
  * Generates Schema.org structured data for an article

@@ -242,9 +242,9 @@ O sistema agora possui todas as características de um sistema enterprise:
    - Obter em: [Google Analytics](https://analytics.google.com/)
 
 ### Recomendadas:
-2. ⚠️ **Executar migração de índices**
-   - Arquivo: `supabase/migrations/add_performance_indexes.sql`
-   - Executar no Supabase SQL Editor
+2. ✅ **Executar migração de índices** - **CONCLUÍDO**
+   - ✅ Todos os índices criados
+   - ✅ Performance otimizada
 
 3. ⚠️ **Testar PWA**
    - Acessar em dispositivo mobile

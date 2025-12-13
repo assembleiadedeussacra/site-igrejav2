@@ -4,7 +4,7 @@ Crie ou atualize o arquivo `.env.local` na raiz do projeto com as seguintes vari
 
 ```env
 # Site URL (obrigatório)
-NEXT_PUBLIC_SITE_URL=https://assembleiasacramento.com.br
+NEXT_PUBLIC_SITE_URL=https://assembleiasacramento.vercel.app
 
 # Revalidation Secret (para webhook de revalidação)
 # Valor gerado: goA1S8Qh9Eo7l7z+j0wZuqpVKfF74k0LK0Zdbu/Lj3E=

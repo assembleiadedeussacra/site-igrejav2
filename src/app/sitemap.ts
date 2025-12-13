@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next';
 import { serverApi } from '@/services/server';
 import type { Post } from '@/lib/database.types';
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://assembleiasacramento.com.br';
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://assembleiasacramento.vercel.app';
 
 // Helper function to normalize URLs (remove trailing slashes and fix double slashes)
 function normalizeUrl(baseUrl: string, path: string): string {
