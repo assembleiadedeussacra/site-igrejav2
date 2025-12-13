@@ -346,7 +346,7 @@ function PostCard({
                 </p>
 
                 <Link
-                    href={`/${pageType}/${post.id}`}
+                    href={`/${pageType === 'study' ? 'estudos' : 'blog'}/${post.id}`}
                     className="inline-flex items-center gap-2 text-[var(--color-accent)] font-semibold hover:gap-3 transition-all"
                 >
                     Ler {pageType === 'blog' ? 'Artigo' : 'Sobre'}
