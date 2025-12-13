@@ -58,6 +58,31 @@ export interface Leader {
     updated_at: string;
 }
 
+// SEO-related type definitions
+export interface SEOFields {
+    slug: string | null;
+    excerpt: string | null;
+    meta_title: string | null;
+    meta_description: string | null;
+    keywords: string[];
+    canonical_url: string | null;
+    noindex: boolean;
+    nofollow: boolean;
+}
+
+export interface OpenGraphFields {
+    og_title: string | null;
+    og_description: string | null;
+    og_image: string | null;
+}
+
+export interface RobotsFields {
+    noindex: boolean;
+    nofollow: boolean;
+}
+
+export type SchemaType = 'Article' | 'BlogPosting' | 'Study';
+
 export interface Post {
     id: string;
     title: string;
@@ -72,6 +97,20 @@ export interface Post {
     created_at: string;
     updated_at: string;
     related_posts?: Post[]; // Optional, for queries with relations
+    
+    // SEO fields
+    slug: string | null;
+    excerpt: string | null;
+    meta_title: string | null;
+    meta_description: string | null;
+    keywords: string[];
+    canonical_url: string | null;
+    noindex: boolean;
+    nofollow: boolean;
+    og_title: string | null;
+    og_description: string | null;
+    og_image: string | null;
+    schema_type: SchemaType;
 }
 
 export interface PageBanner {

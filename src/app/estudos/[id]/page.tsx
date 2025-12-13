@@ -91,10 +91,10 @@ export default function EstudoPostPage() {
             <Header settings={settings} />
             <PostViewTracker postId={id} />
             <main className="pt-24">
-                <article className="bg-[var(--color-background)]">
+                <article>
                     {/* Cover Image */}
                     {post.cover_image && (
-                        <div className="relative h-[50vh] min-h-[400px] overflow-hidden">
+                        <div className="relative h-[50vh] min-h-[400px] overflow-hidden -mt-24">
                             <Image
                                 src={post.cover_image}
                                 alt={post.title}
@@ -106,7 +106,7 @@ export default function EstudoPostPage() {
                         </div>
                     )}
 
-                    <div className="container-custom py-12">
+                    <div className="container-custom py-12 bg-[var(--color-background)]">
                         <div className="max-w-4xl mx-auto">
                             {/* Back Link */}
                             <Link

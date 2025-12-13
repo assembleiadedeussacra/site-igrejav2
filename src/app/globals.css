@@ -340,6 +340,11 @@ main > section:first-child {
   margin-top: 0;
 }
 
+/* Post Cards - Ensure title font-size is 22px */
+article.card-hover h2.font-bold {
+  font-size: 22px !important;
+}
+
 /* Animation Keyframes */
 @keyframes fadeIn {
   from {
