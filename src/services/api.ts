@@ -1,5 +1,5 @@
 import { createClient } from '../lib/supabase/client';
-import { Database, AboutPageCover } from '../lib/database.types';
+import { Database, AboutPageCover, Post } from '../lib/database.types';
 
 export const api = {
     getBanners: async () => {
@@ -954,6 +954,22 @@ export const api = {
             return [];
         }
         return data || [];
+    },
+
+    getPostById: async (id: string): Promise<Post | null> => {
+        const supabase = createClient();
+        const { data, error } = await supabase
+            .from('posts')
+            .select('*')
+            .eq('id', id)
+            .eq('published', true)
+            .single();
+
+        if (error) {
+            console.error('Error fetching post:', error);
+            return null;
+        }
+        return data as Post | null;
     },
 
     incrementPostViews: async (postId: string) => {

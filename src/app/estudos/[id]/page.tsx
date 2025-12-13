@@ -1,42 +1,59 @@
-import type { Metadata } from 'next';
+'use client';
+
+import { useEffect, useState } from 'react';
+import { useParams } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Header, Footer } from '@/components';
 import PostViewTracker from '@/components/posts/PostViewTracker';
+import { api } from '@/services/api';
 import { serverApi } from '@/services/server';
 import type { Post, SiteSettings } from '@/lib/database.types';
 import { Calendar, Tag, ArrowLeft, Eye } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-interface EstudoPostPageProps {
-    params: Promise<{ id: string }>;
-}
+export default function EstudoPostPage() {
+    const params = useParams();
+    const id = params.id as string;
+    const [post, setPost] = useState<Post | null>(null);
+    const [settings, setSettings] = useState<SiteSettings | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
 
-export async function generateMetadata({ params }: EstudoPostPageProps): Promise<Metadata> {
-    const { id } = await params;
-    const post = await serverApi.getPostById(id);
-    
-    return {
-        title: post?.title || 'Estudos e Reflexões',
-        description: post?.description || '',
-    };
-}
+    useEffect(() => {
+        const loadData = async () => {
+            try {
+                setIsLoading(true);
+                const results = await Promise.allSettled([
+                    api.getPostById(id),
+                    serverApi.getSettings(),
+                ]);
 
-export default async function EstudoPostPage({ params }: EstudoPostPageProps) {
-    const { id } = await params;
-    let post: Post | null = null;
-    let settings: SiteSettings | null = null;
+                setPost(results[0].status === 'fulfilled' ? results[0].value : null);
+                setSettings(results[1].status === 'fulfilled' ? results[1].value : null);
+            } catch (error) {
+                console.error('Error loading post:', error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
 
-    try {
-        const results = await Promise.allSettled([
-            serverApi.getPostById(id),
-            serverApi.getSettings(),
-        ]);
+        if (id) {
+            loadData();
+        }
+    }, [id]);
 
-        post = results[0].status === 'fulfilled' ? results[0].value : null;
-        settings = results[1].status === 'fulfilled' ? results[1].value : null;
-    } catch (error) {
-        console.error('Error loading post:', error);
+    if (isLoading) {
+        return (
+            <>
+                <Header settings={settings} />
+                <main className="pt-24 min-h-screen flex items-center justify-center">
+                    <div className="text-center">
+                        <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--color-accent)]"></div>
+                    </div>
+                </main>
+                <Footer settings={settings} />
+            </>
+        );
     }
 
     if (!post) {
@@ -166,4 +183,3 @@ export default async function EstudoPostPage({ params }: EstudoPostPageProps) {
         </>
     );
 }
-
