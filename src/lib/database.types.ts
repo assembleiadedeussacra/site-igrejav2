@@ -68,9 +68,19 @@ export interface Post {
     content: string; // Rich text/HTML content
     author: string | null;
     published: boolean;
+    views: number;
     created_at: string;
     updated_at: string;
     related_posts?: Post[]; // Optional, for queries with relations
+}
+
+export interface PageBanner {
+    id: string;
+    page_type: 'estudos' | 'blog';
+    image_url: string;
+    active: boolean;
+    created_at: string;
+    updated_at: string;
 }
 
 export interface PostRelation {

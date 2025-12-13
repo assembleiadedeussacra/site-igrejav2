@@ -174,6 +174,84 @@ export const serverApi = {
         }
     },
 
+    getPostsByType: async (type: 'blog' | 'study', limit?: number, offset?: number) => {
+        try {
+            const supabase = await createClient();
+            let query = supabase
+                .from('posts')
+                .select('*')
+                .eq('type', type)
+                .eq('published', true)
+                .order('created_at', { ascending: false });
+
+            if (limit) query = query.limit(limit);
+            if (offset !== undefined && limit) {
+                query = query.range(offset, offset + limit - 1);
+            }
+
+            const { data } = await query;
+            return data || [];
+        } catch (error) {
+            console.error('Error fetching posts by type:', error);
+            return [];
+        }
+    },
+
+    getAllPostsByType: async (type: 'blog' | 'study') => {
+        try {
+            const supabase = await createClient();
+            const { data } = await supabase
+                .from('posts')
+                .select('*')
+                .eq('type', type)
+                .eq('published', true)
+                .order('created_at', { ascending: false });
+            return data || [];
+        } catch (error) {
+            console.error('Error fetching all posts by type:', error);
+            return [];
+        }
+    },
+
+    getTopPostsThisMonth: async (type: 'blog' | 'study', limit = 8) => {
+        try {
+            const supabase = await createClient();
+            const startOfMonth = new Date();
+            startOfMonth.setDate(1);
+            startOfMonth.setHours(0, 0, 0, 0);
+
+            const { data } = await supabase
+                .from('posts')
+                .select('*')
+                .eq('type', type)
+                .eq('published', true)
+                .gte('created_at', startOfMonth.toISOString())
+                .order('views', { ascending: false })
+                .limit(limit);
+            return data || [];
+        } catch (error) {
+            console.error('Error fetching top posts:', error);
+            return [];
+        }
+    },
+
+    getPageBanner: async (pageType: 'estudos' | 'blog') => {
+        try {
+            const supabase = await createClient();
+            const { data } = await supabase
+                .from('page_banners')
+                .select('*')
+                .eq('page_type', pageType)
+                .eq('active', true)
+                .limit(1)
+                .single();
+            return data || null;
+        } catch (error) {
+            console.error('Error fetching page banner:', error);
+            return null;
+        }
+    },
+
     getLeaders: async () => {
         try {
             const supabase = await createClient();
@@ -234,5 +312,21 @@ export const serverApi = {
             console.error('Error fetching department members:', error);
             return [];
         }
-    }
+    },
+
+    getPostById: async (id: string) => {
+        try {
+            const supabase = await createClient();
+            const { data } = await supabase
+                .from('posts')
+                .select('*')
+                .eq('id', id)
+                .eq('published', true)
+                .single();
+            return data || null;
+        } catch (error) {
+            console.error('Error fetching post:', error);
+            return null;
+        }
+    },
 };

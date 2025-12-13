@@ -85,6 +85,11 @@ const menuItems = [
         icon: Users,
     },
     {
+        href: '/admin/banners-paginas',
+        label: 'Banners Páginas',
+        icon: ImageIcon,
+    },
+    {
         href: '/admin/configuracoes',
         label: 'Configurações',
         icon: Settings,

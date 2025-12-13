@@ -1,5 +1,5 @@
 import { createClient } from '../lib/supabase/client';
-import { Database } from '../lib/database.types';
+import { Database, AboutPageCover } from '../lib/database.types';
 
 export const api = {
     getBanners: async () => {
@@ -623,7 +623,7 @@ export const api = {
         return data;
     },
 
-    getAdminAboutPageCover: async () => {
+    getAdminAboutPageCover: async (): Promise<AboutPageCover | null> => {
         const supabase = createClient();
         const { data, error } = await supabase
             .from('about_page_cover')
@@ -632,7 +632,7 @@ export const api = {
             .single();
 
         if (error && error.code !== 'PGRST116') throw error; // PGRST116 = no rows returned
-        return data;
+        return data as AboutPageCover | null;
     },
 
     createAboutPageCover: async (cover: Database['public']['Tables']['about_page_cover']['Insert']) => {
@@ -820,5 +820,160 @@ export const api = {
 
         if (error) throw error;
         return data;
+    },
+
+    // Page Banners
+    getPageBanner: async (pageType: 'estudos' | 'blog') => {
+        const supabase = createClient();
+        const { data, error } = await supabase
+            .from('page_banners')
+            .select('*')
+            .eq('page_type', pageType)
+            .eq('active', true)
+            .limit(1)
+            .single();
+
+        if (error && error.code !== 'PGRST116') {
+            console.error('Error fetching page banner:', error);
+            return null;
+        }
+        return data;
+    },
+
+    getAdminPageBanner: async (pageType: 'estudos' | 'blog') => {
+        const supabase = createClient();
+        const { data, error } = await supabase
+            .from('page_banners')
+            .select('*')
+            .eq('page_type', pageType)
+            .limit(1)
+            .single();
+
+        if (error && error.code !== 'PGRST116') throw error;
+        return data;
+    },
+
+    createPageBanner: async (banner: Database['public']['Tables']['page_banners']['Insert']) => {
+        const supabase = createClient();
+        const { data, error } = await (supabase as any)
+            .from('page_banners')
+            .insert([banner])
+            .select()
+            .single();
+
+        if (error) throw error;
+        return data;
+    },
+
+    updatePageBanner: async (id: string, updates: Database['public']['Tables']['page_banners']['Update']) => {
+        const supabase = createClient();
+        const { data, error } = await (supabase as any)
+            .from('page_banners')
+            .update(updates)
+            .eq('id', id)
+            .select()
+            .single();
+
+        if (error) throw error;
+        return data;
+    },
+
+    // Posts with filters
+    getPostsByType: async (type: 'blog' | 'study', limit?: number, offset?: number) => {
+        const supabase = createClient();
+        let query = supabase
+            .from('posts')
+            .select('*')
+            .eq('type', type)
+            .eq('published', true)
+            .order('created_at', { ascending: false });
+
+        if (limit) query = query.limit(limit);
+        if (offset) query = query.range(offset, offset + (limit || 10) - 1);
+
+        const { data, error } = await query;
+
+        if (error) {
+            console.error('Error fetching posts:', error);
+            return [];
+        }
+        return data || [];
+    },
+
+    searchPosts: async (type: 'blog' | 'study', searchQuery: string) => {
+        const supabase = createClient();
+        const { data, error } = await supabase
+            .from('posts')
+            .select('*')
+            .eq('type', type)
+            .eq('published', true)
+            .or(`title.ilike.%${searchQuery}%,description.ilike.%${searchQuery}%,content.ilike.%${searchQuery}%`)
+            .order('created_at', { ascending: false });
+
+        if (error) {
+            console.error('Error searching posts:', error);
+            return [];
+        }
+        return data || [];
+    },
+
+    getPostsByTag: async (type: 'blog' | 'study', tag: string) => {
+        const supabase = createClient();
+        const { data, error } = await supabase
+            .from('posts')
+            .select('*')
+            .eq('type', type)
+            .eq('published', true)
+            .contains('tags', [tag])
+            .order('created_at', { ascending: false });
+
+        if (error) {
+            console.error('Error fetching posts by tag:', error);
+            return [];
+        }
+        return data || [];
+    },
+
+    getTopPostsThisMonth: async (type: 'blog' | 'study', limit = 8) => {
+        const supabase = createClient();
+        const startOfMonth = new Date();
+        startOfMonth.setDate(1);
+        startOfMonth.setHours(0, 0, 0, 0);
+
+        const { data, error } = await supabase
+            .from('posts')
+            .select('*')
+            .eq('type', type)
+            .eq('published', true)
+            .gte('created_at', startOfMonth.toISOString())
+            .order('views', { ascending: false })
+            .limit(limit);
+
+        if (error) {
+            console.error('Error fetching top posts:', error);
+            return [];
+        }
+        return data || [];
+    },
+
+    incrementPostViews: async (postId: string) => {
+        const supabase = createClient();
+        // First get current views
+        const { data: post } = await supabase
+            .from('posts')
+            .select('views')
+            .eq('id', postId)
+            .single();
+
+        if (!post) return;
+
+        const { error } = await supabase
+            .from('posts')
+            .update({ views: (post.views || 0) + 1 })
+            .eq('id', postId);
+
+        if (error) {
+            console.error('Error incrementing post views:', error);
+        }
     },
 };
