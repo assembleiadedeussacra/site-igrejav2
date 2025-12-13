@@ -43,7 +43,7 @@ export default function TestimonialsSection({ testimonials = [] }: TestimonialsS
     const swiperRef = useRef<SwiperType | undefined>(undefined);
 
     return (
-        <section className="section-padding bg-[var(--color-surface)]">
+        <section id="depoimentos" className="section-padding bg-[var(--color-surface)]">
             <div className="container-custom">
                 {/* Section Header */}
                 <motion.div

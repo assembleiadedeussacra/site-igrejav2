@@ -272,11 +272,43 @@ img {
 
 /* Swiper Wrapper Styles for About Section */
 #sobre .swiper-wrapper {
-  padding-top: 20px;
-  padding-bottom: 20px;
+  padding-top: 30px;
+  padding-bottom: 30px;
   padding-left: 10px;
   padding-right: 10px;
   overflow: hidden;
+}
+
+/* Testimonials Section Styles */
+#depoimentos.section-padding {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-left: 10px;
+  margin-right: 10px;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+/* AboutPageSection Leaders Section - Reduced Padding */
+section.section-padding.bg-white {
+  padding-top: 60px;
+  padding-bottom: 60px;
+}
+
+/* Swiper Styles for Leaders Section in About Page */
+section.section-padding.bg-white .swiper {
+  padding-top: 30px;
+  padding-bottom: 30px;
+}
+
+section.section-padding.bg-white .swiper-wrapper {
+  gap: 0px;
+}
+
+/* Remove padding from motion.div.relative in AboutPageSection */
+section.section-padding.bg-white .relative.px-4 {
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
 /* Animation Keyframes */
