@@ -140,6 +140,8 @@ export default function RichTextEditor({ content, onChange, onImageUpload }: Ric
                         disabled={!editor.can().chain().focus().toggleBold().run()}
                         className={`p-2 rounded-[10px] transition-colors ${editor.isActive('bold') ? 'bg-[var(--color-accent)] text-white' : 'bg-white text-gray-700 hover:bg-gray-100'}`}
                         title="Negrito (Ctrl+B)"
+                        aria-label="Aplicar negrito"
+                        aria-pressed={editor.isActive('bold')}
                     >
                         <Bold className="w-4 h-4" />
                     </button>
@@ -149,6 +151,8 @@ export default function RichTextEditor({ content, onChange, onImageUpload }: Ric
                         disabled={!editor.can().chain().focus().toggleItalic().run()}
                         className={`p-2 rounded-[10px] transition-colors ${editor.isActive('italic') ? 'bg-[var(--color-accent)] text-white' : 'bg-white text-gray-700 hover:bg-gray-100'}`}
                         title="Itálico (Ctrl+I)"
+                        aria-label="Aplicar itálico"
+                        aria-pressed={editor.isActive('italic')}
                     >
                         <Italic className="w-4 h-4" />
                     </button>

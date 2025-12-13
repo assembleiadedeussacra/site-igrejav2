@@ -11,6 +11,7 @@ import { Post } from '@/lib/database.types';
 import { generateSlug, validateSlug } from '@/lib/utils/slug';
 import { validateSemanticStructure, validateContentLength } from '@/lib/content/validator';
 import { validateTitleLength, validateDescriptionLength } from '@/lib/seo/optimizers';
+import { validatePost } from '@/lib/validation/post';
 import toast from 'react-hot-toast';
 
 export default function AdminPostsPage() {
@@ -300,15 +301,6 @@ export default function AdminPostsPage() {
                 return;
             }
 
-            // Validate SEO
-            const isValid = validateSEO();
-            if (!isValid && seoWarnings.length > 0) {
-                // Show warnings but allow saving
-                toast.error(`Atenção: ${seoWarnings.length} aviso(s) de SEO encontrado(s). Verifique os avisos abaixo.`, {
-                    duration: 5000,
-                });
-            }
-
             let coverImageUrl = formData.cover_image;
 
             // Upload cover image if a new file was selected
@@ -322,7 +314,8 @@ export default function AdminPostsPage() {
             const tagsArray = formData.tags.split(',').map((t) => t.trim()).filter(Boolean);
             const keywordsArray = formData.keywords.split(',').map((k) => k.trim()).filter(Boolean);
             
-            const postData: any = {
+            // Preparar dados para validação
+            const postDataToValidate = {
                 title: formData.title,
                 description: formData.description,
                 cover_image: coverImageUrl || null,
@@ -330,14 +323,11 @@ export default function AdminPostsPage() {
                 tags: tagsArray,
                 content: formData.content,
                 published: formData.published,
-                author: null,
-                views: editingPost?.views ?? 0,
-                // SEO fields
-                slug: formData.slug || null,
+                slug: formData.slug || generateSlug(formData.title),
                 excerpt: formData.excerpt || null,
                 meta_title: formData.meta_title || null,
                 meta_description: formData.meta_description || null,
-                keywords: keywordsArray,
+                keywords: keywordsArray.length > 0 ? keywordsArray.join(', ') : null,
                 canonical_url: formData.canonical_url || null,
                 noindex: formData.noindex,
                 nofollow: formData.nofollow,
@@ -345,6 +335,51 @@ export default function AdminPostsPage() {
                 og_description: formData.og_description || null,
                 og_image: formData.og_image || null,
                 schema_type: formData.schema_type,
+            };
+
+            // Validação com Zod
+            const validation = validatePost(postDataToValidate);
+            if (!validation.success) {
+                const errorMessages = validation.errors.map(e => e.message).join(', ');
+                toast.error(`Erro de validação: ${errorMessages}`, {
+                    duration: 6000,
+                });
+                setIsSaving(false);
+                return;
+            }
+
+            // Validate SEO (avisos, não bloqueia)
+            const isValid = validateSEO();
+            if (!isValid && seoWarnings.length > 0) {
+                // Show warnings but allow saving
+                toast.error(`Atenção: ${seoWarnings.length} aviso(s) de SEO encontrado(s). Verifique os avisos abaixo.`, {
+                    duration: 5000,
+                });
+            }
+            
+            const postData: any = {
+                title: validation.data.title,
+                description: formData.description,
+                cover_image: coverImageUrl || null,
+                type: validation.data.type,
+                tags: validation.data.tags,
+                content: validation.data.content,
+                published: validation.data.published,
+                author: null,
+                views: editingPost?.views ?? 0,
+                // SEO fields
+                slug: validation.data.slug,
+                excerpt: validation.data.excerpt || null,
+                meta_title: validation.data.meta_title || null,
+                meta_description: validation.data.meta_description || null,
+                keywords: keywordsArray,
+                canonical_url: validation.data.canonical_url || null,
+                noindex: validation.data.noindex,
+                nofollow: validation.data.nofollow,
+                og_title: validation.data.og_title || null,
+                og_description: validation.data.og_description || null,
+                og_image: validation.data.og_image || null,
+                schema_type: validation.data.schema_type,
             };
 
             let savedPostId: string;

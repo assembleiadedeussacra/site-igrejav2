@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { serverApi } from '@/services/server';
 import type { Post } from '@/lib/database.types';
+import { checkRateLimit } from '@/lib/rate-limit';
+import { Errors, handleApiError } from '@/lib/errors';
+import { logger } from '@/lib/logger';
 
 /**
  * API REST endpoint for Headless CMS integration
@@ -17,6 +20,18 @@ import type { Post } from '@/lib/database.types';
  */
 export async function GET(request: NextRequest) {
     try {
+        // Rate limiting (mais permissivo para API pública)
+        const ip = request.headers.get('x-forwarded-for') || 
+                   request.headers.get('x-real-ip') || 
+                   'unknown';
+        if (!checkRateLimit(`api-posts:${ip}`, 60)) {
+            logger.warn('Rate limit exceeded for posts API', { ip });
+            return NextResponse.json(
+                Errors.RATE_LIMIT_EXCEEDED(),
+                { status: 429 }
+            );
+        }
+
         const searchParams = request.nextUrl.searchParams;
         
         const type = searchParams.get('type') as 'blog' | 'study' | null;
@@ -115,10 +130,18 @@ export async function GET(request: NextRequest) {
             }
         );
     } catch (error) {
-        console.error('Error in /api/content/posts:', error);
+        const appError = handleApiError(error);
+        logger.error('Error in /api/content/posts', error, {
+            path: request.nextUrl.pathname,
+            searchParams: Object.fromEntries(request.nextUrl.searchParams),
+        });
+        
         return NextResponse.json(
-            { error: 'Internal server error' },
-            { status: 500 }
+            {
+                error: appError.message,
+                code: appError.code,
+            },
+            { status: appError.statusCode }
         );
     }
 }

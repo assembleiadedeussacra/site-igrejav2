@@ -83,6 +83,7 @@ export default function ContactSection({ settings }: ContactSectionProps) {
                                     target={item.href.startsWith('http') ? '_blank' : undefined}
                                     rel={item.href.startsWith('http') ? 'noopener noreferrer' : undefined}
                                     className="block bg-white rounded-[10px] p-6 shadow-lg hover:shadow-xl transition-all duration-300 group card-hover h-full"
+                                    aria-label={`${item.title}: ${item.value}. Abrir em nova aba`}
                                 >
                                     <div
                                         className={`w-14 h-14 rounded-[10px] bg-gradient-to-br ${item.color} flex items-center justify-center mb-4 text-white group-hover:scale-110 transition-transform`}

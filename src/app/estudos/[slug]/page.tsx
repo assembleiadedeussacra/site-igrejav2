@@ -119,7 +119,7 @@ export default async function EstudoPostPage({ params }: EstudoPostPageProps) {
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
             />
             <Header settings={settings} />
-            <PostViewTracker postId={post.id} />
+                <PostViewTracker post={post} />
             <main className="pt-24">
                 <article>
                     {/* Cover Image */}

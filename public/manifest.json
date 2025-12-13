@@ -1,12 +1,15 @@
 {
   "name": "Assembleia de Deus Missão - Sacramento/MG",
-  "short_name": "AD Missão",
-  "description": "Website oficial da Igreja Assembleia de Deus Missão de Sacramento MG. Uma comunidade de fé dedicada a adorar a Deus e servir ao próximo.",
+  "short_name": "AD Sacramento",
+  "description": "Website oficial da Igreja Assembleia de Deus Missão de Sacramento MG. Encontre informações sobre cultos, eventos, departamentos e mais.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#232d82",
   "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "pt-BR",
+  "dir": "ltr",
   "icons": [
     {
       "src": "/images/logo-igreja.jpg",
@@ -22,8 +25,31 @@
     }
   ],
   "categories": ["religion", "lifestyle"],
-  "lang": "pt-BR",
-  "dir": "ltr"
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Blog",
+      "short_name": "Blog",
+      "description": "Acessar artigos e estudos",
+      "url": "/blog",
+      "icons": [{ "src": "/images/logo-igreja.jpg", "sizes": "96x96" }]
+    },
+    {
+      "name": "Estudos",
+      "short_name": "Estudos",
+      "description": "Acessar estudos bíblicos",
+      "url": "/estudos",
+      "icons": [{ "src": "/images/logo-igreja.jpg", "sizes": "96x96" }]
+    }
+  ],
+  "share_target": {
+    "action": "/share",
+    "method": "POST",
+    "enctype": "multipart/form-data",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url"
+    }
+  }
 }
-
-

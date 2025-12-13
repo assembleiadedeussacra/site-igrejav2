@@ -92,7 +92,8 @@ export default function GivingSection({ financials }: GivingSectionProps) {
                                                     ? 'bg-green-500 text-white'
                                                     : 'bg-white/20 text-white hover:bg-white/30'
                                                     }`}
-                                                aria-label="Copiar chave PIX"
+                                                aria-label={copied ? "Chave PIX copiada" : "Copiar chave PIX"}
+                                                aria-pressed={copied}
                                             >
                                                 {copied ? (
                                                     <Check className="w-5 h-5" />

@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { revalidatePath, revalidateTag } from 'next/cache';
+import { checkRateLimit } from '@/lib/rate-limit';
+import { Errors, handleApiError } from '@/lib/errors';
+import { logger } from '@/lib/logger';
 
 /**
  * Webhook endpoint for revalidating pages when content is updated
@@ -13,13 +16,26 @@ import { revalidatePath, revalidateTag } from 'next/cache';
  */
 export async function POST(request: NextRequest) {
     try {
+        // Rate limiting
+        const ip = request.headers.get('x-forwarded-for') || 
+                   request.headers.get('x-real-ip') || 
+                   'unknown';
+        if (!checkRateLimit(`revalidate:${ip}`, 10)) {
+            logger.warn('Rate limit exceeded for revalidate endpoint', { ip });
+            return NextResponse.json(
+                Errors.RATE_LIMIT_EXCEEDED(),
+                { status: 429 }
+            );
+        }
+
         const secret = request.nextUrl.searchParams.get('secret');
         const expectedSecret = process.env.REVALIDATE_SECRET;
 
         // Verify secret
         if (!expectedSecret || secret !== expectedSecret) {
+            logger.warn('Invalid secret provided for revalidate endpoint', { ip });
             return NextResponse.json(
-                { error: 'Invalid secret' },
+                Errors.UNAUTHORIZED(),
                 { status: 401 }
             );
         }
@@ -81,10 +97,17 @@ export async function POST(request: NextRequest) {
             now: Date.now(),
         });
     } catch (error) {
-        console.error('Error in /api/revalidate:', error);
+        const appError = handleApiError(error);
+        logger.error('Error in /api/revalidate', error, { 
+            path: request.nextUrl.pathname 
+        });
+        
         return NextResponse.json(
-            { error: 'Error revalidating' },
-            { status: 500 }
+            { 
+                error: appError.message,
+                code: appError.code,
+            },
+            { status: appError.statusCode }
         );
     }
 }
