@@ -9,6 +9,7 @@ import {
     HandHelping,
     GraduationCap,
     Info,
+    Music,
 } from 'lucide-react';
 
 import { Event as DBEvent } from '@/lib/database.types';
@@ -48,6 +49,11 @@ export default function ScheduleSection({ events = [] }: ScheduleSectionProps) {
             icon: GraduationCap,
             badge: 'badge-ebd',
             label: 'EBD',
+        },
+        ensaio: {
+            icon: Music,
+            badge: 'badge-ensaio',
+            label: 'Ensaio',
         },
     };
 

@@ -69,7 +69,7 @@ CREATE TABLE IF NOT EXISTS events (
   time_start TEXT NOT NULL,
   time_end TEXT,
   description TEXT,
-  type TEXT NOT NULL CHECK (type IN ('culto', 'estudo', 'oracao', 'ebd')),
+  type TEXT NOT NULL CHECK (type IN ('culto', 'estudo', 'oracao', 'ebd', 'ensaio')),
   active BOOLEAN NOT NULL DEFAULT true,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()

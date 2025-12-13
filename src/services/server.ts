@@ -89,7 +89,7 @@ export const serverApi = {
                 .from('events')
                 .select('*')
                 .eq('active', true)
-                .order('created_at', { ascending: true });
+                .order('order', { ascending: true });
             return data || [];
         } catch (error) {
             console.error('Error fetching events:', error);

@@ -2,15 +2,15 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, Pencil, Trash2, X, Save, Loader2, Calendar, Clock, Check } from 'lucide-react';
+import { Plus, Pencil, Trash2, X, Save, Loader2, Calendar, Clock, Check, ChevronUp, ChevronDown } from 'lucide-react';
 import { api } from '@/services/api';
 import toast from 'react-hot-toast';
 
-interface Event { id: string; title: string; day_of_week: string; time_start: string; time_end: string | null; description: string | null; type: 'culto' | 'estudo' | 'oracao' | 'ebd'; active: boolean; }
+interface Event { id: string; title: string; day_of_week: string; time_start: string; time_end: string | null; description: string | null; type: 'culto' | 'estudo' | 'oracao' | 'ebd' | 'ensaio'; active: boolean; order: number; }
 
 const dayOptions = ['Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado', 'Domingo'];
-const typeOptions = [{ value: 'culto', label: 'Culto' }, { value: 'estudo', label: 'Estudo' }, { value: 'oracao', label: 'Oração' }, { value: 'ebd', label: 'EBD' }];
-const typeColors = { culto: 'bg-blue-100 text-blue-600', estudo: 'bg-green-100 text-green-600', oracao: 'bg-purple-100 text-purple-600', ebd: 'bg-orange-100 text-orange-600' };
+const typeOptions = [{ value: 'culto', label: 'Culto' }, { value: 'estudo', label: 'Estudo' }, { value: 'oracao', label: 'Oração' }, { value: 'ebd', label: 'EBD' }, { value: 'ensaio', label: 'Ensaio' }];
+const typeColors = { culto: 'bg-blue-100 text-blue-600', estudo: 'bg-green-100 text-green-600', oracao: 'bg-purple-100 text-purple-600', ebd: 'bg-orange-100 text-orange-600', ensaio: 'bg-pink-100 text-pink-600' };
 
 export default function AdminEventosPage() {
     const [events, setEvents] = useState<Event[]>([]);
@@ -50,7 +50,7 @@ export default function AdminEventosPage() {
         setIsSaving(true);
 
         try {
-            const eventData = {
+            const eventData: any = {
                 ...formData,
                 time_end: formData.time_end || null,
                 description: formData.description || null,
@@ -59,6 +59,9 @@ export default function AdminEventosPage() {
             if (editingEvent) {
                 await api.updateEvent(editingEvent.id, eventData);
             } else {
+                // Calcular order para novo evento
+                const maxOrder = events.length > 0 ? Math.max(...events.map(e => e.order || 0)) : -1;
+                eventData.order = maxOrder + 1;
                 await api.createEvent(eventData);
             }
             await loadEvents();
@@ -85,6 +88,31 @@ export default function AdminEventosPage() {
         }
     };
 
+    const moveEvent = async (eventId: string, direction: 'up' | 'down') => {
+        const currentIndex = events.findIndex(e => e.id === eventId);
+        if (currentIndex === -1) return;
+
+        const targetIndex = direction === 'up' ? currentIndex - 1 : currentIndex + 1;
+        if (targetIndex < 0 || targetIndex >= events.length) return;
+
+        const currentEvent = events[currentIndex];
+        const targetEvent = events[targetIndex];
+
+        try {
+            // Trocar as ordens
+            await Promise.all([
+                api.updateEventOrder(currentEvent.id, targetEvent.order),
+                api.updateEventOrder(targetEvent.id, currentEvent.order),
+            ]);
+            
+            await loadEvents();
+            toast.success('Ordem atualizada com sucesso!');
+        } catch (error) {
+            console.error('Erro ao atualizar ordem:', error);
+            toast.error('Erro ao atualizar ordem. Tente novamente.');
+        }
+    };
+
     return (
         <div className="space-y-6">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -106,7 +134,25 @@ export default function AdminEventosPage() {
                 ) : (
                     <div className="divide-y">
                         {events.map((event, index) => (
-                        <motion.div key={event.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.05 }} className="flex items-center gap-4 p-4 hover:bg-gray-50">
+                        <motion.div key={event.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.05 }} className="flex items-center gap-4 p-4 hover:bg-gray-50 group">
+                            <div className="flex flex-col gap-1">
+                                <button 
+                                    onClick={() => moveEvent(event.id, 'up')} 
+                                    disabled={index === 0}
+                                    className="p-1 rounded-[10px] text-gray-400 hover:text-[var(--color-accent)] hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                                    aria-label="Mover para cima"
+                                >
+                                    <ChevronUp className="w-4 h-4" />
+                                </button>
+                                <button 
+                                    onClick={() => moveEvent(event.id, 'down')} 
+                                    disabled={index === events.length - 1}
+                                    className="p-1 rounded-[10px] text-gray-400 hover:text-[var(--color-accent)] hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                                    aria-label="Mover para baixo"
+                                >
+                                    <ChevronDown className="w-4 h-4" />
+                                </button>
+                            </div>
                             <span className={`px-3 py-1 rounded-[10px] text-xs font-semibold ${typeColors[event.type]}`}>{typeOptions.find((t) => t.value === event.type)?.label}</span>
                             <div className="flex-1">
                                 <h3 className="font-bold text-[var(--color-accent)]">{event.title}</h3>

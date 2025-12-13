@@ -14,6 +14,8 @@ import {
     Users,
     Upload,
     Image as ImageIcon,
+    ChevronUp,
+    ChevronDown,
 } from 'lucide-react';
 import { api } from '@/services/api';
 import { uploadLeaderImage } from '@/lib/supabase/storage';
@@ -179,6 +181,31 @@ export default function AdminLiderancaPage() {
         }
     };
 
+    const moveLeader = async (leaderId: string, direction: 'up' | 'down') => {
+        const currentIndex = leaders.findIndex(l => l.id === leaderId);
+        if (currentIndex === -1) return;
+
+        const targetIndex = direction === 'up' ? currentIndex - 1 : currentIndex + 1;
+        if (targetIndex < 0 || targetIndex >= leaders.length) return;
+
+        const currentLeader = leaders[currentIndex];
+        const targetLeader = leaders[targetIndex];
+
+        try {
+            // Trocar as ordens
+            await Promise.all([
+                api.updateLeaderOrder(currentLeader.id, targetLeader.order),
+                api.updateLeaderOrder(targetLeader.id, currentLeader.order),
+            ]);
+            
+            await loadLeaders();
+            toast.success('Ordem atualizada com sucesso!');
+        } catch (error) {
+            console.error('Erro ao atualizar ordem:', error);
+            toast.error('Erro ao atualizar ordem. Tente novamente.');
+        }
+    };
+
     return (
         <div className="space-y-6">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -210,13 +237,34 @@ export default function AdminLiderancaPage() {
                                 initial={{ opacity: 0, scale: 0.95 }}
                                 animate={{ opacity: 1, scale: 1 }}
                                 transition={{ delay: index * 0.05 }}
-                                className="bg-gray-50 rounded-[10px] p-4 flex flex-col items-center text-center group"
+                                className="bg-gray-50 rounded-[10px] p-4 flex flex-col items-center text-center group relative"
                             >
+                                <div className="absolute top-2 left-2 flex flex-col gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+                                    <button 
+                                        onClick={() => moveLeader(leader.id, 'up')} 
+                                        disabled={index === 0}
+                                        className="p-1 rounded-[10px] bg-white text-gray-400 hover:text-[var(--color-accent)] hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors shadow-sm"
+                                        aria-label="Mover para cima"
+                                    >
+                                        <ChevronUp className="w-4 h-4" />
+                                    </button>
+                                    <button 
+                                        onClick={() => moveLeader(leader.id, 'down')} 
+                                        disabled={index === leaders.length - 1}
+                                        className="p-1 rounded-[10px] bg-white text-gray-400 hover:text-[var(--color-accent)] hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors shadow-sm"
+                                        aria-label="Mover para baixo"
+                                    >
+                                        <ChevronDown className="w-4 h-4" />
+                                    </button>
+                                </div>
                                 <div className="relative w-24 h-24 rounded-[10px] overflow-hidden mb-4 border-4 border-[var(--color-primary)]">
                                     <Image src={leader.image_url} alt={leader.name} fill className="object-cover" />
                                 </div>
                                 <h3 className="font-bold text-[var(--color-accent)]">{leader.name}</h3>
                                 <p className="text-sm text-[var(--color-text-secondary)]">{leader.title}</p>
+                                {leader.department && (
+                                    <p className="text-xs text-[var(--color-text-muted)] mt-1">{leader.department}</p>
+                                )}
                                 <div className="flex gap-2 mt-4 opacity-0 group-hover:opacity-100 transition-opacity">
                                     <button onClick={() => openModal(leader)} className="p-2 rounded-[10px] bg-blue-100 text-blue-600 hover:bg-blue-200" aria-label={`Editar ${leader.name}`}>
                                         <Pencil className="w-4 h-4" />

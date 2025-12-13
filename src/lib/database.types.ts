@@ -68,8 +68,9 @@ export interface Event {
     time_start: string;
     time_end: string | null;
     description: string | null;
-    type: 'culto' | 'estudo' | 'oracao' | 'ebd';
+    type: 'culto' | 'estudo' | 'oracao' | 'ebd' | 'ensaio';
     active: boolean;
+    order: number;
     created_at: string;
     updated_at: string;
 }

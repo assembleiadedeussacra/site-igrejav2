@@ -232,6 +232,19 @@ export const api = {
         if (error) throw error;
     },
 
+    updateLeaderOrder: async (id: string, newOrder: number) => {
+        const supabase = createClient();
+        const { data, error } = await (supabase as any)
+            .from('leaders')
+            .update({ order: newOrder })
+            .eq('id', id)
+            .select()
+            .single();
+
+        if (error) throw error;
+        return data;
+    },
+
     getAdminPosts: async () => {
         const supabase = createClient();
         const { data, error } = await supabase
@@ -336,7 +349,7 @@ export const api = {
         const { data, error } = await supabase
             .from('events')
             .select('*')
-            .order('created_at', { ascending: true });
+            .order('order', { ascending: true });
 
         if (error) throw error;
         return data;
@@ -344,6 +357,19 @@ export const api = {
 
     createEvent: async (event: Database['public']['Tables']['events']['Insert']) => {
         const supabase = createClient();
+        
+        // Se order não foi fornecido, buscar o maior order e adicionar 1
+        if (!event.order && event.order !== 0) {
+            const { data: existingEvents } = await supabase
+                .from('events')
+                .select('order')
+                .order('order', { ascending: false })
+                .limit(1);
+            
+            const maxOrder = existingEvents && existingEvents.length > 0 ? existingEvents[0].order : -1;
+            event.order = maxOrder + 1;
+        }
+        
         const { data, error } = await (supabase as any)
             .from('events')
             .insert([event])
@@ -359,6 +385,19 @@ export const api = {
         const { data, error } = await (supabase as any)
             .from('events')
             .update(updates)
+            .eq('id', id)
+            .select()
+            .single();
+
+        if (error) throw error;
+        return data;
+    },
+
+    updateEventOrder: async (id: string, newOrder: number) => {
+        const supabase = createClient();
+        const { data, error } = await (supabase as any)
+            .from('events')
+            .update({ order: newOrder })
             .eq('id', id)
             .select()
             .single();

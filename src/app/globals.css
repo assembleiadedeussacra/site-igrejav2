@@ -398,6 +398,11 @@ img {
   color: white;
 }
 
+.badge-ensaio {
+  background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%);
+  color: white;
+}
+
 /* Rating Stars */
 .star-filled {
   color: #fbbf24;
