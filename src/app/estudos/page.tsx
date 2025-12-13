@@ -32,7 +32,7 @@ export default async function EstudosPage() {
     return (
         <>
             <Header settings={null} />
-            <main className="pt-24">
+            <main>
                 <PostsPageContent
                     initialPosts={posts}
                     pageType="study"

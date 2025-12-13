@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -138,7 +138,7 @@ export default function AboutPageSection({
                             className="relative px-4 md:px-8"
                         >
                             {/* Navigation Buttons */}
-                            {leaders.length > 4 && (
+                            {leaders.length > 3 && (
                                 <div className="hidden md:flex absolute -left-2 -right-2 top-1/2 -translate-y-1/2 justify-between pointer-events-none z-10">
                                     <button
                                         onClick={() => leadersSwiperRef.current?.slidePrev()}
@@ -159,8 +159,8 @@ export default function AboutPageSection({
 
                             <Swiper
                                 modules={[Navigation, Pagination, FreeMode]}
-                                spaceBetween={24}
-                                slidesPerView={2}
+                                spaceBetween={20}
+                                slidesPerView={1}
                                 freeMode={{ enabled: true, sticky: true }}
                                 pagination={{ clickable: true, dynamicBullets: true }}
                                 onBeforeInit={(swiper) => {
@@ -169,12 +169,19 @@ export default function AboutPageSection({
                                 breakpoints={{
                                     640: {
                                         slidesPerView: 2,
+                                        spaceBetween: 20,
                                     },
                                     768: {
                                         slidesPerView: 3,
+                                        spaceBetween: 20,
                                     },
                                     1024: {
                                         slidesPerView: 4,
+                                        spaceBetween: 24,
+                                    },
+                                    1280: {
+                                        slidesPerView: 5,
+                                        spaceBetween: 24,
                                     },
                                 }}
                                 className="pb-12"
@@ -186,22 +193,23 @@ export default function AboutPageSection({
                                             whileInView={{ opacity: 1, scale: 1 }}
                                             viewport={{ once: true }}
                                             transition={{ delay: index * 0.1 }}
-                                            className="bg-white rounded-[10px] overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 group"
+                                            className="bg-white rounded-[10px] overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 group cursor-pointer"
                                         >
-                                            <div className="relative h-56 md:h-64 overflow-hidden">
+                                            <div className="relative h-48 md:h-56 overflow-hidden">
                                                 <Image
                                                     src={leader.image_url}
                                                     alt={leader.name}
                                                     fill
-                                                    className="object-cover group-hover:scale-105 transition-transform duration-500"
-                                                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                                                    className="object-cover group-hover:scale-110 transition-transform duration-500"
+                                                    sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, (max-width: 1280px) 25vw, 20vw"
                                                 />
+                                                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                                             </div>
-                                            <div className="p-4 text-center">
-                                                <h4 className="font-bold text-[var(--color-accent)] text-lg truncate">
+                                            <div className="p-4 md:p-5 text-center">
+                                                <h4 className="font-bold text-[var(--color-accent)] text-base md:text-lg mb-1 truncate">
                                                     {leader.name}
                                                 </h4>
-                                                <p className="text-[var(--color-text-secondary)] text-sm">
+                                                <p className="text-[var(--color-text-secondary)] text-xs md:text-sm">
                                                     {leader.title}
                                                 </p>
                                             </div>
@@ -273,7 +281,7 @@ export default function AboutPageSection({
                                             {members.length > 0 && (
                                                 <div>
                                                     <div className="flex items-center justify-between mb-6">
-                                                        <h4 className="text-xl md:text-2xl font-bold text-[var(--color-accent)]">
+                                                        <h4 className="text-[24px] font-bold text-[var(--color-accent)]">
                                                             Liderança e Integrantes
                                                         </h4>
                                                         <span className="text-sm text-[var(--color-text-secondary)] bg-[var(--color-primary-light)] px-3 py-1 rounded-full">
@@ -316,11 +324,55 @@ export default function AboutPageSection({
 
 function DepartmentMembersCarousel({ members }: { members: DepartmentMember[] }) {
     const swiperRef = useRef<SwiperType | undefined>(undefined);
+    const [showNavigation, setShowNavigation] = useState(true);
+
+    // Função para verificar se todas as slides estão visíveis
+    const checkIfAllVisible = (swiper: SwiperType | undefined) => {
+        if (!swiper) return;
+        
+        // Obter o número de slides visíveis baseado no breakpoint atual
+        let slidesPerView = 2; // padrão mobile
+        const width = window.innerWidth;
+        
+        if (width >= 1280) {
+            slidesPerView = 6;
+        } else if (width >= 1024) {
+            slidesPerView = 5;
+        } else if (width >= 768) {
+            slidesPerView = 4;
+        } else if (width >= 640) {
+            slidesPerView = 3;
+        }
+        
+        const totalSlides = members.length;
+        
+        // Se o número de slides visíveis é maior ou igual ao total, esconder navegação
+        setShowNavigation(slidesPerView < totalSlides);
+    };
+
+    // Verificar quando o componente monta ou quando a janela redimensiona
+    useEffect(() => {
+        const handleResize = () => {
+            if (swiperRef.current) {
+                checkIfAllVisible(swiperRef.current);
+            }
+        };
+
+        // Verificar inicialmente
+        setTimeout(() => {
+            if (swiperRef.current) {
+                checkIfAllVisible(swiperRef.current);
+            }
+        }, 100);
+
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, [members.length]);
 
     return (
         <div className="relative">
-            {/* Navigation Buttons */}
-            {members.length > 4 && (
+            {/* Navigation Buttons - Só aparece se nem todos os membros estão visíveis */}
+            {showNavigation && (
                 <div className="hidden md:flex absolute -left-4 -right-4 top-1/2 -translate-y-1/2 justify-between pointer-events-none z-10">
                     <button
                         onClick={() => swiperRef.current?.slidePrev()}
@@ -347,6 +399,12 @@ function DepartmentMembersCarousel({ members }: { members: DepartmentMember[] })
                 pagination={{ clickable: true, dynamicBullets: true }}
                 onBeforeInit={(swiper) => {
                     swiperRef.current = swiper;
+                }}
+                onInit={(swiper) => {
+                    setTimeout(() => checkIfAllVisible(swiper), 100);
+                }}
+                onResize={(swiper) => {
+                    checkIfAllVisible(swiper);
                 }}
                 breakpoints={{
                     640: {
@@ -376,7 +434,7 @@ function DepartmentMembersCarousel({ members }: { members: DepartmentMember[] })
                             viewport={{ once: true }}
                             className="bg-white rounded-[8px] shadow-sm border border-gray-200 overflow-hidden hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group"
                         >
-                            <div className="relative w-full aspect-square overflow-hidden">
+                            <div className="relative w-full h-44 md:h-48 overflow-hidden">
                                 <Image
                                     src={member.image_url}
                                     alt={member.name}
@@ -386,7 +444,7 @@ function DepartmentMembersCarousel({ members }: { members: DepartmentMember[] })
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                             </div>
-                            <div className="p-2 md:p-3 text-center">
+                            <div className="p-2.5 md:p-3 text-center">
                                 <h5 className="font-semibold text-[var(--color-accent)] mb-0.5 text-xs md:text-sm truncate">
                                     {member.name}
                                 </h5>

@@ -305,6 +305,16 @@ section.section-padding.bg-white .swiper-wrapper {
   gap: 0px;
 }
 
+/* Leaders Cards Improvements */
+section.section-padding.bg-white .swiper-slide {
+  height: auto;
+}
+
+section.section-padding.bg-white .swiper-pagination {
+  margin-top: 1.5rem;
+  position: relative;
+}
+
 /* Remove padding from motion.div.relative in AboutPageSection */
 section.section-padding.bg-white .relative.px-4 {
   padding-top: 0;
@@ -323,6 +333,11 @@ section.section-padding.bg-white .relative.px-4 {
 
 #departamentos .swiper-pagination {
   margin-top: 1rem;
+}
+
+/* Posts Page - Remove gap between header and banner */
+main > section:first-child {
+  margin-top: 0;
 }
 
 /* Animation Keyframes */
