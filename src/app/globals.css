@@ -311,6 +311,20 @@ section.section-padding.bg-white .relative.px-4 {
   padding-bottom: 0;
 }
 
+/* Department Members Carousel Styles */
+#departamentos .swiper-wrapper {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+#departamentos .swiper-slide {
+  height: auto;
+}
+
+#departamentos .swiper-pagination {
+  margin-top: 1rem;
+}
+
 /* Animation Keyframes */
 @keyframes fadeIn {
   from {

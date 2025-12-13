@@ -5,9 +5,9 @@ import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, FreeMode } from 'swiper/modules';
+import type { Swiper as SwiperType } from 'swiper';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import type { AboutPageCover, Department, DepartmentMember, Leader } from '@/lib/database.types';
-import type { Swiper as SwiperType } from 'swiper';
 
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -272,9 +272,14 @@ export default function AboutPageSection({
                                             {/* Members Carousel */}
                                             {members.length > 0 && (
                                                 <div>
-                                                    <h4 className="text-lg font-semibold text-[var(--color-text)] mb-4">
-                                                        Liderança e Integrantes
-                                                    </h4>
+                                                    <div className="flex items-center justify-between mb-6">
+                                                        <h4 className="text-xl md:text-2xl font-bold text-[var(--color-accent)]">
+                                                            Liderança e Integrantes
+                                                        </h4>
+                                                        <span className="text-sm text-[var(--color-text-secondary)] bg-[var(--color-primary-light)] px-3 py-1 rounded-full">
+                                                            {members.length} {members.length === 1 ? 'membro' : 'membros'}
+                                                        </span>
+                                                    </div>
                                                     <DepartmentMembersCarousel members={members} />
                                                 </div>
                                             )}
@@ -310,12 +315,12 @@ export default function AboutPageSection({
 }
 
 function DepartmentMembersCarousel({ members }: { members: DepartmentMember[] }) {
-    const swiperRef = useRef<any>(null);
+    const swiperRef = useRef<SwiperType | undefined>(undefined);
 
     return (
         <div className="relative">
             {/* Navigation Buttons */}
-            {members.length > 3 && (
+            {members.length > 4 && (
                 <div className="hidden md:flex absolute -left-4 -right-4 top-1/2 -translate-y-1/2 justify-between pointer-events-none z-10">
                     <button
                         onClick={() => swiperRef.current?.slidePrev()}
@@ -335,25 +340,30 @@ function DepartmentMembersCarousel({ members }: { members: DepartmentMember[] })
             )}
 
             <Swiper
-                modules={[Navigation, Pagination]}
-                spaceBetween={24}
-                slidesPerView={1}
+                modules={[Navigation, Pagination, FreeMode]}
+                spaceBetween={16}
+                slidesPerView={2}
+                freeMode={{ enabled: true, sticky: true }}
                 pagination={{ clickable: true, dynamicBullets: true }}
                 onBeforeInit={(swiper) => {
                     swiperRef.current = swiper;
                 }}
                 breakpoints={{
                     640: {
-                        slidesPerView: 2,
-                        spaceBetween: 20,
+                        slidesPerView: 3,
+                        spaceBetween: 16,
                     },
                     768: {
-                        slidesPerView: 3,
-                        spaceBetween: 24,
+                        slidesPerView: 4,
+                        spaceBetween: 16,
                     },
                     1024: {
-                        slidesPerView: 4,
-                        spaceBetween: 24,
+                        slidesPerView: 5,
+                        spaceBetween: 20,
+                    },
+                    1280: {
+                        slidesPerView: 6,
+                        spaceBetween: 20,
                     },
                 }}
                 className="pb-12"
@@ -364,22 +374,23 @@ function DepartmentMembersCarousel({ members }: { members: DepartmentMember[] })
                             initial={{ opacity: 0, scale: 0.9 }}
                             whileInView={{ opacity: 1, scale: 1 }}
                             viewport={{ once: true }}
-                            className="bg-white rounded-[10px] shadow-md border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow"
+                            className="bg-white rounded-[8px] shadow-sm border border-gray-200 overflow-hidden hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group"
                         >
-                            <div className="relative w-full aspect-square">
+                            <div className="relative w-full aspect-square overflow-hidden">
                                 <Image
                                     src={member.image_url}
                                     alt={member.name}
                                     fill
-                                    className="object-cover"
+                                    className="object-cover group-hover:scale-105 transition-transform duration-300"
                                     loading="lazy"
                                 />
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                             </div>
-                            <div className="p-4 text-center">
-                                <h5 className="font-semibold text-[var(--color-text)] mb-1">
+                            <div className="p-2 md:p-3 text-center">
+                                <h5 className="font-semibold text-[var(--color-accent)] mb-0.5 text-xs md:text-sm truncate">
                                     {member.name}
                                 </h5>
-                                <p className="text-sm text-[var(--color-text-secondary)]">
+                                <p className="text-[10px] md:text-xs text-[var(--color-text-secondary)] line-clamp-2">
                                     {member.role}
                                 </p>
                             </div>
