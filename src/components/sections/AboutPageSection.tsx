@@ -161,6 +161,7 @@ export default function AboutPageSection({
                                 modules={[Navigation, Pagination, FreeMode]}
                                 spaceBetween={20}
                                 slidesPerView={1}
+                                centeredSlides={true}
                                 freeMode={{ enabled: true, sticky: true }}
                                 pagination={{ clickable: true, dynamicBullets: true }}
                                 onBeforeInit={(swiper) => {
@@ -170,6 +171,7 @@ export default function AboutPageSection({
                                     640: {
                                         slidesPerView: 2,
                                         spaceBetween: 20,
+                                        centeredSlides: false,
                                     },
                                     768: {
                                         slidesPerView: 3,
@@ -193,15 +195,15 @@ export default function AboutPageSection({
                                             whileInView={{ opacity: 1, scale: 1 }}
                                             viewport={{ once: true }}
                                             transition={{ delay: index * 0.1 }}
-                                            className="bg-white rounded-[10px] overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 group cursor-pointer"
+                                            className="bg-white rounded-[10px] overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 group cursor-pointer max-w-[280px] mx-auto"
                                         >
-                                            <div className="relative h-48 md:h-56 overflow-hidden">
+                                            <div className="relative h-80 md:h-56 overflow-hidden">
                                                 <Image
                                                     src={leader.image_url}
                                                     alt={leader.name}
                                                     fill
                                                     className="object-cover group-hover:scale-110 transition-transform duration-500"
-                                                    sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, (max-width: 1280px) 25vw, 20vw"
+                                                    sizes="(max-width: 640px) 280px, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, (max-width: 1280px) 25vw, 20vw"
                                                 />
                                                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                                             </div>

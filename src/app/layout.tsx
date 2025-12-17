@@ -15,9 +15,10 @@ const inter = Inter({
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://assembleiasacramento.vercel.app'),
   title: {
-    default: 'Assembleia de Deus Missão - Sacramento/MG',
-    template: '%s | Assembleia de Deus Missão Sacramento',
+    default: 'AD Missão Sacramento - Assembleia de Deus Sacramento/MG',
+    template: '%s | AD Missão Sacramento',
   },
+  applicationName: 'AD Missão Sacramento',
   description:
     'Website oficial da Igreja Assembleia de Deus Missão de Sacramento MG. Encontre informações sobre cultos, eventos, departamentos e mais. Uma comunidade de fé dedicada a adorar a Deus e servir ao próximo.',
   keywords: [
@@ -49,8 +50,8 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'pt_BR',
     url: process.env.NEXT_PUBLIC_SITE_URL || 'https://assembleiasacramento.vercel.app',
-    siteName: 'Assembleia de Deus Missão - Sacramento/MG',
-    title: 'Assembleia de Deus Missão - Sacramento/MG',
+    siteName: 'AD Missão Sacramento',
+    title: 'AD Missão Sacramento - Assembleia de Deus Sacramento/MG',
     description:
       'Uma comunidade de fé dedicada a adorar a Deus e servir ao próximo. Venha nos conhecer!',
     images: [
@@ -64,7 +65,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Assembleia de Deus Missão - Sacramento/MG',
+    title: 'AD Missão Sacramento - Assembleia de Deus Sacramento/MG',
     description:
       'Uma comunidade de fé dedicada a adorar a Deus e servir ao próximo.',
     images: ['/images/og-image.jpg'],
@@ -97,15 +98,16 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" className={inter.variable}>
       <head>
-        <link rel="icon" href="/images/logo-igreja.png" type="image/png" />
-        <link rel="shortcut icon" href="/images/logo-igreja.png" type="image/png" />
-        <link rel="apple-touch-icon" href="/images/logo-igreja.png" />
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" href="/favicon.png" type="image/png" sizes="32x32" />
+        <link rel="apple-touch-icon" href="/images/logo-igreja.png" sizes="180x180" />
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#232d82" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="AD Sacramento" />
+        <meta name="application-name" content="AD Missão Sacramento" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
