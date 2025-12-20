@@ -165,7 +165,7 @@ export default function LeadershipSection({
                                 initial={{ opacity: 0, scale: 0.9 }}
                                 whileInView={{ opacity: 1, scale: 1 }}
                                 viewport={{ once: true }}
-                                className="bg-white rounded-[12px] overflow-visible shadow-md hover:shadow-2xl transition-all duration-300 group h-full flex flex-col"
+                                className="bg-white rounded-[12px] overflow-visible shadow-md hover:shadow-lg transition-all duration-300 group h-full flex flex-col"
                             >
                                 <div className="relative w-full aspect-[5/6] overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200 rounded-t-[12px]">
                                     <Image
