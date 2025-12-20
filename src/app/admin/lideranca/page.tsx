@@ -259,12 +259,26 @@ export default function AdminLiderancaPage() {
                                 </div>
                                 <div className="relative w-24 h-24 rounded-[10px] overflow-hidden mb-4 border-4 border-[var(--color-primary)]">
                                     <Image src={leader.image_url} alt={leader.name} fill className="object-cover" />
+                                    {!leader.active && (
+                                        <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+                                            <span className="text-white text-xs font-bold">INATIVO</span>
+                                        </div>
+                                    )}
                                 </div>
                                 <h3 className="font-bold text-[var(--color-accent)]">{leader.name}</h3>
                                 <p className="text-sm text-[var(--color-text-secondary)]">{leader.title}</p>
                                 {leader.department && (
                                     <p className="text-xs text-[var(--color-text-muted)] mt-1">{leader.department}</p>
                                 )}
+                                <div className="mt-2">
+                                    <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                                        leader.active 
+                                            ? 'bg-green-100 text-green-800' 
+                                            : 'bg-gray-100 text-gray-800'
+                                    }`}>
+                                        {leader.active ? '● Visível na Home' : '○ Oculto'}
+                                    </span>
+                                </div>
                                 <div className="flex gap-2 mt-4 opacity-0 group-hover:opacity-100 transition-opacity">
                                     <button onClick={() => openModal(leader)} className="p-2 rounded-[10px] bg-blue-100 text-blue-600 hover:bg-blue-200" aria-label={`Editar ${leader.name}`}>
                                         <Pencil className="w-4 h-4" />
@@ -348,6 +362,26 @@ export default function AdminLiderancaPage() {
                                         className="w-full px-4 py-2 rounded-[10px] border border-gray-200 focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/20 outline-none" 
                                         placeholder="Ex: Música, Jovens, Crianças, etc."
                                     />
+                                </div>
+                                <div className="flex items-center justify-between p-4 bg-gray-50 rounded-[10px]">
+                                    <div>
+                                        <label className="block text-sm font-medium text-[var(--color-text)] mb-1">Status</label>
+                                        <p className="text-xs text-[var(--color-text-secondary)]">
+                                            {formData.active ? 'Líder visível na home' : 'Líder oculto na home'}
+                                        </p>
+                                    </div>
+                                    <label className="relative inline-flex items-center cursor-pointer">
+                                        <input 
+                                            type="checkbox" 
+                                            checked={formData.active} 
+                                            onChange={(e) => setFormData((p) => ({ ...p, active: e.target.checked }))}
+                                            className="sr-only peer"
+                                        />
+                                        <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[var(--color-accent)]/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[var(--color-accent)]"></div>
+                                        <span className="ml-3 text-sm font-medium text-[var(--color-text)]">
+                                            {formData.active ? 'Ativo' : 'Inativo'}
+                                        </span>
+                                    </label>
                                 </div>
                                 <div className="flex gap-3 pt-4">
                                     <button type="button" onClick={closeModal} className="flex-1 px-4 py-2 border border-gray-200 rounded-[30px] hover:bg-gray-50">Cancelar</button>

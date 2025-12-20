@@ -1,27 +1,18 @@
 'use client';
 
-import { useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination, FreeMode } from 'swiper/modules';
-import type { Swiper as SwiperType } from 'swiper';
 import {
     Heart,
     BookOpen,
     HandHelping,
     Users,
-    ChevronLeft,
-    ChevronRight,
     ArrowRight,
 } from 'lucide-react';
 
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
-
 import { Leader } from '@/lib/database.types';
+import LeadershipSection from './LeadershipSection';
 
 interface AboutSectionProps {
     leaders: Leader[];
@@ -51,9 +42,8 @@ const features = [
 ];
 
 export default function AboutSection({ leaders = [] }: AboutSectionProps) {
-    const swiperRef = useRef<SwiperType | undefined>(undefined);
-
     return (
+        <>
         <section id="sobre" className="section-padding bg-[var(--color-background)]">
             <div className="container-custom">
                 {/* Section Header */}
@@ -130,119 +120,21 @@ export default function AboutSection({ leaders = [] }: AboutSectionProps) {
                         ))}
                     </motion.div>
                 </div>
-
-                {/* Leadership Section */}
-                {leaders.length > 0 && (
-                    <motion.div
-                        initial={{ opacity: 0, y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        className="relative"
-                    >
-                        {/* Leadership Header */}
-                        <div className="text-center mb-12">
-                            <h3 className="text-3xl md:text-4xl font-bold text-[var(--color-accent)] mb-4 section-title flex items-center justify-center gap-3">
-                                <Users className="w-8 h-8 text-[var(--color-primary)]" />
-                                Nossa Liderança
-                            </h3>
-                            <p className="text-[var(--color-text-secondary)] max-w-2xl mx-auto text-lg">
-                                Liderança espiritual comprometida com o serviço cristão
-                            </p>
-                        </div>
-
-                        <motion.div
-                            initial={{ opacity: 0, y: 30 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            className="relative px-4 md:px-8"
-                        >
-                            {/* Navigation Buttons */}
-                            {leaders.length > 2 && (
-                                <div className="hidden md:flex absolute -left-2 -right-2 top-1/2 -translate-y-1/2 justify-between pointer-events-none z-10">
-                                    <button
-                                        onClick={() => swiperRef.current?.slidePrev()}
-                                        className="w-12 h-12 rounded-[10px] bg-white shadow-lg flex items-center justify-center text-[var(--color-accent)] hover:bg-[var(--color-accent)] hover:text-white transition-colors pointer-events-auto"
-                                        aria-label="Anterior"
-                                    >
-                                        <ChevronLeft className="w-6 h-6" />
-                                    </button>
-                                    <button
-                                        onClick={() => swiperRef.current?.slideNext()}
-                                        className="w-12 h-12 rounded-[10px] bg-white shadow-lg flex items-center justify-center text-[var(--color-accent)] hover:text-white transition-colors pointer-events-auto"
-                                        aria-label="Próximo"
-                                    >
-                                        <ChevronRight className="w-6 h-6" />
-                                    </button>
-                                </div>
-                            )}
-
-                            <Swiper
-                                modules={[Navigation, Pagination, FreeMode]}
-                                spaceBetween={20}
-                                slidesPerView={1}
-                                centeredSlides={true}
-                                freeMode={{ enabled: true, sticky: true }}
-                                pagination={{ clickable: true, dynamicBullets: true }}
-                                loop={false}
-                                onBeforeInit={(swiper) => {
-                                    swiperRef.current = swiper;
-                                }}
-                                breakpoints={{
-                                    640: {
-                                        slidesPerView: 2,
-                                        spaceBetween: 20,
-                                        centeredSlides: false,
-                                    },
-                                    768: {
-                                        slidesPerView: 3,
-                                        spaceBetween: 20,
-                                    },
-                                    1024: {
-                                        slidesPerView: 4,
-                                        spaceBetween: 24,
-                                    },
-                                    1280: {
-                                        slidesPerView: 5,
-                                        spaceBetween: 24,
-                                    },
-                                }}
-                                className="pb-12"
-                            >
-                                {leaders.map((leader, index) => (
-                                    <SwiperSlide key={leader.id}>
-                                        <motion.div
-                                            initial={{ opacity: 0, scale: 0.9 }}
-                                            whileInView={{ opacity: 1, scale: 1 }}
-                                            viewport={{ once: true }}
-                                            transition={{ delay: index * 0.1 }}
-                                            className="bg-white rounded-[10px] overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 group cursor-pointer max-w-[280px] mx-auto"
-                                        >
-                                            <div className="relative h-80 md:h-56 overflow-hidden">
-                                                <Image
-                                                    src={leader.image_url}
-                                                    alt={leader.name}
-                                                    fill
-                                                    className="object-cover group-hover:scale-110 transition-transform duration-500"
-                                                    sizes="(max-width: 640px) 280px, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, (max-width: 1280px) 25vw, 20vw"
-                                                />
-                                                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                                            </div>
-                                            <div className="p-4 md:p-5 text-center">
-                                                <h4 className="font-bold text-[var(--color-accent)] text-base md:text-lg mb-1 truncate">
-                                                    {leader.name}
-                                                </h4>
-                                                <p className="text-[var(--color-text-secondary)] text-xs md:text-sm">
-                                                    {leader.title}
-                                                </p>
-                                            </div>
-                                        </motion.div>
-                                    </SwiperSlide>
-                                ))}
-                            </Swiper>
-                        </motion.div>
-                    </motion.div>
-                )}
             </div>
         </section>
+
+        {/* Leaders Section */}
+        {leaders.length > 0 && (
+            <section className="section-padding bg-white">
+                <div className="container-custom">
+                    <LeadershipSection 
+                        leaders={leaders}
+                        title="Nossa Liderança"
+                        subtitle="Liderança espiritual comprometida com o serviço cristão"
+                    />
+                </div>
+            </section>
+        )}
+        </>
     );
 }
