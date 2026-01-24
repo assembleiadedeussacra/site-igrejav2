@@ -193,6 +193,52 @@ export const api = {
         if (error) throw error;
     },
 
+    updateBannerPositions: async (updates: { id: string; position: number }[]) => {
+        const supabase = createClient();
+        
+        // Atualizar todas as posições em uma transação
+        const promises = updates.map(({ id, position }) =>
+            supabase
+                .from('banners')
+                .update({ position })
+                .eq('id', id)
+        );
+
+        const results = await Promise.all(promises);
+        
+        // Verificar se houve algum erro
+        const errors = results.filter(result => result.error);
+        if (errors.length > 0) {
+            const errorMessage = errors[0].error?.message || 'Erro ao atualizar posições dos banners';
+            throw new Error(errorMessage);
+        }
+        
+        return results;
+    },
+
+    updateBannerPositions: async (updates: { id: string; position: number }[]) => {
+        const supabase = createClient();
+        
+        // Atualizar todas as posições em uma transação
+        const promises = updates.map(({ id, position }) =>
+            supabase
+                .from('banners')
+                .update({ position })
+                .eq('id', id)
+        );
+
+        const results = await Promise.all(promises);
+        
+        // Verificar se houve algum erro
+        const errors = results.filter(result => result.error);
+        if (errors.length > 0) {
+            const errorMessage = errors[0].error?.message || 'Erro ao atualizar posições dos banners';
+            throw new Error(errorMessage);
+        }
+
+        return results;
+    },
+
     // Admin - Get all (including inactive)
     getAdminLeaders: async () => {
         const supabase = createClient();

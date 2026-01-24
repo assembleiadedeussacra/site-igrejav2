@@ -15,6 +15,8 @@ import {
     Loader2,
     ImageIcon,
     Copy,
+    ChevronUp,
+    ChevronDown,
 } from 'lucide-react';
 import { api } from '@/services/api';
 import { Banner } from '@/lib/database.types';
@@ -426,6 +428,43 @@ export default function AdminBannersPage() {
         toast.success('Banner duplicado! Revise os dados e salve.');
     };
 
+    const moveBanner = async (index: number, direction: 'up' | 'down') => {
+        if (direction === 'up' && index === 0) return;
+        if (direction === 'down' && index === banners.length - 1) return;
+
+        const newIndex = direction === 'up' ? index - 1 : index + 1;
+        const currentBanner = banners[index];
+        const targetBanner = banners[newIndex];
+
+        // Trocar posições
+        const tempPosition = currentBanner.position;
+        const newCurrentPosition = targetBanner.position;
+        const newTargetPosition = tempPosition;
+
+        // Atualizar estado local (optimistic update)
+        const updatedBanners = [...banners];
+        updatedBanners[index] = { ...currentBanner, position: newCurrentPosition };
+        updatedBanners[newIndex] = { ...targetBanner, position: newTargetPosition };
+        
+        // Reordenar pelo position
+        updatedBanners.sort((a, b) => a.position - b.position);
+        setBanners(updatedBanners);
+
+        try {
+            // Atualizar no banco de dados
+            await api.updateBannerPositions([
+                { id: currentBanner.id, position: newCurrentPosition },
+                { id: targetBanner.id, position: newTargetPosition },
+            ]);
+            toast.success('Ordem dos banners atualizada!');
+        } catch (error) {
+            console.error('Error updating banner positions:', error);
+            toast.error('Erro ao atualizar ordem dos banners.');
+            // Reverter mudanças
+            loadBanners();
+        }
+    };
+
     return (
         <div className="space-y-6">
             {/* Header */}
@@ -510,6 +549,33 @@ export default function AdminBannersPage() {
 
                                 {/* Actions */}
                                 <div className="flex items-center gap-2">
+                                    {/* Order Controls */}
+                                    <div className="flex flex-col gap-1 mr-2">
+                                        <button
+                                            onClick={() => moveBanner(index, 'up')}
+                                            disabled={index === 0}
+                                            className={`p-1.5 rounded-[8px] transition-colors ${
+                                                index === 0
+                                                    ? 'text-gray-300 cursor-not-allowed'
+                                                    : 'text-blue-600 hover:bg-blue-50'
+                                            }`}
+                                            title="Mover para cima"
+                                        >
+                                            <ChevronUp className="w-4 h-4" />
+                                        </button>
+                                        <button
+                                            onClick={() => moveBanner(index, 'down')}
+                                            disabled={index === banners.length - 1}
+                                            className={`p-1.5 rounded-[8px] transition-colors ${
+                                                index === banners.length - 1
+                                                    ? 'text-gray-300 cursor-not-allowed'
+                                                    : 'text-blue-600 hover:bg-blue-50'
+                                            }`}
+                                            title="Mover para baixo"
+                                        >
+                                            <ChevronDown className="w-4 h-4" />
+                                        </button>
+                                    </div>
                                     <button
                                         onClick={() => toggleActive(banner.id, banner.active)}
                                         className={`p-2 rounded-[10px] transition-colors ${banner.active
