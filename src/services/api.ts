@@ -1090,11 +1090,10 @@ export const api = {
 
         // Fallback: Direct query if RPC function doesn't exist
         try {
-            
             const cutoffDate = new Date();
             cutoffDate.setDate(cutoffDate.getDate() - daysBack);
             
-            const { data, error } = await supabase
+            const { data, error } = await (supabase as any)
                 .from('page_views')
                 .select('page_path, page_title, session_id, created_at')
                 .gte('created_at', cutoffDate.toISOString());
@@ -1145,31 +1144,35 @@ export const api = {
                     last_viewed: stat.last_viewed.toISOString(),
                 }))
                 .sort((a, b) => b.view_count - a.view_count);
+        } catch (error) {
+            console.error('Error in fallback query:', error);
+            return [];
         }
-
-        return [];
     },
 
     getDailyPageViews: async (daysBack: number = 30) => {
         const supabase = createClient();
         
         // Try RPC function first
-        const { data: rpcData, error: rpcError } = await supabase.rpc('get_daily_page_views', {
-            days_back: daysBack,
-        });
+        try {
+            const { data: rpcData, error: rpcError } = await supabase.rpc('get_daily_page_views', {
+                days_back: daysBack,
+            });
 
-        if (!rpcError && rpcData) {
-            return rpcData;
+            if (!rpcError && rpcData) {
+                return rpcData;
+            }
+        } catch (rpcError) {
+            // RPC function might not exist, continue to fallback
+            console.warn('RPC function not available, using direct query');
         }
 
         // Fallback: Direct query if RPC function doesn't exist
-        if (rpcError) {
-            console.warn('RPC function not available, using direct query:', rpcError);
-            
+        try {
             const cutoffDate = new Date();
             cutoffDate.setDate(cutoffDate.getDate() - daysBack);
             
-            const { data, error } = await supabase
+            const { data, error } = await (supabase as any)
                 .from('page_views')
                 .select('session_id, created_at')
                 .gte('created_at', cutoffDate.toISOString())
@@ -1211,14 +1214,15 @@ export const api = {
                     unique_views: daily.unique_views.size,
                 }))
                 .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+        } catch (error) {
+            console.error('Error in fallback query:', error);
+            return [];
         }
-
-        return [];
     },
 
     getTotalPageViews: async () => {
         const supabase = createClient();
-        const { count, error } = await supabase
+        const { count, error } = await (supabase as any)
             .from('page_views')
             .select('*', { count: 'exact', head: true });
 
