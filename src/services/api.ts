@@ -1069,4 +1069,163 @@ export const api = {
             console.error('Error incrementing post views:', error);
         }
     },
+
+    // Analytics
+    getPageViewStats: async (daysBack: number = 30) => {
+        const supabase = createClient();
+        
+        // Try RPC function first
+        try {
+            const { data: rpcData, error: rpcError } = await supabase.rpc('get_page_view_stats', {
+                days_back: daysBack,
+            });
+
+            if (!rpcError && rpcData) {
+                return rpcData;
+            }
+        } catch (rpcError) {
+            // RPC function might not exist, continue to fallback
+            console.warn('RPC function not available, using direct query');
+        }
+
+        // Fallback: Direct query if RPC function doesn't exist
+        try {
+            
+            const cutoffDate = new Date();
+            cutoffDate.setDate(cutoffDate.getDate() - daysBack);
+            
+            const { data, error } = await supabase
+                .from('page_views')
+                .select('page_path, page_title, session_id, created_at')
+                .gte('created_at', cutoffDate.toISOString());
+
+            if (error) {
+                console.error('Error fetching page view stats:', error);
+                return [];
+            }
+
+            // Aggregate manually
+            const statsMap = new Map<string, {
+                page_path: string;
+                page_title: string | null;
+                view_count: number;
+                unique_views: Set<string>;
+                last_viewed: Date;
+            }>();
+
+            data?.forEach((view: any) => {
+                const key = view.page_path;
+                if (!statsMap.has(key)) {
+                    statsMap.set(key, {
+                        page_path: key,
+                        page_title: view.page_title,
+                        view_count: 0,
+                        unique_views: new Set(),
+                        last_viewed: new Date(view.created_at),
+                    });
+                }
+
+                const stat = statsMap.get(key)!;
+                stat.view_count++;
+                if (view.session_id) {
+                    stat.unique_views.add(view.session_id);
+                }
+                const viewDate = new Date(view.created_at);
+                if (viewDate > stat.last_viewed) {
+                    stat.last_viewed = viewDate;
+                }
+            });
+
+            return Array.from(statsMap.values())
+                .map(stat => ({
+                    page_path: stat.page_path,
+                    page_title: stat.page_title,
+                    view_count: stat.view_count,
+                    unique_views: stat.unique_views.size,
+                    last_viewed: stat.last_viewed.toISOString(),
+                }))
+                .sort((a, b) => b.view_count - a.view_count);
+        }
+
+        return [];
+    },
+
+    getDailyPageViews: async (daysBack: number = 30) => {
+        const supabase = createClient();
+        
+        // Try RPC function first
+        const { data: rpcData, error: rpcError } = await supabase.rpc('get_daily_page_views', {
+            days_back: daysBack,
+        });
+
+        if (!rpcError && rpcData) {
+            return rpcData;
+        }
+
+        // Fallback: Direct query if RPC function doesn't exist
+        if (rpcError) {
+            console.warn('RPC function not available, using direct query:', rpcError);
+            
+            const cutoffDate = new Date();
+            cutoffDate.setDate(cutoffDate.getDate() - daysBack);
+            
+            const { data, error } = await supabase
+                .from('page_views')
+                .select('session_id, created_at')
+                .gte('created_at', cutoffDate.toISOString())
+                .order('created_at', { ascending: false });
+
+            if (error) {
+                console.error('Error fetching daily page views:', error);
+                return [];
+            }
+
+            // Aggregate by date manually
+            const dailyMap = new Map<string, {
+                date: string;
+                view_count: number;
+                unique_views: Set<string>;
+            }>();
+
+            data?.forEach((view: any) => {
+                const date = new Date(view.created_at).toISOString().split('T')[0];
+                if (!dailyMap.has(date)) {
+                    dailyMap.set(date, {
+                        date,
+                        view_count: 0,
+                        unique_views: new Set(),
+                    });
+                }
+
+                const daily = dailyMap.get(date)!;
+                daily.view_count++;
+                if (view.session_id) {
+                    daily.unique_views.add(view.session_id);
+                }
+            });
+
+            return Array.from(dailyMap.values())
+                .map(daily => ({
+                    date: daily.date,
+                    view_count: daily.view_count,
+                    unique_views: daily.unique_views.size,
+                }))
+                .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+        }
+
+        return [];
+    },
+
+    getTotalPageViews: async () => {
+        const supabase = createClient();
+        const { count, error } = await supabase
+            .from('page_views')
+            .select('*', { count: 'exact', head: true });
+
+        if (error) {
+            console.error('Error fetching total page views:', error);
+            return 0;
+        }
+        return count || 0;
+    },
 };

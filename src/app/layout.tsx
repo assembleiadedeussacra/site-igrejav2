@@ -4,6 +4,7 @@ import './globals.css';
 import Toaster from '@/components/ui/Toaster';
 import GoogleAnalytics from '@/components/analytics/GoogleAnalytics';
 import PerformanceMonitor from '@/components/analytics/PerformanceMonitor';
+import PageViewTracker from '@/components/analytics/PageViewTracker';
 import PwaServiceWorker from '@/components/pwa/ServiceWorkerRegistration';
 
 const inter = Inter({
@@ -164,6 +165,7 @@ export default function RootLayout({
         <Toaster />
         <GoogleAnalytics />
         <PerformanceMonitor />
+        <PageViewTracker />
         <PwaServiceWorker />
       </body>
     </html>

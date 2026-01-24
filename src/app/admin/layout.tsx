@@ -21,6 +21,7 @@ import {
     Wallet,
     Images,
     MessageSquare,
+    BarChart3,
 } from 'lucide-react';
 
 const menuItems = [
@@ -88,6 +89,11 @@ const menuItems = [
         href: '/admin/banners-paginas',
         label: 'Banners Páginas',
         icon: ImageIcon,
+    },
+    {
+        href: '/admin/analytics',
+        label: 'Análises',
+        icon: BarChart3,
     },
     {
         href: '/admin/configuracoes',

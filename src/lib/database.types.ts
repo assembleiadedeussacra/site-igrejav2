@@ -225,6 +225,31 @@ export interface DepartmentMember {
     updated_at: string;
 }
 
+export interface PageView {
+    id: string;
+    page_path: string;
+    page_title: string | null;
+    referrer: string | null;
+    user_agent: string | null;
+    ip_address: string | null;
+    session_id: string | null;
+    created_at: string;
+}
+
+export interface PageViewStats {
+    page_path: string;
+    page_title: string | null;
+    view_count: number;
+    unique_views: number;
+    last_viewed: string;
+}
+
+export interface DailyPageViews {
+    date: string;
+    view_count: number;
+    unique_views: number;
+}
+
 // Database schema type
 export interface Database {
     public: {
