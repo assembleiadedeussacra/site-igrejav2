@@ -72,7 +72,10 @@ export default async function Home() {
       {eventsSchema.length > 0 && <JsonLd data={eventsSchema} />}
       <Header settings={settings} />
       <main>
-        <HeroSection banners={banners} />
+        <HeroSection
+          banners={banners}
+          autoplaySeconds={settings?.hero_autoplay_seconds ?? 6}
+        />
         <VerseSection verse={verse} />
         <AboutSection leaders={leaders} />
         <KnowledgeSection posts={posts} />

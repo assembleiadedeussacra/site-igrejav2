@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 import { Heart, Copy, Check, QrCode } from 'lucide-react';
 
 import { Financial } from '@/lib/database.types';
+import SectionHeader from '@/components/ui/SectionHeader';
 
 interface GivingSectionProps {
     financials: Financial | null;
@@ -42,14 +43,11 @@ export default function GivingSection({ financials }: GivingSectionProps) {
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    className="text-center mb-12"
                 >
-                    <h2 className="text-3xl md:text-4xl font-bold text-[var(--color-accent)] mb-4 section-title">
-                        Dízimos e Ofertas
-                    </h2>
-                    <p className="text-[var(--color-text-secondary)] max-w-2xl mx-auto text-lg">
-                        Contribua com a obra missionária e ministerial através de dízimos e ofertas
-                    </p>
+                    <SectionHeader
+                        title="Dízimos e Ofertas"
+                        description="Contribua com a obra missionária e ministerial através de dízimos e ofertas"
+                    />
                 </motion.div>
 
                 {/* Giving Card */}

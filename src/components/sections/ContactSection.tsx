@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 
 import { SiteSettings } from '@/lib/database.types';
+import SectionHeader from '@/components/ui/SectionHeader';
 
 interface ContactSectionProps {
     settings: SiteSettings | null;
@@ -57,14 +58,11 @@ export default function ContactSection({ settings }: ContactSectionProps) {
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    className="text-center mb-12"
                 >
-                    <h2 className="text-3xl md:text-4xl font-bold text-[var(--color-accent)] mb-4 section-title">
-                        Contato
-                    </h2>
-                    <p className="text-[var(--color-text-secondary)] max-w-2xl mx-auto text-lg">
-                        Entre em contato conosco ou venha nos visitar!
-                    </p>
+                    <SectionHeader
+                        title="Contato"
+                        description="Entre em contato conosco ou venha nos visitar!"
+                    />
                 </motion.div>
 
                 {/* Contact Cards */}
@@ -90,7 +88,7 @@ export default function ContactSection({ settings }: ContactSectionProps) {
                                     >
                                         <item.icon className="w-7 h-7" />
                                     </div>
-                                    <h3 className="font-bold text-lg text-[var(--color-accent)] mb-2">
+                                    <h3 className="type-card-title mb-2">
                                         {item.title}
                                     </h3>
                                     <p className="text-[var(--color-text-secondary)] group-hover:text-[var(--color-accent)] transition-colors">
@@ -108,7 +106,7 @@ export default function ContactSection({ settings }: ContactSectionProps) {
                                     >
                                         <item.icon className="w-7 h-7" />
                                     </div>
-                                    <h3 className="font-bold text-lg text-[var(--color-accent)] mb-2">
+                                    <h3 className="type-card-title mb-2">
                                         {item.title}
                                     </h3>
                                     <address className="text-[var(--color-text-secondary)] not-italic">
@@ -128,7 +126,7 @@ export default function ContactSection({ settings }: ContactSectionProps) {
                 >
                     <div className="flex items-center gap-3 mb-6">
                         <MapPin className="w-8 h-8 text-[var(--color-primary)]" />
-                        <h3 className="text-2xl md:text-3xl font-bold text-[var(--color-accent)]">
+                        <h3 className="type-subsection-title">
                             Nossa Localização
                         </h3>
                     </div>

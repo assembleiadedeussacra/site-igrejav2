@@ -13,6 +13,7 @@ import {
     Filter,
 } from 'lucide-react';
 import { api } from '@/services/api';
+import { AdminPageHeader } from '@/components/admin';
 import { PageViewStats, DailyPageViews } from '@/lib/database.types';
 import toast from 'react-hot-toast';
 
@@ -103,18 +104,10 @@ export default function AnalyticsPage() {
 
     return (
         <div className="space-y-6">
-            {/* Header */}
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                <div>
-                    <h1 className="text-2xl md:text-[28px] font-bold text-[var(--color-accent)] flex items-center gap-2">
-                        <BarChart3 className="w-7 h-7" />
-                        Análises e Estatísticas
-                    </h1>
-                    <p className="text-[var(--color-text-secondary)] mt-1">
-                        Visualize as páginas mais acessadas e estatísticas de tráfego
-                    </p>
-                </div>
-                <div className="flex items-center gap-2">
+            <AdminPageHeader
+                title="Análises e Estatísticas"
+                description="Visualize as páginas mais acessadas e estatísticas de tráfego"
+                action={
                     <button
                         onClick={loadAnalytics}
                         disabled={isLoading}
@@ -123,14 +116,14 @@ export default function AnalyticsPage() {
                         <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
                         Atualizar
                     </button>
-                </div>
-            </div>
+                }
+            />
 
             {/* Period Filter */}
-            <div className="bg-white rounded-[10px] p-4 shadow-lg border border-gray-100">
+            <div className="admin-card bg-white rounded-[10px] p-4 shadow-lg border border-gray-100">
                 <div className="flex items-center gap-4">
                     <Filter className="w-5 h-5 text-[var(--color-accent)]" />
-                    <span className="font-medium text-[var(--color-text)]">Período:</span>
+                    <span className="admin-label-inline">Período:</span>
                     <div className="flex gap-2">
                         {periods.map((period) => (
                             <button
@@ -164,11 +157,11 @@ export default function AnalyticsPage() {
                     {isLoading ? (
                         <div className="h-8 w-20 bg-gray-200 rounded-[10px] animate-pulse" />
                     ) : (
-                        <p className="text-3xl font-bold text-[var(--color-accent)] mb-1">
+                        <p className="admin-stat-value mb-1">
                             {formatNumber(totalViews)}
                         </p>
                     )}
-                    <p className="text-sm text-[var(--color-text-secondary)] font-medium">
+                    <p className="admin-stat-label font-medium">
                         Total de Visualizações
                     </p>
                 </motion.div>
@@ -187,11 +180,11 @@ export default function AnalyticsPage() {
                     {isLoading ? (
                         <div className="h-8 w-20 bg-gray-200 rounded-[10px] animate-pulse" />
                     ) : (
-                        <p className="text-3xl font-bold text-[var(--color-accent)] mb-1">
+                        <p className="admin-stat-value mb-1">
                             {formatNumber(pageStats.length)}
                         </p>
                     )}
-                    <p className="text-sm text-[var(--color-text-secondary)] font-medium">
+                    <p className="admin-stat-label font-medium">
                         Páginas Únicas
                     </p>
                 </motion.div>
@@ -210,13 +203,13 @@ export default function AnalyticsPage() {
                     {isLoading ? (
                         <div className="h-8 w-20 bg-gray-200 rounded-[10px] animate-pulse" />
                     ) : (
-                        <p className="text-3xl font-bold text-[var(--color-accent)] mb-1">
+                        <p className="admin-stat-value mb-1">
                             {formatNumber(
                                 pageStats.reduce((sum, stat) => sum + stat.unique_views, 0)
                             )}
                         </p>
                     )}
-                    <p className="text-sm text-[var(--color-text-secondary)] font-medium">
+                    <p className="admin-stat-label font-medium">
                         Visitantes Únicos
                     </p>
                 </motion.div>
@@ -229,7 +222,7 @@ export default function AnalyticsPage() {
                 transition={{ delay: 0.3 }}
                 className="bg-white rounded-[10px] p-6 shadow-lg border border-gray-100"
             >
-                <h2 className="text-xl md:text-[24px] font-bold text-[var(--color-accent)] mb-6 flex items-center gap-2">
+                <h2 className="admin-section-title mb-6 flex items-center gap-2">
                     <BarChart3 className="w-5 h-5" />
                     Páginas Mais Acessadas
                 </h2>
@@ -240,10 +233,10 @@ export default function AnalyticsPage() {
                         ))}
                     </div>
                 ) : pageStats.length === 0 ? (
-                    <div className="text-center py-12 text-[var(--color-text-secondary)]">
+                    <div className="text-center py-12 admin-empty-text">
                         <BarChart3 className="w-16 h-16 mx-auto mb-4 text-gray-300" />
-                        <p className="text-sm font-medium mb-2">Nenhum dado disponível para o período selecionado</p>
-                        <p className="text-xs text-[var(--color-text-muted)]">
+                        <p className="font-medium mb-2">Nenhum dado disponível para o período selecionado</p>
+                        <p className="admin-help">
                             {totalViews === 0 
                                 ? 'Execute a migration "migration_create_page_views.sql" no Supabase para começar a coletar dados.'
                                 : 'Tente selecionar um período diferente ou aguarde mais visualizações.'}
@@ -254,19 +247,19 @@ export default function AnalyticsPage() {
                         <table className="w-full">
                             <thead>
                                 <tr className="border-b border-gray-200">
-                                    <th className="text-left py-3 px-4 text-sm font-semibold text-[var(--color-text)]">
+                                    <th className="text-left py-3 px-4 admin-table-head">
                                         #
                                     </th>
-                                    <th className="text-left py-3 px-4 text-sm font-semibold text-[var(--color-text)]">
+                                    <th className="text-left py-3 px-4 admin-table-head">
                                         Página
                                     </th>
-                                    <th className="text-right py-3 px-4 text-sm font-semibold text-[var(--color-text)]">
+                                    <th className="text-right py-3 px-4 admin-table-head">
                                         Visualizações
                                     </th>
-                                    <th className="text-right py-3 px-4 text-sm font-semibold text-[var(--color-text)]">
+                                    <th className="text-right py-3 px-4 admin-table-head">
                                         Visitantes Únicos
                                     </th>
-                                    <th className="text-right py-3 px-4 text-sm font-semibold text-[var(--color-text)]">
+                                    <th className="text-right py-3 px-4 admin-table-head">
                                         Última Visualização
                                     </th>
                                 </tr>
@@ -284,16 +277,16 @@ export default function AnalyticsPage() {
                                         </td>
                                         <td className="py-4 px-4">
                                             <div>
-                                                <p className="font-medium text-[var(--color-text)]">
+                                                <p className="admin-list-item-title">
                                                     {getPageName(stat.page_path)}
                                                 </p>
-                                                <p className="text-xs text-[var(--color-text-muted)] mt-1">
+                                                <p className="admin-card-meta mt-1">
                                                     {stat.page_path}
                                                 </p>
                                             </div>
                                         </td>
                                         <td className="py-4 px-4 text-right">
-                                            <span className="font-bold text-[var(--color-accent)]">
+                                            <span className="admin-card-title">
                                                 {formatNumber(stat.view_count)}
                                             </span>
                                         </td>
@@ -323,7 +316,7 @@ export default function AnalyticsPage() {
                     transition={{ delay: 0.4 }}
                     className="bg-white rounded-[10px] p-6 shadow-lg border border-gray-100"
                 >
-                    <h2 className="text-xl md:text-[24px] font-bold text-[var(--color-accent)] mb-6 flex items-center gap-2">
+                    <h2 className="admin-section-title mb-6 flex items-center gap-2">
                         <Calendar className="w-5 h-5" />
                         Visualizações por Dia
                     </h2>
@@ -334,14 +327,14 @@ export default function AnalyticsPage() {
                             return (
                                 <div key={day.date} className="space-y-2">
                                     <div className="flex items-center justify-between text-sm">
-                                        <span className="font-medium text-[var(--color-text)]">
+                                        <span className="admin-list-item-title">
                                             {formatDate(day.date)}
                                         </span>
                                         <div className="flex items-center gap-4">
                                             <span className="text-[var(--color-text-muted)]">
                                                 {formatNumber(day.unique_views)} únicos
                                             </span>
-                                            <span className="font-bold text-[var(--color-accent)]">
+                                            <span className="admin-card-title">
                                                 {formatNumber(day.view_count)} visualizações
                                             </span>
                                         </div>

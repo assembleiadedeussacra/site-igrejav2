@@ -3,7 +3,10 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, Pencil, Trash2, X, Save, Loader2, FileText, Eye, EyeOff, Tag, Upload, XCircle } from 'lucide-react';
+import { Plus, X, Save, Loader2, FileText, Eye, EyeOff, Tag, Upload, XCircle } from 'lucide-react';
+import { AdminPageHeader, AdminPanel, AdminEntityActions, AdminListToolbar, useAdminViewMode } from '@/components/admin';
+import { triggerContentRevalidation } from '@/lib/admin/triggerRevalidation';
+import { hasValidImageUrl } from '@/lib/imageUtils';
 import { api } from '@/services/api';
 import { uploadPostCover, uploadPostInlineImage } from '@/lib/supabase/storage';
 import RichTextEditor from '@/components/admin/RichTextEditor';
@@ -15,6 +18,7 @@ import { validatePost } from '@/lib/validation/post';
 import toast from 'react-hot-toast';
 
 export default function AdminPostsPage() {
+    const { viewMode, setViewMode } = useAdminViewMode('posts', 'list');
     const [posts, setPosts] = useState<Post[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [filter, setFilter] = useState<'all' | 'blog' | 'study'>('all');
@@ -404,6 +408,14 @@ export default function AdminPostsPage() {
             }
 
             await loadPosts();
+            if (validation.data.published) {
+                await triggerContentRevalidation({
+                    type: validation.data.type,
+                    slug: validation.data.slug,
+                });
+            } else {
+                await triggerContentRevalidation({ type: validation.data.type });
+            }
             toast.success(editingPost ? 'Post atualizado com sucesso!' : 'Post criado com sucesso!');
             closeModal();
         } catch (error) {
@@ -421,6 +433,10 @@ export default function AdminPostsPage() {
             if (post) {
                 await api.updatePost(id, { published: !post.published });
                 await loadPosts();
+                await triggerContentRevalidation({
+                    type: post.type,
+                    slug: post.slug || undefined,
+                });
             }
         } catch (error) {
             console.error('Erro ao alterar publicação:', error);
@@ -432,8 +448,15 @@ export default function AdminPostsPage() {
         if (!confirm('Tem certeza que deseja excluir este post? Esta ação não pode ser desfeita.')) return;
 
         try {
+            const post = posts.find((p) => p.id === id);
             await api.deletePost(id);
             await loadPosts();
+            if (post) {
+                await triggerContentRevalidation({
+                    type: post.type,
+                    slug: post.slug || undefined,
+                });
+            }
             toast.success('Post excluído com sucesso!');
         } catch (error) {
             console.error('Erro ao excluir post:', error);
@@ -443,63 +466,131 @@ export default function AdminPostsPage() {
 
     return (
         <div className="space-y-6">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                <div><h1 className="text-2xl md:text-[28px] font-bold text-[var(--color-accent)]">Blog & Estudos</h1><p className="text-[var(--color-text-secondary)] text-sm">Gerencie posts e estudos bíblicos</p></div>
-                <button onClick={() => openModal()} className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--color-accent)] text-white rounded-[30px] hover:bg-[var(--color-accent-light)]"><Plus className="w-5 h-5" /> Novo Post</button>
-            </div>
+            <AdminPageHeader
+                title="Blog & Estudos"
+                description="Gerencie posts e estudos bíblicos"
+                action={
+                    <button onClick={() => openModal()} className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--color-accent)] text-white rounded-[30px] hover:bg-[var(--color-accent-light)]">
+                        <Plus className="w-5 h-5" /> Novo Post
+                    </button>
+                }
+            />
 
-            {/* Filters */}
-            <div className="flex gap-2">
+            <AdminListToolbar viewMode={viewMode} onViewModeChange={setViewMode}>
                 {[{ key: 'all', label: 'Todos' }, { key: 'blog', label: 'Blog' }, { key: 'study', label: 'Estudos' }].map((f) => (
-                    <button key={f.key} onClick={() => setFilter(f.key as typeof filter)} className={`px-4 py-2 rounded-[10px] font-medium transition-colors ${filter === f.key ? 'bg-[var(--color-accent)] text-white' : 'bg-white text-[var(--color-text)] hover:bg-gray-50'}`}>{f.label}</button>
+                    <button key={f.key} onClick={() => setFilter(f.key as typeof filter)} className={`px-4 py-2 rounded-[10px] font-medium transition-colors ${filter === f.key ? 'bg-[var(--color-accent)] text-white' : 'bg-white text-[var(--color-text)] hover:bg-gray-50 admin-card border border-gray-100'}`}>{f.label}</button>
                 ))}
-            </div>
+            </AdminListToolbar>
 
-            <div className="bg-white rounded-[10px] shadow-lg overflow-hidden">
-                {isLoading ? (
-                    <div className="p-12 text-center">
-                        <Loader2 className="w-16 h-16 mx-auto mb-4 text-gray-300 animate-spin" />
-                        <p className="text-[var(--color-text-secondary)]">Carregando posts...</p>
-                    </div>
-                ) : filteredPosts.length === 0 ? (
-                    <div className="p-12 text-center"><FileText className="w-16 h-16 mx-auto mb-4 text-gray-300" /><p className="text-[var(--color-text-secondary)]">Nenhum post encontrado</p></div>
-                ) : (
-                    <div className="divide-y">
-                        {filteredPosts.map((post, index) => (
-                            <motion.div key={post.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.05 }} className={`flex items-center gap-4 p-4 ${!post.published ? 'opacity-60 bg-gray-50' : ''}`}>
-                                {post.cover_image && (
-                                    <div className="relative w-20 h-14 rounded-[10px] overflow-hidden bg-gray-100 flex-shrink-0"><Image src={post.cover_image} alt={post.title} fill className="object-cover" /></div>
+            <AdminPanel
+                isLoading={isLoading}
+                isEmpty={!isLoading && filteredPosts.length === 0}
+                emptyIcon={FileText}
+                emptyMessage="Nenhum post encontrado"
+                loadingMessage="Carregando posts..."
+            >
+                {viewMode === 'grid' ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 p-4">
+                    {filteredPosts.map((post) => (
+                        <article key={post.id} className={`admin-sortable-card flex flex-col h-full ${!post.published ? 'opacity-75' : ''}`}>
+                            <div className="relative aspect-[16/10] bg-gray-100">
+                                {hasValidImageUrl(post.cover_image) ? (
+                                    <Image src={post.cover_image!} alt={post.title} fill className="object-cover" sizes="(max-width:640px) 100vw, 33vw" />
+                                ) : (
+                                    <span className="absolute inset-0 flex items-center justify-center">
+                                        <FileText className="w-10 h-10 text-gray-300" />
+                                    </span>
                                 )}
-                                <div className="flex-1 min-w-0">
-                                    <div className="flex items-center gap-2 mb-1">
-                                        <span className={`px-2 py-0.5 rounded-[10px] text-xs font-medium ${post.type === 'blog' ? 'bg-blue-100 text-blue-600' : 'bg-green-100 text-green-600'}`}>{post.type === 'blog' ? 'Blog' : 'Estudo'}</span>
-                                        {!post.published && <span className="px-2 py-0.5 rounded-[10px] text-xs font-medium bg-yellow-100 text-yellow-600">Rascunho</span>}
-                                    </div>
-                                    <h3 className="font-bold text-[var(--color-accent)] truncate">{post.title}</h3>
-                                    <p className="text-sm text-[var(--color-text-secondary)] truncate">{post.description}</p>
+                            </div>
+                            <div className="p-4 flex-1 flex flex-col">
+                                <div className="flex flex-wrap items-center gap-2 mb-2">
+                                    <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${post.type === 'blog' ? 'bg-blue-100 text-blue-700' : 'bg-green-100 text-green-700'}`}>
+                                        {post.type === 'blog' ? 'Blog' : 'Estudo'}
+                                    </span>
+                                    {!post.published && (
+                                        <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-700">Rascunho</span>
+                                    )}
                                 </div>
-                                <div className="flex gap-2">
-                                    <button onClick={() => togglePublish(post.id)} className={`p-2 rounded-[10px] transition-colors ${post.published ? 'text-green-600 hover:bg-green-50' : 'text-gray-400 hover:bg-gray-100'}`} title={post.published ? 'Despublicar' : 'Publicar'} aria-label={post.published ? 'Despublicar post' : 'Publicar post'}>{post.published ? <Eye className="w-5 h-5" /> : <EyeOff className="w-5 h-5" />}</button>
-                                    <button onClick={() => openModal(post)} className="p-2 rounded-[10px] text-blue-600 hover:bg-blue-50" aria-label={`Editar ${post.title}`}><Pencil className="w-5 h-5" /></button>
-                                    <button onClick={() => deletePost(post.id)} className="p-2 rounded-[10px] text-red-600 hover:bg-red-50" aria-label={`Excluir ${post.title}`}><Trash2 className="w-5 h-5" /></button>
+                                <h3 className="admin-card-title line-clamp-2">{post.title}</h3>
+                                <p className="admin-card-desc line-clamp-2 mt-1 flex-1">{post.description}</p>
+                                <div className="flex items-center gap-1.5 mt-4 pt-3 border-t border-gray-100">
+                                    <button
+                                        type="button"
+                                        onClick={() => togglePublish(post.id)}
+                                        className={`p-2 rounded-[10px] transition-colors ${post.published ? 'text-green-600 bg-green-50 hover:bg-green-100' : 'text-gray-500 bg-gray-50 hover:bg-gray-100'}`}
+                                        title={post.published ? 'Despublicar' : 'Publicar'}
+                                        aria-label={post.published ? 'Despublicar post' : 'Publicar post'}
+                                    >
+                                        {post.published ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
+                                    </button>
+                                    <AdminEntityActions onEdit={() => openModal(post)} onDelete={() => deletePost(post.id)} />
                                 </div>
-                            </motion.div>
-                        ))}
-                    </div>
+                            </div>
+                        </article>
+                    ))}
+                </div>
+                ) : (
+                <div className="divide-y divide-gray-100">
+                    {filteredPosts.map((post) => (
+                        <div
+                            key={post.id}
+                            className={`admin-sortable-row ${!post.published ? 'opacity-75' : ''}`}
+                        >
+                            <div className="relative w-16 h-11 sm:w-20 sm:h-14 rounded-[10px] overflow-hidden bg-gray-100 flex-shrink-0">
+                                {hasValidImageUrl(post.cover_image) ? (
+                                    <Image src={post.cover_image!} alt={post.title} fill className="object-cover" sizes="80px" />
+                                ) : (
+                                    <span className="absolute inset-0 flex items-center justify-center">
+                                        <FileText className="w-5 h-5 text-gray-300" />
+                                    </span>
+                                )}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                                <div className="flex flex-wrap items-center gap-2 mb-1">
+                                    <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${post.type === 'blog' ? 'bg-blue-100 text-blue-700' : 'bg-green-100 text-green-700'}`}>
+                                        {post.type === 'blog' ? 'Blog' : 'Estudo'}
+                                    </span>
+                                    {!post.published && (
+                                        <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-700">Rascunho</span>
+                                    )}
+                                </div>
+                                <h3 className="admin-card-title truncate">{post.title}</h3>
+                                <p className="admin-card-desc truncate">{post.description}</p>
+                            </div>
+                            <div className="flex items-center gap-1.5 shrink-0">
+                                <button
+                                    type="button"
+                                    onClick={() => togglePublish(post.id)}
+                                    className={`p-2 rounded-[10px] transition-colors ${post.published ? 'text-green-600 bg-green-50 hover:bg-green-100' : 'text-gray-500 bg-gray-50 hover:bg-gray-100'}`}
+                                    title={post.published ? 'Despublicar' : 'Publicar'}
+                                    aria-label={post.published ? 'Despublicar post' : 'Publicar post'}
+                                >
+                                    {post.published ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
+                                </button>
+                                <AdminEntityActions
+                                    onEdit={() => openModal(post)}
+                                    onDelete={() => deletePost(post.id)}
+                                    editLabel={`Editar ${post.title}`}
+                                    deleteLabel={`Excluir ${post.title}`}
+                                />
+                            </div>
+                        </div>
+                    ))}
+                </div>
                 )}
-            </div>
+            </AdminPanel>
 
             <AnimatePresence>
                 {isModalOpen && (
                     <>
                         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={closeModal} className="fixed inset-0 bg-black/50 z-50" />
                         <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} className="fixed inset-4 md:inset-auto md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:max-w-2xl md:w-full bg-white rounded-[10px] shadow-2xl z-50 overflow-auto max-h-[90vh]">
-                            <div className="flex items-center justify-between p-4 border-b sticky top-0 bg-white z-10"><h2 className="text-xl md:text-[24px] font-bold text-[var(--color-accent)]">{editingPost ? 'Editar' : 'Novo'} Post</h2><button onClick={closeModal} className="p-2 rounded-[10px] hover:bg-gray-100"><X className="w-5 h-5" /></button></div>
+                            <div className="flex items-center justify-between p-4 border-b sticky top-0 bg-white z-10"><h2 className="admin-modal-title">{editingPost ? 'Editar' : 'Novo'} Post</h2><button onClick={closeModal} className="p-2 rounded-[10px] hover:bg-gray-100"><X className="w-5 h-5" /></button></div>
                             <form onSubmit={handleSubmit} className="p-4 space-y-4">
                                 {/* SEO Warnings */}
                                 {seoWarnings.length > 0 && (
                                     <div className="bg-yellow-50 border border-yellow-200 rounded-[10px] p-4 mb-4">
-                                        <h3 className="font-semibold text-yellow-800 mb-2">⚠️ Avisos de SEO</h3>
+                                        <h3 className="admin-form-subtitle text-yellow-800 mb-2">⚠️ Avisos de SEO</h3>
                                         <ul className="list-disc list-inside space-y-1 text-sm text-yellow-700">
                                             {seoWarnings.map((warning, index) => (
                                                 <li key={index}>{warning}</li>
@@ -509,7 +600,7 @@ export default function AdminPostsPage() {
                                 )}
                                 <div className="grid md:grid-cols-2 gap-4">
                                     <div className="md:col-span-2">
-                                        <label className="block text-sm font-medium mb-1">
+                                        <label className="admin-label mb-1">
                                             Título *
                                             {formData.title && (
                                                 <span className={`ml-2 text-xs ${validateTitleLength(formData.title).isValid ? 'text-green-600' : 'text-yellow-600'}`}>
@@ -530,7 +621,7 @@ export default function AdminPostsPage() {
                                         />
                                     </div>
                                     <div className="md:col-span-2">
-                                        <label className="block text-sm font-medium mb-1">
+                                        <label className="admin-label mb-1">
                                             Slug (URL amigável)
                                             <button
                                                 type="button"
@@ -553,17 +644,17 @@ export default function AdminPostsPage() {
                                             className={`w-full px-4 py-2 rounded-[10px] border focus:border-[var(--color-accent)] outline-none ${slugError ? 'border-red-500' : ''}`}
                                         />
                                         {slugError && <p className="text-xs text-red-500 mt-1">{slugError}</p>}
-                                        <p className="text-xs text-gray-500 mt-1">Deixe vazio para gerar automaticamente do título</p>
+                                        <p className="admin-help mt-1">Deixe vazio para gerar automaticamente do título</p>
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-medium mb-1">Tipo *</label>
+                                        <label className="admin-label mb-1">Tipo *</label>
                                         <select value={formData.type} onChange={(e) => setFormData((p) => ({ ...p, type: e.target.value as Post['type'] }))} className="w-full px-4 py-2 rounded-[10px] border focus:border-[var(--color-accent)] outline-none">
                                             <option value="blog">Blog</option>
                                             <option value="study">Estudo</option>
                                         </select>
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-medium mb-1">Tipo de Schema</label>
+                                        <label className="admin-label mb-1">Tipo de Schema</label>
                                         <select value={formData.schema_type} onChange={(e) => setFormData((p) => ({ ...p, schema_type: e.target.value as 'Article' | 'BlogPosting' | 'Study' }))} className="w-full px-4 py-2 rounded-[10px] border focus:border-[var(--color-accent)] outline-none">
                                             <option value="Article">Article</option>
                                             <option value="BlogPosting">BlogPosting</option>
@@ -571,7 +662,7 @@ export default function AdminPostsPage() {
                                         </select>
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-medium mb-1">Imagem de Capa</label>
+                                        <label className="admin-label mb-1">Imagem de Capa</label>
                                         <div className="space-y-2">
                                             <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-[10px] cursor-pointer hover:bg-gray-50 transition-colors relative overflow-hidden">
                                                 {coverPreview ? (
@@ -582,8 +673,8 @@ export default function AdminPostsPage() {
                                                 ) : (
                                                     <div className="flex flex-col items-center justify-center pt-5 pb-6">
                                                         <Upload className="w-8 h-8 mb-2 text-gray-400" />
-                                                        <p className="text-sm text-gray-500">Clique para fazer upload</p>
-                                                        <p className="text-xs text-gray-400">PNG, JPG até 5MB</p>
+                                                        <p className="admin-upload-text">Clique para fazer upload</p>
+                                                        <p className="admin-help">PNG, JPG até 5MB</p>
                                                     </div>
                                                 )}
                                                 <input type="file" className="hidden" accept="image/*" onChange={handleCoverFileChange} />
@@ -598,7 +689,7 @@ export default function AdminPostsPage() {
                                     </div>
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium mb-1">
+                                    <label className="admin-label mb-1">
                                         Descrição *
                                         {formData.description && (
                                             <span className={`ml-2 text-xs ${validateDescriptionLength(formData.description).isValid ? 'text-green-600' : 'text-yellow-600'}`}>
@@ -618,28 +709,28 @@ export default function AdminPostsPage() {
                                         maxLength={200}
                                     />
                                 </div>
-                                <div><label className="block text-sm font-medium mb-1">Excerpt (Resumo para SEO)</label><textarea value={formData.excerpt} onChange={(e) => setFormData((p) => ({ ...p, excerpt: e.target.value }))} rows={2} className="w-full px-4 py-2 rounded-[10px] border focus:border-[var(--color-accent)] outline-none resize-none" placeholder="Resumo otimizado para SEO (150-160 caracteres)" /></div>
+                                <div><label className="admin-label mb-1">Excerpt (Resumo para SEO)</label><textarea value={formData.excerpt} onChange={(e) => setFormData((p) => ({ ...p, excerpt: e.target.value }))} rows={2} className="w-full px-4 py-2 rounded-[10px] border focus:border-[var(--color-accent)] outline-none resize-none" placeholder="Resumo otimizado para SEO (150-160 caracteres)" /></div>
                                 
                                 {/* SEO Section */}
                                 <div className="md:col-span-2 border-t pt-4 mt-4">
-                                    <h3 className="text-lg font-bold text-[var(--color-accent)] mb-4">Configurações SEO</h3>
+                                    <h3 className="admin-section-title mb-4">Configurações SEO</h3>
                                     <div className="grid md:grid-cols-2 gap-4">
                                         <div>
-                                            <label className="block text-sm font-medium mb-1">Meta Title (opcional)</label>
+                                            <label className="admin-label mb-1">Meta Title (opcional)</label>
                                             <input type="text" value={formData.meta_title} onChange={(e) => setFormData((p) => ({ ...p, meta_title: e.target.value }))} className="w-full px-4 py-2 rounded-[10px] border focus:border-[var(--color-accent)] outline-none" placeholder="Título para SEO (50-60 caracteres)" maxLength={60} />
-                                            <p className="text-xs text-gray-500 mt-1">{formData.meta_title.length}/60 caracteres</p>
+                                            <p className="admin-help mt-1">{formData.meta_title.length}/60 caracteres</p>
                                         </div>
                                         <div>
-                                            <label className="block text-sm font-medium mb-1">Meta Description (opcional)</label>
+                                            <label className="admin-label mb-1">Meta Description (opcional)</label>
                                             <textarea value={formData.meta_description} onChange={(e) => setFormData((p) => ({ ...p, meta_description: e.target.value }))} rows={2} className="w-full px-4 py-2 rounded-[10px] border focus:border-[var(--color-accent)] outline-none resize-none" placeholder="Descrição para SEO (150-160 caracteres)" maxLength={160} />
-                                            <p className="text-xs text-gray-500 mt-1">{formData.meta_description.length}/160 caracteres</p>
+                                            <p className="admin-help mt-1">{formData.meta_description.length}/160 caracteres</p>
                                         </div>
                                         <div>
-                                            <label className="block text-sm font-medium mb-1">Keywords (separadas por vírgula)</label>
+                                            <label className="admin-label mb-1">Keywords (separadas por vírgula)</label>
                                             <input type="text" value={formData.keywords} onChange={(e) => setFormData((p) => ({ ...p, keywords: e.target.value }))} className="w-full px-4 py-2 rounded-[10px] border focus:border-[var(--color-accent)] outline-none" placeholder="palavra-chave-1, palavra-chave-2" />
                                         </div>
                                         <div>
-                                            <label className="block text-sm font-medium mb-1">Canonical URL (opcional)</label>
+                                            <label className="admin-label mb-1">Canonical URL (opcional)</label>
                                             <input type="url" value={formData.canonical_url} onChange={(e) => setFormData((p) => ({ ...p, canonical_url: e.target.value }))} className="w-full px-4 py-2 rounded-[10px] border focus:border-[var(--color-accent)] outline-none" placeholder="https://exemplo.com/artigo" />
                                         </div>
                                         <div className="flex gap-4">
@@ -657,27 +748,27 @@ export default function AdminPostsPage() {
 
                                 {/* Open Graph Section */}
                                 <div className="md:col-span-2 border-t pt-4 mt-4">
-                                    <h3 className="text-lg font-bold text-[var(--color-accent)] mb-4">Open Graph (Redes Sociais)</h3>
+                                    <h3 className="admin-section-title mb-4">Open Graph (Redes Sociais)</h3>
                                     <div className="grid md:grid-cols-2 gap-4">
                                         <div>
-                                            <label className="block text-sm font-medium mb-1">OG Title (opcional)</label>
+                                            <label className="admin-label mb-1">OG Title (opcional)</label>
                                             <input type="text" value={formData.og_title} onChange={(e) => setFormData((p) => ({ ...p, og_title: e.target.value }))} className="w-full px-4 py-2 rounded-[10px] border focus:border-[var(--color-accent)] outline-none" placeholder="Título para compartilhamento" />
                                         </div>
                                         <div>
-                                            <label className="block text-sm font-medium mb-1">OG Description (opcional)</label>
+                                            <label className="admin-label mb-1">OG Description (opcional)</label>
                                             <textarea value={formData.og_description} onChange={(e) => setFormData((p) => ({ ...p, og_description: e.target.value }))} rows={2} className="w-full px-4 py-2 rounded-[10px] border focus:border-[var(--color-accent)] outline-none resize-none" placeholder="Descrição para compartilhamento" />
                                         </div>
                                         <div>
-                                            <label className="block text-sm font-medium mb-1">OG Image URL (opcional)</label>
+                                            <label className="admin-label mb-1">OG Image URL (opcional)</label>
                                             <input type="url" value={formData.og_image} onChange={(e) => setFormData((p) => ({ ...p, og_image: e.target.value }))} className="w-full px-4 py-2 rounded-[10px] border focus:border-[var(--color-accent)] outline-none" placeholder="https://exemplo.com/imagem-og.jpg" />
-                                            <p className="text-xs text-gray-500 mt-1">Recomendado: 1200x630px. Deixe vazio para usar imagem de capa.</p>
+                                            <p className="admin-help mt-1">Recomendado: 1200x630px. Deixe vazio para usar imagem de capa.</p>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div><label className="block text-sm font-medium mb-1">Tags (separadas por vírgula)</label><input type="text" value={formData.tags} onChange={(e) => setFormData((p) => ({ ...p, tags: e.target.value }))} className="w-full px-4 py-2 rounded-[10px] border focus:border-[var(--color-accent)] outline-none" placeholder="Ex: Oração, Vida Cristã" /></div>
+                                <div><label className="admin-label mb-1">Tags (separadas por vírgula)</label><input type="text" value={formData.tags} onChange={(e) => setFormData((p) => ({ ...p, tags: e.target.value }))} className="w-full px-4 py-2 rounded-[10px] border focus:border-[var(--color-accent)] outline-none" placeholder="Ex: Oração, Vida Cristã" /></div>
                                 <div>
-                                    <label className="block text-sm font-medium mb-1">Conteúdo *</label>
+                                    <label className="admin-label mb-1">Conteúdo *</label>
                                     <RichTextEditor 
                                         content={formData.content} 
                                         onChange={(content) => {
@@ -686,12 +777,12 @@ export default function AdminPostsPage() {
                                         }}
                                         onImageUpload={handleImageUpload}
                                     />
-                                    <p className="text-xs text-gray-500 mt-2">
+                                    <p className="admin-help mt-2">
                                         Dica: Use apenas um H1 por artigo. Use H2, H3, H4 para hierarquia.
                                     </p>
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium mb-1">Conteúdos Relacionados</label>
+                                    <label className="admin-label mb-1">Conteúdos Relacionados</label>
                                     <div className="space-y-2">
                                         <div className="flex gap-2">
                                             <input 
@@ -713,7 +804,7 @@ export default function AdminPostsPage() {
                                                         aria-label={`Adicionar ${post.title} como post relacionado`}
                                                     >
                                                         <div className="font-medium text-[var(--color-accent)]">{post.title}</div>
-                                                        <div className="text-xs text-gray-500">{post.type === 'blog' ? 'Blog' : 'Estudo'}</div>
+                                                        <div className="admin-card-meta">{post.type === 'blog' ? 'Blog' : 'Estudo'}</div>
                                                     </button>
                                                 ))}
                                             </div>

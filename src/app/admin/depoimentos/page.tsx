@@ -1,14 +1,24 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, Pencil, Trash2, X, Save, Loader2, MessageSquare, Star, Upload } from 'lucide-react';
+import { Plus, X, Save, Loader2, MessageSquare, Star, Upload } from 'lucide-react';
 import { api } from '@/services/api';
 import { Testimonial } from '@/lib/database.types';
 import { uploadTestimonialAvatar } from '@/lib/supabase/storage';
+import { hasValidImageUrl } from '@/lib/imageUtils';
+import {
+    AdminPageHeader,
+    AdminPanel,
+    AdminEntityActions,
+    AdminListToolbar,
+    useAdminViewMode,
+} from '@/components/admin';
 import toast from 'react-hot-toast';
 
 export default function AdminDepoimentosPage() {
+    const { viewMode, setViewMode } = useAdminViewMode('depoimentos', 'grid');
     const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -148,46 +158,106 @@ export default function AdminDepoimentosPage() {
 
     return (
         <div className="space-y-6">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                <div><h1 className="text-2xl md:text-[28px] font-bold text-[var(--color-accent)]">Depoimentos</h1><p className="text-[var(--color-text-secondary)] text-sm">Gerencie os depoimentos exibidos no site</p></div>
-                <button onClick={() => openModal()} className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--color-accent)] text-white rounded-[30px] hover:bg-[var(--color-accent-light)]"><Plus className="w-5 h-5" /> Novo Depoimento</button>
-            </div>
+            <AdminPageHeader
+                title="Depoimentos"
+                description="Gerencie os testemunhos exibidos no carrossel da home"
+                action={
+                    <button onClick={() => openModal()} className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--color-accent)] text-white rounded-[30px] hover:bg-[var(--color-accent-light)]">
+                        <Plus className="w-5 h-5" /> Novo Depoimento
+                    </button>
+                }
+            />
 
-            <div className="bg-white rounded-[10px] shadow-lg overflow-hidden">
-                {isLoading ? (
-                    <div className="p-12 text-center">
-                        <Loader2 className="w-8 h-8 mx-auto animate-spin text-[var(--color-accent)]" />
-                    </div>
-                ) : testimonials.length === 0 ? (
-                    <div className="p-12 text-center"><MessageSquare className="w-16 h-16 mx-auto mb-4 text-gray-300" /><p className="text-[var(--color-text-secondary)]">Nenhum depoimento cadastrado</p></div>
-                ) : (
-                    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
-                        {testimonials.map((t, index) => (
-                            <motion.div key={t.id} initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: index * 0.05 }} className="bg-gray-50 rounded-[10px] p-4 relative group">
-                                <div className="flex gap-1 mb-2">{[1, 2, 3, 4, 5].map((s) => <Star key={s} className={`w-4 h-4 ${s <= t.rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'}`} />)}</div>
-                                <p className="text-[var(--color-text-secondary)] italic mb-3">&ldquo;{t.text}&rdquo;</p>
-                                <p className="font-bold text-[var(--color-accent)]">{t.name}</p>
-                                <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <button onClick={() => openModal(t)} className="p-1.5 rounded-[10px] bg-blue-100 text-blue-600 hover:bg-blue-200" aria-label={`Editar depoimento de ${t.name}`}><Pencil className="w-3.5 h-3.5" /></button>
-                                    <button onClick={() => deleteTestimonial(t.id)} className="p-1.5 rounded-[10px] bg-red-100 text-red-600 hover:bg-red-200" aria-label={`Excluir depoimento de ${t.name}`}><Trash2 className="w-3.5 h-3.5" /></button>
+            <AdminListToolbar viewMode={viewMode} onViewModeChange={setViewMode} />
+
+            <AdminPanel
+                isLoading={isLoading}
+                isEmpty={!isLoading && testimonials.length === 0}
+                emptyIcon={MessageSquare}
+                emptyMessage="Nenhum depoimento cadastrado"
+            >
+                {viewMode === 'grid' ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 p-4">
+                    {testimonials.map((t) => (
+                        <article key={t.id} className="admin-sortable-card flex flex-col h-full">
+                            <div className="flex items-center justify-between gap-2 px-3 py-2 border-b border-gray-100 bg-gray-50/80">
+                                <div className="flex items-center gap-2">
+                                    <div className="relative w-10 h-10 rounded-full overflow-hidden bg-gray-200 flex-shrink-0">
+                                        {hasValidImageUrl(t.avatar_url) ? (
+                                            <Image src={t.avatar_url!} alt={t.name} fill className="object-cover" sizes="40px" />
+                                        ) : (
+                                            <span className="absolute inset-0 flex items-center justify-center text-sm font-bold text-[var(--color-accent)]">
+                                                {t.name.charAt(0)}
+                                            </span>
+                                        )}
+                                    </div>
+                                    <div className="min-w-0">
+                                        <p className="admin-card-title truncate">{t.name}</p>
+                                        <div className="flex gap-0.5">
+                                            {[1, 2, 3, 4, 5].map((s) => (
+                                                <Star key={s} className={`w-3 h-3 ${s <= t.rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'}`} />
+                                            ))}
+                                        </div>
+                                    </div>
                                 </div>
-                            </motion.div>
-                        ))}
-                    </div>
+                                <AdminEntityActions size="sm" onEdit={() => openModal(t)} onDelete={() => deleteTestimonial(t.id)} />
+                            </div>
+                            <div className="p-4 flex-1 flex flex-col">
+                                <p className="text-[var(--color-text-secondary)] italic admin-card-desc leading-relaxed line-clamp-4 flex-1">
+                                    &ldquo;{t.text}&rdquo;
+                                </p>
+                                <span className={`mt-3 inline-flex self-start px-2 py-0.5 rounded-full text-xs font-medium ${t.active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-600'}`}>
+                                    {t.active ? 'Ativo' : 'Inativo'}
+                                </span>
+                            </div>
+                        </article>
+                    ))}
+                </div>
+                ) : (
+                <div className="divide-y divide-gray-100">
+                    {testimonials.map((t) => (
+                        <div key={t.id} className="admin-sortable-row">
+                            <div className="relative w-12 h-12 rounded-full overflow-hidden bg-gray-200 flex-shrink-0">
+                                {hasValidImageUrl(t.avatar_url) ? (
+                                    <Image src={t.avatar_url!} alt={t.name} fill className="object-cover" sizes="48px" />
+                                ) : (
+                                    <span className="absolute inset-0 flex items-center justify-center text-sm font-bold text-[var(--color-accent)]">
+                                        {t.name.charAt(0)}
+                                    </span>
+                                )}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                                <div className="flex items-center gap-2 mb-0.5">
+                                    <p className="admin-card-title truncate">{t.name}</p>
+                                    <div className="flex gap-0.5 shrink-0">
+                                        {[1, 2, 3, 4, 5].map((s) => (
+                                            <Star key={s} className={`w-3 h-3 ${s <= t.rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'}`} />
+                                        ))}
+                                    </div>
+                                </div>
+                                <p className="admin-card-desc italic line-clamp-2">&ldquo;{t.text}&rdquo;</p>
+                            </div>
+                            <span className={`hidden sm:inline-flex px-2 py-0.5 rounded-full text-xs font-medium shrink-0 ${t.active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-600'}`}>
+                                {t.active ? 'Ativo' : 'Inativo'}
+                            </span>
+                            <AdminEntityActions onEdit={() => openModal(t)} onDelete={() => deleteTestimonial(t.id)} />
+                        </div>
+                    ))}
+                </div>
                 )}
-            </div>
+            </AdminPanel>
 
             <AnimatePresence>
                 {isModalOpen && (
                     <>
                         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={closeModal} className="fixed inset-0 bg-black/50 z-50" />
                         <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} className="fixed inset-4 md:inset-auto md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:max-w-lg md:w-full bg-white rounded-[10px] shadow-2xl z-50 overflow-hidden">
-                            <div className="flex items-center justify-between p-4 border-b"><h2 className="text-xl md:text-[24px] font-bold text-[var(--color-accent)]">{editingTestimonial ? 'Editar' : 'Novo'} Depoimento</h2><button onClick={closeModal} className="p-2 rounded-[10px] hover:bg-gray-100" aria-label="Fechar modal"><X className="w-5 h-5" /></button></div>
+                            <div className="flex items-center justify-between p-4 border-b"><h2 className="admin-modal-title">{editingTestimonial ? 'Editar' : 'Novo'} Depoimento</h2><button onClick={closeModal} className="p-2 rounded-[10px] hover:bg-gray-100" aria-label="Fechar modal"><X className="w-5 h-5" /></button></div>
                             <form onSubmit={handleSubmit} className="p-4 space-y-4">
-                                <div><label className="block text-sm font-medium mb-1">Nome *</label><input type="text" value={formData.name} onChange={(e) => setFormData((p) => ({ ...p, name: e.target.value }))} className="w-full px-4 py-2 rounded-[10px] border focus:border-[var(--color-accent)] outline-none" required /></div>
-                                <div><label className="block text-sm font-medium mb-1">Depoimento *</label><textarea value={formData.text} onChange={(e) => setFormData((p) => ({ ...p, text: e.target.value }))} rows={4} className="w-full px-4 py-2 rounded-[10px] border focus:border-[var(--color-accent)] outline-none resize-none" required /></div>
+                                <div><label className="admin-label mb-1">Nome *</label><input type="text" value={formData.name} onChange={(e) => setFormData((p) => ({ ...p, name: e.target.value }))} className="w-full px-4 py-2 rounded-[10px] border focus:border-[var(--color-accent)] outline-none" required /></div>
+                                <div><label className="admin-label mb-1">Depoimento *</label><textarea value={formData.text} onChange={(e) => setFormData((p) => ({ ...p, text: e.target.value }))} rows={4} className="w-full px-4 py-2 rounded-[10px] border focus:border-[var(--color-accent)] outline-none resize-none" required /></div>
                                 <div>
-                                    <label className="block text-sm font-medium mb-1">Avatar (opcional)</label>
+                                    <label className="admin-label mb-1">Avatar (opcional)</label>
                                     <div className="space-y-2">
                                         <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-[10px] cursor-pointer hover:bg-gray-50 transition-colors relative overflow-hidden">
                                             {avatarPreview ? (
@@ -198,8 +268,8 @@ export default function AdminDepoimentosPage() {
                                             ) : (
                                                 <div className="flex flex-col items-center justify-center pt-5 pb-6">
                                                     <Upload className="w-8 h-8 mb-2 text-gray-400" />
-                                                    <p className="text-sm text-gray-500">Clique para fazer upload</p>
-                                                    <p className="text-xs text-gray-400">PNG, JPG até 2MB</p>
+                                                    <p className="admin-upload-text">Clique para fazer upload</p>
+                                                    <p className="admin-help">PNG, JPG até 2MB</p>
                                                 </div>
                                             )}
                                             <input type="file" className="hidden" accept="image/*" onChange={handleFileChange} />
@@ -212,7 +282,7 @@ export default function AdminDepoimentosPage() {
                                         )}
                                     </div>
                                 </div>
-                                <div><label className="block text-sm font-medium mb-1">Avaliação</label><div className="flex gap-2">{[1, 2, 3, 4, 5].map((s) => <button key={s} type="button" onClick={() => setFormData((p) => ({ ...p, rating: s }))} className="p-1"><Star className={`w-6 h-6 ${s <= formData.rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'}`} /></button>)}</div></div>
+                                <div><label className="admin-label mb-1">Avaliação</label><div className="flex gap-2">{[1, 2, 3, 4, 5].map((s) => <button key={s} type="button" onClick={() => setFormData((p) => ({ ...p, rating: s }))} className="p-1"><Star className={`w-6 h-6 ${s <= formData.rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'}`} /></button>)}</div></div>
                                 <div className="flex items-center gap-3">
                                     <input
                                         type="checkbox"

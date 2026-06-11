@@ -86,7 +86,7 @@ export default function LeadershipSection({
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    className="text-2xl sm:text-3xl md:text-4xl font-bold text-[var(--color-accent)] mb-4 section-title flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 px-2"
+                    className="type-section-title section-title flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 px-2 mb-4"
                 >
                     <Users className="w-8 h-8 text-[var(--color-primary)]" />
                     {title}
@@ -96,7 +96,7 @@ export default function LeadershipSection({
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: 0.1 }}
-                    className="text-[var(--color-text-secondary)] max-w-2xl mx-auto text-lg"
+                    className="type-section-desc max-w-2xl mx-auto"
                 >
                     {subtitle}
                 </motion.p>

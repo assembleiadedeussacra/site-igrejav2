@@ -13,6 +13,7 @@ import {
 
 import { Leader } from '@/lib/database.types';
 import LeadershipSection from './LeadershipSection';
+import SectionHeader from '@/components/ui/SectionHeader';
 
 interface AboutSectionProps {
     leaders: Leader[];
@@ -51,14 +52,11 @@ export default function AboutSection({ leaders = [] }: AboutSectionProps) {
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    className="text-center mb-16"
                 >
-                    <h2 className="text-3xl md:text-4xl font-bold text-[var(--color-accent)] mb-4 section-title">
-                        Sobre Nós
-                    </h2>
-                    <p className="text-[var(--color-text-secondary)] max-w-2xl mx-auto section-desc">
-                        Conheça nossa história e missão
-                    </p>
+                    <SectionHeader
+                        title="Sobre Nós"
+                        description="Conheça nossa história e missão"
+                    />
                 </motion.div>
 
                 {/* About Content */}
@@ -70,12 +68,12 @@ export default function AboutSection({ leaders = [] }: AboutSectionProps) {
                         viewport={{ once: true }}
                         transition={{ duration: 0.6 }}
                     >
-                        <p className="text-lg text-[var(--color-text-secondary)] leading-relaxed mb-6">
+                        <p className="type-body-lg text-[var(--color-text-secondary)] mb-6">
                             A <strong className="text-[var(--color-accent)]">Assembleia de Deus Missão</strong> em
                             Sacramento, Minas Gerais, é uma igreja evangélica comprometida com a pregação do Evangelho,
                             o ensino bíblico e o desenvolvimento espiritual de seus membros e visitantes.
                         </p>
-                        <p className="text-lg text-[var(--color-text-secondary)] leading-relaxed mb-8">
+                        <p className="type-body-lg text-[var(--color-text-secondary)] mb-8">
                             Nossa missão é proclamar a Palavra de Deus, promover a adoração genuína e servir a comunidade
                             com amor e dedicação. Estamos abertos a receber todos aqueles que buscam conhecer mais sobre
                             Jesus Cristo e crescer na fé cristã.
@@ -110,10 +108,10 @@ export default function AboutSection({ leaders = [] }: AboutSectionProps) {
                                 <div className="w-12 h-12 rounded-[10px] bg-gradient-to-br from-[var(--color-accent)] to-[var(--color-accent-light)] flex items-center justify-center mb-4 text-white group-hover:scale-110 transition-transform">
                                     <feature.icon className="w-6 h-6" />
                                 </div>
-                                <h3 className="font-bold text-[var(--color-accent)] mb-2">
+                                <h3 className="type-card-title mb-2">
                                     {feature.title}
                                 </h3>
-                                <p className="text-sm text-[var(--color-text-secondary)]">
+                                <p className="type-card-desc">
                                     {feature.description}
                                 </p>
                             </motion.div>

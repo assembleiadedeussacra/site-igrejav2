@@ -5,23 +5,31 @@ import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
     Plus,
-    Pencil,
-    Trash2,
-    ChevronUp,
-    ChevronDown,
     Eye,
     EyeOff,
     X,
     Save,
     Loader2,
     Upload,
+    Building2,
 } from 'lucide-react';
 import { api } from '@/services/api';
 import { Department } from '@/lib/database.types';
 import { uploadDepartmentImage } from '@/lib/supabase/storage';
+import { hasValidImageUrl } from '@/lib/imageUtils';
+import { toOrderUpdates } from '@/lib/admin/reorder';
+import {
+    AdminPageHeader,
+    AdminPanel,
+    AdminSortable,
+    AdminEntityActions,
+    AdminListToolbar,
+    useAdminViewMode,
+} from '@/components/admin';
 import toast from 'react-hot-toast';
 
 export default function AdminDepartamentosPage() {
+    const { viewMode, setViewMode } = useAdminViewMode('departamentos', 'list');
     const [departments, setDepartments] = useState<Department[]>([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingDepartment, setEditingDepartment] = useState<Department | null>(null);
@@ -174,130 +182,102 @@ export default function AdminDepartamentosPage() {
         }
     };
 
-    const moveDepartment = async (id: string, direction: 'up' | 'down') => {
-        const department = departments.find((d) => d.id === id);
-        if (!department) return;
-
-        const currentIndex = departments.findIndex((d) => d.id === id);
-        const newIndex = direction === 'up' ? currentIndex - 1 : currentIndex + 1;
-
-        if (newIndex < 0 || newIndex >= departments.length) return;
-
-        const targetDepartment = departments[newIndex];
-        const newOrder = targetDepartment.order;
-        const targetNewOrder = department.order;
-
+    const handleReorder = async (reordered: Department[]) => {
+        const previous = departments;
+        setDepartments(reordered);
         try {
-            await Promise.all([
-                api.updateDepartmentOrder(id, newOrder),
-                api.updateDepartmentOrder(targetDepartment.id, targetNewOrder),
-            ]);
+            await api.updateDepartmentOrders(toOrderUpdates(reordered, (d) => d.id));
             toast.success('Ordem atualizada!');
-            await loadDepartments();
-        } catch (error: any) {
+        } catch (error) {
             console.error('Error moving department:', error);
+            setDepartments(previous);
             toast.error('Erro ao atualizar ordem.');
         }
     };
 
-    if (isLoading) {
-        return (
-            <div className="flex items-center justify-center min-h-screen">
-                <Loader2 className="w-8 h-8 animate-spin text-[var(--color-primary)]" />
-            </div>
-        );
-    }
-
     return (
-        <div className="p-6 space-y-6">
-            <div className="flex items-center justify-between">
-                <div>
-                    <h1 className="text-2xl md:text-[28px] font-bold text-[var(--color-text)]">
-                        Departamentos
-                    </h1>
-                    <p className="text-[var(--color-text-secondary)] mt-1">
-                        Gerencie os departamentos da igreja
-                    </p>
-                </div>
-                <button
-                    onClick={() => openModal()}
-                    className="px-4 py-2 bg-[var(--color-primary)] text-white rounded-[10px] hover:bg-[var(--color-accent)] transition-colors flex items-center gap-2"
-                >
-                    <Plus className="w-4 h-4" />
-                    Novo Departamento
-                </button>
-            </div>
-
-            <div className="grid gap-4">
-                {departments.map((department) => (
-                    <motion.div
-                        key={department.id}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="bg-white rounded-[10px] shadow-sm border border-gray-200 p-4 flex items-center justify-between"
+        <div className="space-y-6">
+            <AdminPageHeader
+                title="Departamentos"
+                description="Gerencie os departamentos da página Sobre"
+                action={
+                    <button
+                        onClick={() => openModal()}
+                        className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--color-accent)] text-white rounded-[30px] hover:bg-[var(--color-accent-light)] transition-colors"
                     >
-                        <div className="flex items-center gap-4 flex-1">
-                            <div className="flex flex-col gap-1">
-                                <button
-                                    onClick={() => moveDepartment(department.id, 'up')}
-                                    disabled={departments.findIndex((d) => d.id === department.id) === 0}
-                                    className="p-1 rounded-[10px] text-gray-400 hover:text-gray-600 disabled:opacity-30 disabled:cursor-not-allowed"
-                                >
-                                    <ChevronUp className="w-4 h-4" />
-                                </button>
-                                <button
-                                    onClick={() => moveDepartment(department.id, 'down')}
-                                    disabled={departments.findIndex((d) => d.id === department.id) === departments.length - 1}
-                                    className="p-1 rounded-[10px] text-gray-400 hover:text-gray-600 disabled:opacity-30 disabled:cursor-not-allowed"
-                                >
-                                    <ChevronDown className="w-4 h-4" />
-                                </button>
+                        <Plus className="w-4 h-4" />
+                        Novo Departamento
+                    </button>
+                }
+            />
+
+            <AdminListToolbar viewMode={viewMode} onViewModeChange={setViewMode} />
+
+            <AdminPanel
+                isLoading={isLoading}
+                isEmpty={!isLoading && departments.length === 0}
+                emptyIcon={Building2}
+                emptyMessage="Nenhum departamento cadastrado"
+                hint="Arraste para definir a ordem na página Sobre"
+            >
+                <AdminSortable
+                    items={departments}
+                    getItemId={(d) => d.id}
+                    onReorder={handleReorder}
+                    layout={viewMode}
+                    renderItem={(department, { dragHandle, orderBadge, layout }) =>
+                        layout === 'grid' ? (
+                            <div className="flex flex-col h-full">
+                                <div className="flex items-center justify-between gap-2 px-3 py-2 border-b border-gray-100 bg-gray-50/80">
+                                    <div className="flex items-center gap-2">{dragHandle}{orderBadge}</div>
+                                    <AdminEntityActions size="sm" onEdit={() => openModal(department)} onDelete={() => handleDelete(department.id)} />
+                                </div>
+                                {hasValidImageUrl(department.image_url) && (
+                                    <div className="relative aspect-[16/10] bg-gray-100">
+                                        <Image src={department.image_url!} alt={department.name} fill className="object-cover" sizes="(max-width:640px) 100vw, 33vw" />
+                                    </div>
+                                )}
+                                <div className="p-4 flex-1">
+                                    <h3 className="admin-card-title">{department.name}</h3>
+                                    {department.description && (
+                                        <p className="admin-card-desc line-clamp-3 mt-1">{department.description}</p>
+                                    )}
+                                    <span className={`mt-3 inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${department.active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-600'}`}>
+                                        {department.active ? 'Visível' : 'Oculto'}
+                                    </span>
+                                </div>
                             </div>
-                            {department.image_url && (
-                                <div className="relative w-16 h-16 rounded-[10px] overflow-hidden">
-                                    <Image
-                                        src={department.image_url}
-                                        alt={department.name}
-                                        fill
-                                        className="object-cover"
-                                    />
+                        ) : (
+                        <>
+                            {dragHandle}
+                            {orderBadge}
+                            {hasValidImageUrl(department.image_url) && (
+                                <div className="relative w-16 h-16 rounded-[10px] overflow-hidden flex-shrink-0">
+                                    <Image src={department.image_url!} alt={department.name} fill className="object-cover" sizes="64px" />
                                 </div>
                             )}
-                            <div className="flex-1">
-                                <h3 className="font-semibold text-[var(--color-text)]">{department.name}</h3>
+                            <div className="flex-1 min-w-0">
+                                <h3 className="admin-card-title">{department.name}</h3>
                                 {department.description && (
-                                    <p className="text-sm text-[var(--color-text-secondary)] line-clamp-1">
-                                        {department.description}
-                                    </p>
+                                    <p className="admin-card-desc line-clamp-2 mt-0.5">{department.description}</p>
                                 )}
                             </div>
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-2 shrink-0" title={department.active ? 'Visível' : 'Oculto'}>
                                 {department.active ? (
                                     <Eye className="w-5 h-5 text-green-500" />
                                 ) : (
                                     <EyeOff className="w-5 h-5 text-gray-400" />
                                 )}
                             </div>
-                        </div>
-                        <div className="flex items-center gap-2 ml-4">
-                            <button
-                                onClick={() => openModal(department)}
-                                className="p-2 rounded-[10px] text-blue-600 hover:bg-blue-50 transition-colors"
-                                title="Editar"
-                            >
-                                <Pencil className="w-5 h-5" />
-                            </button>
-                            <button
-                                onClick={() => handleDelete(department.id)}
-                                className="p-2 rounded-[10px] text-red-600 hover:bg-red-50 transition-colors"
-                                title="Excluir"
-                            >
-                                <Trash2 className="w-5 h-5" />
-                            </button>
-                        </div>
-                    </motion.div>
-                ))}
-            </div>
+                            <AdminEntityActions
+                                onEdit={() => openModal(department)}
+                                onDelete={() => handleDelete(department.id)}
+                            />
+                        </>
+                        )
+                    }
+                />
+            </AdminPanel>
 
             {/* Modal */}
             <AnimatePresence>
@@ -317,7 +297,7 @@ export default function AdminDepartamentosPage() {
                             className="bg-white rounded-[10px] shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
                         >
                             <div className="sticky top-0 bg-white border-b border-gray-200 p-4 flex items-center justify-between z-10">
-                                <h2 className="text-xl font-bold text-[var(--color-text)]">
+                                <h2 className="admin-modal-title">
                                     {editingDepartment ? 'Editar Departamento' : 'Novo Departamento'}
                                 </h2>
                                 <button
@@ -331,7 +311,7 @@ export default function AdminDepartamentosPage() {
                             <form onSubmit={handleSubmit} className="p-6 space-y-6">
                                 {/* Name */}
                                 <div>
-                                    <label className="block text-sm font-medium text-[var(--color-text)] mb-2">
+                                    <label className="admin-label mb-2">
                                         Nome do Departamento *
                                     </label>
                                     <input
@@ -346,7 +326,7 @@ export default function AdminDepartamentosPage() {
 
                                 {/* Description */}
                                 <div>
-                                    <label className="block text-sm font-medium text-[var(--color-text)] mb-2">
+                                    <label className="admin-label mb-2">
                                         Descrição
                                     </label>
                                     <textarea
@@ -359,7 +339,7 @@ export default function AdminDepartamentosPage() {
 
                                 {/* Image Upload */}
                                 <div>
-                                    <label className="block text-sm font-medium text-[var(--color-text)] mb-2">
+                                    <label className="admin-label mb-2">
                                         Imagem do Departamento
                                     </label>
                                     <div className="flex items-center gap-4">
@@ -377,10 +357,8 @@ export default function AdminDepartamentosPage() {
                                             <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-[10px] cursor-pointer hover:bg-gray-50 transition-colors">
                                                 <div className="flex flex-col items-center justify-center pt-5 pb-6">
                                                     <Upload className="w-8 h-8 text-gray-400 mb-2" />
-                                                    <p className="text-sm text-gray-600">
-                                                        <span className="font-semibold">Clique para upload</span> ou arraste e solte
-                                                    </p>
-                                                    <p className="text-xs text-gray-500 mt-1">
+                                                    <p className="admin-upload-text"><strong>Clique para upload</strong> ou arraste e solte</p>
+                                                    <p className="admin-help mt-1">
                                                         PNG, JPG até 5MB
                                                     </p>
                                                 </div>
@@ -404,7 +382,7 @@ export default function AdminDepartamentosPage() {
                                         onChange={(e) => setFormData((p) => ({ ...p, active: e.target.checked }))}
                                         className="w-4 h-4 text-[var(--color-primary)] rounded focus:ring-[var(--color-primary)]"
                                     />
-                                    <label htmlFor="active" className="text-sm text-[var(--color-text)]">
+                                    <label htmlFor="active" className="admin-label-inline">
                                         Ativo (exibir no site)
                                     </label>
                                 </div>

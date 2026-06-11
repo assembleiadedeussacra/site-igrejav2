@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Save, Loader2, Upload } from 'lucide-react';
+import { AdminPageHeader, AdminPanel } from '@/components/admin';
 import { api } from '@/services/api';
 import { PageBanner } from '@/lib/database.types';
 import { uploadAboutPageCover } from '@/lib/supabase/storage';
@@ -128,35 +129,24 @@ export default function AdminBannersPaginasPage() {
         }
     };
 
-    if (isLoading) {
-        return (
-            <div className="flex items-center justify-center min-h-screen">
-                <Loader2 className="w-8 h-8 animate-spin text-[var(--color-primary)]" />
-            </div>
-        );
-    }
-
     return (
-        <div className="p-6 space-y-6">
-            <div>
-                <h1 className="text-2xl md:text-[28px] font-bold text-[var(--color-text)]">
-                    Banners das Páginas
-                </h1>
-                <p className="text-[var(--color-text-secondary)] mt-1">
-                    Configure os banners das páginas de Estudos e Blog
-                </p>
-            </div>
+        <div className="space-y-6">
+            <AdminPageHeader
+                title="Banners das Páginas"
+                description="Configure os banners das páginas de Estudos e Blog"
+            />
 
+            <AdminPanel isLoading={isLoading} loadingMessage="Carregando banners...">
             {/* Estudos Banner */}
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-white rounded-[10px] shadow-sm border border-gray-200 p-6"
+                className="p-6 border-b border-gray-100"
             >
-                <h2 className="text-xl font-bold text-[var(--color-text)] mb-4">Banner - Página Estudos</h2>
+                <h2 className="admin-section-title mb-4">Banner - Página Estudos</h2>
                 <div className="space-y-4">
                     <div>
-                        <label className="block text-sm font-medium text-[var(--color-text)] mb-2">
+                        <label className="admin-label mb-2">
                             Imagem do Banner
                         </label>
                         <div className="flex items-center gap-4">
@@ -174,10 +164,8 @@ export default function AdminBannersPaginasPage() {
                                 <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-[10px] cursor-pointer hover:bg-gray-50 transition-colors">
                                     <div className="flex flex-col items-center justify-center pt-5 pb-6">
                                         <Upload className="w-8 h-8 text-gray-400 mb-2" />
-                                        <p className="text-sm text-gray-600">
-                                            <span className="font-semibold">Clique para upload</span> ou arraste e solte
-                                        </p>
-                                        <p className="text-xs text-gray-500 mt-1">
+                                        <p className="admin-upload-text"><strong>Clique para upload</strong> ou arraste e solte</p>
+                                        <p className="admin-help mt-1">
                                             PNG, JPG até 5MB
                                         </p>
                                     </div>
@@ -217,12 +205,12 @@ export default function AdminBannersPaginasPage() {
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-white rounded-[10px] shadow-sm border border-gray-200 p-6"
+                className="p-6"
             >
-                <h2 className="text-xl font-bold text-[var(--color-text)] mb-4">Banner - Página Blog</h2>
+                <h2 className="admin-section-title mb-4">Banner - Página Blog</h2>
                 <div className="space-y-4">
                     <div>
-                        <label className="block text-sm font-medium text-[var(--color-text)] mb-2">
+                        <label className="admin-label mb-2">
                             Imagem do Banner
                         </label>
                         <div className="flex items-center gap-4">
@@ -240,10 +228,8 @@ export default function AdminBannersPaginasPage() {
                                 <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-[10px] cursor-pointer hover:bg-gray-50 transition-colors">
                                     <div className="flex flex-col items-center justify-center pt-5 pb-6">
                                         <Upload className="w-8 h-8 text-gray-400 mb-2" />
-                                        <p className="text-sm text-gray-600">
-                                            <span className="font-semibold">Clique para upload</span> ou arraste e solte
-                                        </p>
-                                        <p className="text-xs text-gray-500 mt-1">
+                                        <p className="admin-upload-text"><strong>Clique para upload</strong> ou arraste e solte</p>
+                                        <p className="admin-help mt-1">
                                             PNG, JPG até 5MB
                                         </p>
                                     </div>
@@ -278,6 +264,7 @@ export default function AdminBannersPaginasPage() {
                     </div>
                 </div>
             </motion.div>
+            </AdminPanel>
         </div>
     );
 }

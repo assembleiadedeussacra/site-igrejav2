@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { BookOpen, ExternalLink, RefreshCw, Share2 } from 'lucide-react';
 
 import { Verse } from '@/lib/database.types';
+import SectionHeader from '@/components/ui/SectionHeader';
 
 interface VerseSectionProps {
     verse: Verse | null;
@@ -46,14 +47,11 @@ export default function VerseSection({ verse }: VerseSectionProps) {
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    className="text-center mb-12"
                 >
-                    <h2 className="text-3xl md:text-4xl font-bold text-[var(--color-accent)] mb-4 section-title">
-                        Versículo do Dia
-                    </h2>
-                    <p className="text-[var(--color-text-secondary)] max-w-2xl mx-auto">
-                        Meditação diária da Palavra de Deus para edificação espiritual
-                    </p>
+                    <SectionHeader
+                        title="Versículo do Dia"
+                        description="Meditação diária da Palavra de Deus para edificação espiritual"
+                    />
                 </motion.div>
 
                 {/* Verse Card */}

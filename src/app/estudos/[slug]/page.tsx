@@ -33,8 +33,11 @@ export async function generateMetadata(
     return generatePostMetadata(post, 'study');
 }
 
-// ISR: Revalidate every hour
+// ISR: Revalida a cada hora; novos posts são atualizados on-demand via /api/admin/revalidate
 export const revalidate = 3600;
+
+// Permite renderizar slugs criados após o build
+export const dynamicParams = true;
 
 // SSG: Generate static pages for top posts at build time
 export async function generateStaticParams() {
@@ -152,11 +155,11 @@ export default async function EstudoPostPage({ params }: EstudoPostPageProps) {
                                     )}
                                 </div>
 
-                                <h1 className="text-2xl sm:text-3xl md:text-5xl font-bold text-[var(--color-accent)] mb-4">
+                                <h1 className="type-page-hero-title text-[var(--color-accent)] mb-4">
                                     {post.title}
                                 </h1>
 
-                                <p className="text-base sm:text-lg md:text-xl text-[var(--color-text-secondary)] mb-6">
+                                <p className="type-page-hero-desc text-[var(--color-text-secondary)] mb-6">
                                     {post.excerpt || post.description}
                                 </p>
 

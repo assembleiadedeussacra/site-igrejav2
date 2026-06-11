@@ -5,23 +5,31 @@ import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
     Plus,
-    Pencil,
-    Trash2,
-    ChevronUp,
-    ChevronDown,
     Eye,
     EyeOff,
     X,
     Save,
     Loader2,
     Upload,
+    Users,
 } from 'lucide-react';
 import { api } from '@/services/api';
 import { DepartmentMember, Department } from '@/lib/database.types';
 import { uploadDepartmentMemberImage } from '@/lib/supabase/storage';
+import { hasValidImageUrl } from '@/lib/imageUtils';
+import { toOrderUpdates } from '@/lib/admin/reorder';
+import {
+    AdminPageHeader,
+    AdminPanel,
+    AdminSortable,
+    AdminEntityActions,
+    AdminListToolbar,
+    useAdminViewMode,
+} from '@/components/admin';
 import toast from 'react-hot-toast';
 
 export default function AdminIntegrantesPage() {
+    const { viewMode, setViewMode } = useAdminViewMode('integrantes', 'list');
     const [members, setMembers] = useState<DepartmentMember[]>([]);
     const [departments, setDepartments] = useState<Department[]>([]);
     const [selectedDepartment, setSelectedDepartment] = useState<string>('all');
@@ -201,28 +209,15 @@ export default function AdminIntegrantesPage() {
         }
     };
 
-    const moveMember = async (id: string, direction: 'up' | 'down') => {
-        const member = members.find((m) => m.id === id);
-        if (!member) return;
-
-        const currentIndex = members.findIndex((m) => m.id === id);
-        const newIndex = direction === 'up' ? currentIndex - 1 : currentIndex + 1;
-
-        if (newIndex < 0 || newIndex >= members.length) return;
-
-        const targetMember = members[newIndex];
-        const newOrder = targetMember.order;
-        const targetNewOrder = member.order;
-
+    const handleReorder = async (reordered: DepartmentMember[]) => {
+        const previous = members;
+        setMembers(reordered);
         try {
-            await Promise.all([
-                api.updateDepartmentMemberOrder(id, newOrder),
-                api.updateDepartmentMemberOrder(targetMember.id, targetNewOrder),
-            ]);
+            await api.updateDepartmentMemberOrders(toOrderUpdates(reordered, (m) => m.id));
             toast.success('Ordem atualizada!');
-            await loadMembers();
-        } catch (error: any) {
+        } catch (error) {
             console.error('Error moving member:', error);
+            setMembers(previous);
             toast.error('Erro ao atualizar ordem.');
         }
     };
@@ -231,43 +226,30 @@ export default function AdminIntegrantesPage() {
         return departments.find((d) => d.id === departmentId)?.name || 'Desconhecido';
     };
 
-    if (isLoading && members.length === 0) {
-        return (
-            <div className="flex items-center justify-center min-h-screen">
-                <Loader2 className="w-8 h-8 animate-spin text-[var(--color-primary)]" />
-            </div>
-        );
-    }
-
     return (
-        <div className="p-6 space-y-6">
-            <div className="flex items-center justify-between">
-                <div>
-                    <h1 className="text-2xl md:text-[28px] font-bold text-[var(--color-text)]">
-                        Integrantes dos Departamentos
-                    </h1>
-                    <p className="text-[var(--color-text-secondary)] mt-1">
-                        Gerencie os integrantes de cada departamento
-                    </p>
-                </div>
-                <button
-                    onClick={() => openModal()}
-                    className="px-4 py-2 bg-[var(--color-primary)] text-white rounded-[10px] hover:bg-[var(--color-accent)] transition-colors flex items-center gap-2"
-                >
-                    <Plus className="w-4 h-4" />
-                    Novo Integrante
-                </button>
-            </div>
+        <div className="space-y-6">
+            <AdminPageHeader
+                title="Integrantes dos Departamentos"
+                description="Gerencie os integrantes exibidos em cada departamento"
+                action={
+                    <button
+                        onClick={() => openModal()}
+                        className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--color-accent)] text-white rounded-[30px] hover:bg-[var(--color-accent-light)] transition-colors"
+                    >
+                        <Plus className="w-4 h-4" />
+                        Novo Integrante
+                    </button>
+                }
+            />
 
-            {/* Department Filter */}
-            <div>
-                <label className="block text-sm font-medium text-[var(--color-text)] mb-2">
+            <div className="admin-card bg-white rounded-[10px] shadow-lg border border-gray-100 p-4 sm:p-5">
+                <label className="admin-label mb-2">
                     Filtrar por Departamento
                 </label>
                 <select
                     value={selectedDepartment}
                     onChange={(e) => setSelectedDepartment(e.target.value)}
-                    className="w-full md:w-auto px-4 py-2 border border-gray-300 rounded-[10px] focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent"
+                    className="w-full md:max-w-md px-4 py-2 border border-gray-200 rounded-[10px] focus:border-[var(--color-accent)] outline-none admin-input"
                 >
                     <option value="all">Todos os Departamentos</option>
                     {departments.map((dept) => (
@@ -278,81 +260,81 @@ export default function AdminIntegrantesPage() {
                 </select>
             </div>
 
-            <div className="grid gap-4">
-                {members.map((member) => (
-                    <motion.div
-                        key={member.id}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="bg-white rounded-[10px] shadow-sm border border-gray-200 p-4 flex items-center justify-between"
-                    >
-                        <div className="flex items-center gap-4 flex-1">
-                            <div className="flex flex-col gap-1">
-                                <button
-                                    onClick={() => moveMember(member.id, 'up')}
-                                    disabled={members.findIndex((m) => m.id === member.id) === 0}
-                                    className="p-1 rounded-[10px] text-gray-400 hover:text-gray-600 disabled:opacity-30 disabled:cursor-not-allowed"
-                                >
-                                    <ChevronUp className="w-4 h-4" />
-                                </button>
-                                <button
-                                    onClick={() => moveMember(member.id, 'down')}
-                                    disabled={members.findIndex((m) => m.id === member.id) === members.length - 1}
-                                    className="p-1 rounded-[10px] text-gray-400 hover:text-gray-600 disabled:opacity-30 disabled:cursor-not-allowed"
-                                >
-                                    <ChevronDown className="w-4 h-4" />
-                                </button>
-                            </div>
-                            {member.image_url && (
-                                <div className="relative w-16 h-16 rounded-[10px] overflow-hidden">
-                                    <Image
-                                        src={member.image_url}
-                                        alt={member.name}
-                                        fill
-                                        className="object-cover"
-                                    />
+            <AdminListToolbar viewMode={viewMode} onViewModeChange={setViewMode} />
+
+            <AdminPanel
+                isLoading={isLoading}
+                isEmpty={!isLoading && members.length === 0}
+                emptyIcon={Users}
+                emptyMessage="Nenhum integrante encontrado"
+                hint="Arraste para definir a ordem dentro do departamento"
+            >
+                <AdminSortable
+                    items={members}
+                    getItemId={(m) => m.id}
+                    onReorder={handleReorder}
+                    layout={viewMode}
+                    renderItem={(member, { dragHandle, orderBadge, layout }) =>
+                        layout === 'grid' ? (
+                            <div className="flex flex-col h-full">
+                                <div className="flex items-center justify-between gap-2 px-3 py-2 border-b border-gray-100 bg-gray-50/80">
+                                    <div className="flex items-center gap-2">{dragHandle}{orderBadge}</div>
+                                    <AdminEntityActions size="sm" onEdit={() => openModal(member)} onDelete={() => handleDelete(member.id)} />
                                 </div>
-                            )}
-                            <div className="flex-1">
-                                <h3 className="font-semibold text-[var(--color-text)]">{member.name}</h3>
-                                <p className="text-sm text-[var(--color-text-secondary)]">{member.role}</p>
-                                <p className="text-xs text-gray-500 mt-1">
+                                <div className="flex flex-col items-center text-center p-5 flex-1">
+                                    <div className="relative w-20 h-20 rounded-full overflow-hidden bg-gray-100 mb-3 border-2 border-[var(--color-primary)]">
+                                        {hasValidImageUrl(member.image_url) ? (
+                                            <Image src={member.image_url} alt={member.name} fill className="object-cover" sizes="80px" />
+                                        ) : (
+                                            <span className="absolute inset-0 flex items-center justify-center text-xl font-bold text-[var(--color-accent)]">
+                                                {member.name.charAt(0)}
+                                            </span>
+                                        )}
+                                    </div>
+                                    <h3 className="admin-card-title">{member.name}</h3>
+                                    <p className="admin-card-desc mt-0.5">{member.role}</p>
+                                    <p className="admin-card-meta mt-1">{getDepartmentName(member.department_id)}</p>
+                                    <span className={`mt-3 inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${member.active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-600'}`}>
+                                        {member.active ? 'Ativo' : 'Inativo'}
+                                    </span>
+                                </div>
+                            </div>
+                        ) : (
+                        <>
+                            {dragHandle}
+                            {orderBadge}
+                            <div className="relative w-14 h-14 rounded-[10px] overflow-hidden bg-gray-100 flex-shrink-0">
+                                {hasValidImageUrl(member.image_url) ? (
+                                    <Image src={member.image_url} alt={member.name} fill className="object-cover" sizes="56px" />
+                                ) : (
+                                    <span className="absolute inset-0 flex items-center justify-center text-sm font-bold text-[var(--color-accent)]">
+                                        {member.name.charAt(0)}
+                                    </span>
+                                )}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                                <h3 className="admin-card-title">{member.name}</h3>
+                                <p className="admin-card-desc">{member.role}</p>
+                                <p className="admin-card-meta mt-0.5">
                                     {getDepartmentName(member.department_id)}
                                 </p>
                             </div>
-                            <div className="flex items-center gap-2">
+                            <div className="shrink-0" title={member.active ? 'Visível' : 'Oculto'}>
                                 {member.active ? (
                                     <Eye className="w-5 h-5 text-green-500" />
                                 ) : (
                                     <EyeOff className="w-5 h-5 text-gray-400" />
                                 )}
                             </div>
-                        </div>
-                        <div className="flex items-center gap-2 ml-4">
-                            <button
-                                onClick={() => openModal(member)}
-                                className="p-2 rounded-[10px] text-blue-600 hover:bg-blue-50 transition-colors"
-                                title="Editar"
-                            >
-                                <Pencil className="w-5 h-5" />
-                            </button>
-                            <button
-                                onClick={() => handleDelete(member.id)}
-                                className="p-2 rounded-[10px] text-red-600 hover:bg-red-50 transition-colors"
-                                title="Excluir"
-                            >
-                                <Trash2 className="w-5 h-5" />
-                            </button>
-                        </div>
-                    </motion.div>
-                ))}
-            </div>
-
-            {members.length === 0 && (
-                <div className="text-center py-12 text-[var(--color-text-secondary)]">
-                    <p>Nenhum integrante encontrado.</p>
-                </div>
-            )}
+                            <AdminEntityActions
+                                onEdit={() => openModal(member)}
+                                onDelete={() => handleDelete(member.id)}
+                            />
+                        </>
+                        )
+                    }
+                />
+            </AdminPanel>
 
             {/* Modal */}
             <AnimatePresence>
@@ -372,7 +354,7 @@ export default function AdminIntegrantesPage() {
                             className="bg-white rounded-[10px] shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
                         >
                             <div className="sticky top-0 bg-white border-b border-gray-200 p-4 flex items-center justify-between z-10">
-                                <h2 className="text-xl font-bold text-[var(--color-text)]">
+                                <h2 className="admin-modal-title">
                                     {editingMember ? 'Editar Integrante' : 'Novo Integrante'}
                                 </h2>
                                 <button
@@ -386,7 +368,7 @@ export default function AdminIntegrantesPage() {
                             <form onSubmit={handleSubmit} className="p-6 space-y-6">
                                 {/* Department */}
                                 <div>
-                                    <label className="block text-sm font-medium text-[var(--color-text)] mb-2">
+                                    <label className="admin-label mb-2">
                                         Departamento *
                                     </label>
                                     <select
@@ -406,7 +388,7 @@ export default function AdminIntegrantesPage() {
 
                                 {/* Name */}
                                 <div>
-                                    <label className="block text-sm font-medium text-[var(--color-text)] mb-2">
+                                    <label className="admin-label mb-2">
                                         Nome *
                                     </label>
                                     <input
@@ -421,7 +403,7 @@ export default function AdminIntegrantesPage() {
 
                                 {/* Role */}
                                 <div>
-                                    <label className="block text-sm font-medium text-[var(--color-text)] mb-2">
+                                    <label className="admin-label mb-2">
                                         Cargo/Função *
                                     </label>
                                     <input
@@ -436,7 +418,7 @@ export default function AdminIntegrantesPage() {
 
                                 {/* Image Upload */}
                                 <div>
-                                    <label className="block text-sm font-medium text-[var(--color-text)] mb-2">
+                                    <label className="admin-label mb-2">
                                         Foto do Integrante *
                                     </label>
                                     <div className="flex items-center gap-4">
@@ -454,10 +436,8 @@ export default function AdminIntegrantesPage() {
                                             <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-[10px] cursor-pointer hover:bg-gray-50 transition-colors">
                                                 <div className="flex flex-col items-center justify-center pt-5 pb-6">
                                                     <Upload className="w-8 h-8 text-gray-400 mb-2" />
-                                                    <p className="text-sm text-gray-600">
-                                                        <span className="font-semibold">Clique para upload</span> ou arraste e solte
-                                                    </p>
-                                                    <p className="text-xs text-gray-500 mt-1">
+                                                    <p className="admin-upload-text"><strong>Clique para upload</strong> ou arraste e solte</p>
+                                                    <p className="admin-help mt-1">
                                                         PNG, JPG até 5MB
                                                     </p>
                                                 </div>
@@ -481,7 +461,7 @@ export default function AdminIntegrantesPage() {
                                         onChange={(e) => setFormData((p) => ({ ...p, active: e.target.checked }))}
                                         className="w-4 h-4 text-[var(--color-primary)] rounded focus:ring-[var(--color-primary)]"
                                     />
-                                    <label htmlFor="active" className="text-sm text-[var(--color-text)]">
+                                    <label htmlFor="active" className="admin-label-inline">
                                         Ativo (exibir no site)
                                     </label>
                                 </div>

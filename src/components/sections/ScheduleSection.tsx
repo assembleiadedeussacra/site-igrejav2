@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 
 import { Event as DBEvent } from '@/lib/database.types';
+import SectionHeader from '@/components/ui/SectionHeader';
 
 interface ScheduleSectionProps {
     events: DBEvent[];
@@ -65,14 +66,11 @@ export default function ScheduleSection({ events = [] }: ScheduleSectionProps) {
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    className="text-center mb-12"
                 >
-                    <h2 className="text-3xl md:text-4xl font-bold text-[var(--color-accent)] mb-4 section-title">
-                        Agenda
-                    </h2>
-                    <p className="text-[var(--color-text-secondary)] max-w-2xl mx-auto text-lg">
-                        Programação de cultos, estudos bíblicos e atividades ministeriais
-                    </p>
+                    <SectionHeader
+                        title="Agenda"
+                        description="Programação de cultos, estudos bíblicos e atividades ministeriais"
+                    />
                 </motion.div>
 
                 {/* Google Calendar Embed */}
@@ -109,7 +107,7 @@ export default function ScheduleSection({ events = [] }: ScheduleSectionProps) {
                 >
                     <div className="flex items-center gap-3 mb-8">
                         <Clock className="w-8 h-8 text-[var(--color-primary)]" />
-                        <h3 className="text-2xl md:text-3xl font-bold text-[var(--color-accent)]">
+                        <h3 className="type-subsection-title">
                             Programação Fixa
                         </h3>
                     </div>

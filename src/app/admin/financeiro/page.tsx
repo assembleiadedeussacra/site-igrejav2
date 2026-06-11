@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Copy, Check, QrCode, Save, Loader2, Wallet, Upload } from 'lucide-react';
+import { AdminPageHeader, AdminPanel } from '@/components/admin';
 import { api } from '@/services/api';
 import { Financial } from '@/lib/database.types';
 import { uploadQRCode } from '@/lib/supabase/storage';
@@ -102,27 +103,26 @@ export default function AdminFinanceiroPage() {
 
     return (
         <div className="space-y-6">
-            <div><h1 className="text-2xl md:text-[28px] font-bold text-[var(--color-accent)]">Dízimos e Ofertas</h1><p className="text-[var(--color-text-secondary)] text-sm">Configure as informações de PIX para contribuições</p></div>
+            <AdminPageHeader
+                title="Dízimos e Ofertas"
+                description="Configure as informações de PIX para contribuições"
+            />
 
-            {isLoading ? (
-                <div className="bg-white rounded-[10px] shadow-lg p-12 text-center">
-                    <Loader2 className="w-8 h-8 mx-auto animate-spin text-[var(--color-accent)]" />
-                </div>
-            ) : (
-                <div className="grid lg:grid-cols-2 gap-6">
+            <AdminPanel isLoading={isLoading} loadingMessage="Carregando configurações financeiras...">
+                <div className="grid lg:grid-cols-2 gap-6 p-4 sm:p-6">
                     {/* Preview */}
                     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-gradient-to-br from-[var(--color-accent)] to-[var(--color-accent-light)] rounded-[10px] p-6 text-white">
-                    <h2 className="text-xl md:text-[24px] font-bold mb-4 flex items-center gap-2"><Wallet className="w-5 h-5" /> Preview</h2>
+                    <h2 className="admin-section-title text-white mb-4 flex items-center gap-2"><Wallet className="w-5 h-5" /> Preview</h2>
                     <div className="bg-white/10 backdrop-blur-sm rounded-[10px] p-4 mb-4">
-                        <p className="text-white/80 text-sm uppercase tracking-wider mb-2">Chave PIX</p>
+                        <p className="text-white/80 admin-stat-label uppercase tracking-wider mb-2">Chave PIX</p>
                         <div className="flex items-center gap-3">
-                            <span className="text-2xl font-bold font-mono">{pixKey}</span>
+                            <span className="font-bold font-mono text-base text-white">{pixKey}</span>
                             <button onClick={copyPixKey} className={`p-2 rounded-[10px] transition-colors ${copied ? 'bg-green-500' : 'bg-white/20 hover:bg-white/30'}`}>{copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}</button>
                         </div>
                     </div>
                     {qrcodePreview && (
-                        <div className="bg-white rounded-[10px] p-4 inline-block">
-                            <div className="flex items-center gap-2 text-[var(--color-accent)] mb-2"><QrCode className="w-4 h-4" /><span className="text-sm font-medium">QR Code</span></div>
+                        <div className="bg-white rounded-[10px] p-4 inline-block admin-qr-preview">
+                            <div className="flex items-center gap-2 text-[var(--color-accent)] mb-2"><QrCode className="w-4 h-4" /><span className="admin-label-inline">QR Code</span></div>
                             <div className="relative w-32 h-32"><Image src={qrcodePreview} alt="QR Code PIX" fill className="object-contain" /></div>
                         </div>
                     )}
@@ -130,11 +130,11 @@ export default function AdminFinanceiroPage() {
 
                 {/* Form */}
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="bg-white rounded-[10px] shadow-lg p-6">
-                    <h2 className="text-xl md:text-[24px] font-bold text-[var(--color-accent)] mb-4">Configurações</h2>
+                    <h2 className="admin-section-title mb-4">Configurações</h2>
                     <form onSubmit={handleSubmit} className="space-y-4">
-                        <div><label className="block text-sm font-medium mb-1">Chave PIX *</label><input type="text" value={pixKey} onChange={(e) => setPixKey(e.target.value)} className="w-full px-4 py-2 rounded-[10px] border focus:border-[var(--color-accent)] outline-none" required /></div>
+                        <div><label className="admin-label mb-1">Chave PIX *</label><input type="text" value={pixKey} onChange={(e) => setPixKey(e.target.value)} className="w-full px-4 py-2 rounded-[10px] border focus:border-[var(--color-accent)] outline-none" required /></div>
                         <div>
-                            <label className="block text-sm font-medium mb-1">QR Code *</label>
+                            <label className="admin-label mb-1">QR Code *</label>
                             <div className="space-y-2">
                                 <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-[10px] cursor-pointer hover:bg-gray-50 transition-colors relative overflow-hidden">
                                     {qrcodePreview ? (
@@ -145,8 +145,8 @@ export default function AdminFinanceiroPage() {
                                     ) : (
                                         <div className="flex flex-col items-center justify-center pt-5 pb-6">
                                             <Upload className="w-8 h-8 mb-2 text-gray-400" />
-                                            <p className="text-sm text-gray-500">Clique para fazer upload</p>
-                                            <p className="text-xs text-gray-400">PNG, JPG até 2MB</p>
+                                            <p className="admin-upload-text">Clique para fazer upload</p>
+                                            <p className="admin-help">PNG, JPG até 2MB</p>
                                         </div>
                                     )}
                                     <input type="file" className="hidden" accept="image/*" onChange={handleFileChange} />
@@ -162,8 +162,8 @@ export default function AdminFinanceiroPage() {
                         <button type="submit" disabled={isSaving || isUploading} className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-[var(--color-accent)] text-white rounded-[30px] hover:bg-[var(--color-accent-light)] disabled:opacity-70">{(isSaving || isUploading) ? <><Loader2 className="w-5 h-5 animate-spin" />Salvando...</> : <><Save className="w-5 h-5" />Salvar</>}</button>
                     </form>
                 </motion.div>
-            </div>
-            )}
+                </div>
+            </AdminPanel>
         </div>
     );
 }

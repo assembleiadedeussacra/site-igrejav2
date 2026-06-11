@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { BookOpen, RefreshCw, ExternalLink } from 'lucide-react';
+import { AdminPageHeader, AdminPanel } from '@/components/admin';
 
 interface Verse {
     text: string;
@@ -31,16 +32,17 @@ export default function AdminVersiculoPage() {
 
     return (
         <div className="space-y-6">
-            <div>
-                <h1 className="text-2xl md:text-[28px] font-bold text-[var(--color-accent)]">Versículo do Dia</h1>
-                <p className="text-[var(--color-text-secondary)]">Visualize o versículo exibido na página inicial</p>
-            </div>
+            <AdminPageHeader
+                title="Versículo do Dia"
+                description="Visualize o versículo exibido na página inicial"
+            />
 
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-white rounded-[10px] shadow-lg p-6 max-w-2xl">
-                <h2 className="text-xl md:text-[24px] font-bold text-[var(--color-accent)] mb-4 flex items-center gap-2">
+            <AdminPanel>
+                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="p-6 max-w-2xl">
+                <h2 className="admin-section-title mb-4 flex items-center gap-2">
                     <BookOpen className="w-5 h-5" /> Versículo Atual
                 </h2>
-                <div className="bg-gradient-to-br from-[var(--color-primary)]/20 to-white rounded-[10px] p-6 mb-4">
+                <div className="admin-verse-preview bg-gradient-to-br from-[var(--color-primary)]/20 to-white rounded-[10px] p-6 mb-4">
                     <blockquote className="text-lg italic text-[var(--color-accent)] mb-2">&ldquo;{verse.text}&rdquo;</blockquote>
                     <cite className="text-[var(--color-accent)] font-bold not-italic">{verse.reference}</cite>
                 </div>
@@ -53,11 +55,12 @@ export default function AdminVersiculoPage() {
                     </a>
                 </div>
                 <div className="bg-blue-50 border border-blue-200 rounded-[10px] p-4">
-                    <p className="text-sm text-blue-800">
+                    <p className="admin-panel-hint text-blue-800">
                         <strong>Nota:</strong> O versículo é atualizado automaticamente diariamente. Não é possível configurá-lo manualmente.
                     </p>
                 </div>
-            </motion.div>
+                </motion.div>
+            </AdminPanel>
         </div>
     );
 }

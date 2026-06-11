@@ -122,6 +122,7 @@ CREATE TABLE IF NOT EXISTS site_settings (
   instagram_handle TEXT DEFAULT '@assembleiasacramento',
   google_maps_embed TEXT,
   google_calendar_embed TEXT,
+  hero_autoplay_seconds INTEGER NOT NULL DEFAULT 6,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );

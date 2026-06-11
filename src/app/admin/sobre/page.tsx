@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Save, Loader2, ImageIcon, Upload } from 'lucide-react';
+import { AdminPageHeader, AdminPanel } from '@/components/admin';
 import { api } from '@/services/api';
 import { AboutPageCover } from '@/lib/database.types';
 import { uploadAboutPageCover } from '@/lib/supabase/storage';
@@ -177,36 +178,23 @@ export default function AdminSobrePage() {
         }
     };
 
-    if (isLoading) {
-        return (
-            <div className="flex items-center justify-center min-h-screen">
-                <Loader2 className="w-8 h-8 animate-spin text-[var(--color-primary)]" />
-            </div>
-        );
-    }
-
     return (
-        <div className="p-6 space-y-6">
-            <div className="flex items-center justify-between">
-                <div>
-                    <h1 className="text-2xl md:text-[28px] font-bold text-[var(--color-text)]">
-                        Cover da Página Sobre
-                    </h1>
-                    <p className="text-[var(--color-text-secondary)] mt-1">
-                        Configure a imagem, título e descrição exibidos no topo da página Sobre
-                    </p>
-                </div>
-            </div>
+        <div className="space-y-6">
+            <AdminPageHeader
+                title="Cover da Página Sobre"
+                description="Configure a imagem, título e descrição exibidos no topo da página Sobre"
+            />
 
+            <AdminPanel isLoading={isLoading} loadingMessage="Carregando conteúdo...">
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-white rounded-[10px] shadow-sm border border-gray-200 p-6"
+                className="p-6"
             >
                 <form onSubmit={handleSubmit} className="space-y-6">
                     {/* Image Upload */}
                     <div>
-                        <label className="block text-sm font-medium text-[var(--color-text)] mb-2">
+                        <label className="admin-label mb-2">
                             Imagem de Capa
                         </label>
                         <div className="flex items-center gap-4">
@@ -224,10 +212,8 @@ export default function AdminSobrePage() {
                                 <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-[10px] cursor-pointer hover:bg-gray-50 transition-colors">
                                     <div className="flex flex-col items-center justify-center pt-5 pb-6">
                                         <Upload className="w-8 h-8 text-gray-400 mb-2" />
-                                        <p className="text-sm text-gray-600">
-                                            <span className="font-semibold">Clique para upload</span> ou arraste e solte
-                                        </p>
-                                        <p className="text-xs text-gray-500 mt-1">
+                                        <p className="admin-upload-text"><strong>Clique para upload</strong> ou arraste e solte</p>
+                                        <p className="admin-help mt-1">
                                             PNG, JPG até 5MB
                                         </p>
                                     </div>
@@ -244,7 +230,7 @@ export default function AdminSobrePage() {
 
                     {/* Title */}
                     <div>
-                        <label className="block text-sm font-medium text-[var(--color-text)] mb-2">
+                        <label className="admin-label mb-2">
                             Título
                         </label>
                         <input
@@ -259,7 +245,7 @@ export default function AdminSobrePage() {
 
                     {/* Description */}
                     <div>
-                        <label className="block text-sm font-medium text-[var(--color-text)] mb-2">
+                        <label className="admin-label mb-2">
                             Descrição
                         </label>
                         <textarea
@@ -273,13 +259,13 @@ export default function AdminSobrePage() {
 
                     {/* Church Content Section */}
                     <div className="border-t border-gray-200 pt-6 space-y-6">
-                        <h3 className="text-lg font-semibold text-[var(--color-text)]">
+                        <h3 className="admin-form-subtitle">
                             Conteúdo Sobre a Igreja
                         </h3>
 
                         {/* Church Text Part 1 */}
                         <div>
-                            <label className="block text-sm font-medium text-[var(--color-text)] mb-2">
+                            <label className="admin-label mb-2">
                                 Texto Sobre a Igreja (Parte 1)
                             </label>
                             <div className="border border-gray-300 rounded-[10px] overflow-hidden">
@@ -292,7 +278,7 @@ export default function AdminSobrePage() {
 
                         {/* Church Image */}
                         <div>
-                            <label className="block text-sm font-medium text-[var(--color-text)] mb-2">
+                            <label className="admin-label mb-2">
                                 Imagem da Igreja
                             </label>
                             <div className="flex items-center gap-4">
@@ -310,10 +296,8 @@ export default function AdminSobrePage() {
                                     <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-[10px] cursor-pointer hover:bg-gray-50 transition-colors">
                                         <div className="flex flex-col items-center justify-center pt-5 pb-6">
                                             <Upload className="w-8 h-8 text-gray-400 mb-2" />
-                                            <p className="text-sm text-gray-600">
-                                                <span className="font-semibold">Clique para upload</span> ou arraste e solte
-                                            </p>
-                                            <p className="text-xs text-gray-500 mt-1">
+                                            <p className="admin-upload-text"><strong>Clique para upload</strong> ou arraste e solte</p>
+                                            <p className="admin-help mt-1">
                                                 PNG, JPG até 5MB
                                             </p>
                                         </div>
@@ -330,7 +314,7 @@ export default function AdminSobrePage() {
 
                         {/* Church Text Part 2 */}
                         <div>
-                            <label className="block text-sm font-medium text-[var(--color-text)] mb-2">
+                            <label className="admin-label mb-2">
                                 Texto Sobre a Igreja (Parte 2 - Continuação)
                             </label>
                             <div className="border border-gray-300 rounded-[10px] overflow-hidden">
@@ -351,7 +335,7 @@ export default function AdminSobrePage() {
                             onChange={(e) => setFormData((p) => ({ ...p, active: e.target.checked }))}
                             className="w-4 h-4 text-[var(--color-primary)] rounded focus:ring-[var(--color-primary)]"
                         />
-                        <label htmlFor="active" className="text-sm text-[var(--color-text)]">
+                        <label htmlFor="active" className="admin-label-inline">
                             Ativo (exibir no site)
                         </label>
                     </div>
@@ -378,6 +362,7 @@ export default function AdminSobrePage() {
                     </div>
                 </form>
             </motion.div>
+            </AdminPanel>
         </div>
     );
 }

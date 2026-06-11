@@ -162,10 +162,10 @@ export default function AdminDashboardPage() {
             >
                 <div className="flex items-start justify-between">
                     <div>
-                        <h1 className="text-2xl md:text-[28px] font-bold mb-2">
+                        <h1 className="admin-hero-title text-white mb-2">
                             Bem-vindo ao Painel Administrativo
                         </h1>
-                        <p className="text-white/90 text-xs">
+                        <p className="admin-hero-desc text-white/90">
                             Gerencie o conteúdo do site da Assembleia de Deus Missão - Sacramento/MG
                         </p>
                     </div>
@@ -206,11 +206,11 @@ export default function AdminDashboardPage() {
                             {isLoading ? (
                                 <div className="h-8 w-12 bg-gray-200 rounded-[10px] animate-pulse mb-2" />
                             ) : (
-                                <p className="text-2xl font-bold text-[var(--color-accent)] mb-1">
+                                <p className="admin-stat-value mb-1">
                                     {stats[card.key as keyof Stats]}
                                 </p>
                             )}
-                            <p className="text-xs text-[var(--color-text-secondary)] font-medium">{card.label}</p>
+                            <p className="admin-stat-label">{card.label}</p>
                         </Link>
                     </motion.div>
                 ))}
@@ -223,7 +223,7 @@ export default function AdminDashboardPage() {
                 transition={{ delay: 0.4 }}
                 className="bg-white rounded-[10px] p-6 shadow-lg border border-gray-100"
             >
-                <h2 className="text-xl md:text-[24px] font-bold text-[var(--color-accent)] mb-5 flex items-center gap-2">
+                <h2 className="admin-section-title mb-5 flex items-center gap-2">
                     <RefreshCw className="w-4 h-4" />
                     Ações Rápidas
                 </h2>
@@ -237,7 +237,7 @@ export default function AdminDashboardPage() {
                             <div className="w-10 h-10 rounded-[10px] bg-[var(--color-accent)]/10 flex items-center justify-center group-hover:bg-[var(--color-accent)] group-hover:scale-110 transition-all">
                                 <action.icon className="w-5 h-5 text-[var(--color-accent)] group-hover:text-white transition-colors" />
                             </div>
-                            <span className="font-medium text-[var(--color-text)] text-sm flex-1">
+                            <span className="admin-list-item-title flex-1">
                                 {action.label}
                             </span>
                             <ArrowRight className="w-4 h-4 text-gray-400 group-hover:text-[var(--color-accent)] group-hover:translate-x-1 transition-all flex-shrink-0" />
@@ -255,7 +255,7 @@ export default function AdminDashboardPage() {
                     transition={{ delay: 0.5 }}
                     className="bg-white rounded-[10px] p-6 shadow-lg"
                 >
-                    <h2 className="text-lg font-bold text-[var(--color-accent)] mb-4 flex items-center gap-2">
+                    <h2 className="admin-section-title mb-4 flex items-center gap-2">
                         <FileText className="w-4 h-4" />
                         Posts Recentes
                     </h2>
@@ -266,9 +266,9 @@ export default function AdminDashboardPage() {
                             ))}
                         </div>
                     ) : recentPosts.length === 0 ? (
-                        <div className="text-center py-8 text-[var(--color-text-secondary)]">
+                        <div className="text-center py-8 admin-empty-text">
                             <FileText className="w-12 h-12 mx-auto mb-2 text-gray-300" />
-                            <p className="text-sm">Nenhum post cadastrado</p>
+                            <p>Nenhum post cadastrado</p>
                         </div>
                     ) : (
                         <>
@@ -286,7 +286,7 @@ export default function AdminDashboardPage() {
                                             className="flex items-center justify-between p-3 rounded-[10px] bg-gray-50 hover:bg-gray-100 transition-colors group"
                                         >
                                             <div className="flex-1 min-w-0">
-                                                <p className="font-medium text-[var(--color-text)] truncate group-hover:text-[var(--color-accent)] transition-colors">
+                                                <p className="admin-list-item-title truncate group-hover:text-[var(--color-accent)] transition-colors">
                                                     {post.title}
                                                 </p>
                                                 <div className="flex items-center gap-2 mt-1">
@@ -324,7 +324,7 @@ export default function AdminDashboardPage() {
                     transition={{ delay: 0.6 }}
                     className="bg-white rounded-[10px] p-6 shadow-lg"
                 >
-                    <h2 className="text-lg font-bold text-[var(--color-accent)] mb-4 flex items-center gap-2">
+                    <h2 className="admin-section-title mb-4 flex items-center gap-2">
                         <Calendar className="w-4 h-4" />
                         Programação Fixa
                     </h2>
@@ -335,9 +335,9 @@ export default function AdminDashboardPage() {
                             ))}
                         </div>
                     ) : recentEvents.length === 0 ? (
-                        <div className="text-center py-8 text-[var(--color-text-secondary)]">
+                        <div className="text-center py-8 admin-empty-text">
                             <Calendar className="w-12 h-12 mx-auto mb-2 text-gray-300" />
-                            <p className="text-sm">Nenhum evento cadastrado</p>
+                            <p>Nenhum evento cadastrado</p>
                         </div>
                     ) : (
                         <>
@@ -351,14 +351,14 @@ export default function AdminDashboardPage() {
                                             className="flex items-center justify-between p-3 rounded-[10px] bg-gray-50 hover:bg-gray-100 transition-colors group"
                                         >
                                             <div className="flex items-center gap-3 flex-1 min-w-0">
-                                                <span className="font-bold text-[var(--color-accent)] w-20 text-sm flex-shrink-0">
+                                                <span className="font-bold text-[var(--color-accent)] w-20 admin-card-meta flex-shrink-0">
                                                     {dayShort}
                                                 </span>
                                                 <span className="text-[var(--color-text)] truncate group-hover:text-[var(--color-accent)] transition-colors">
                                                     {event.title}
                                                 </span>
                                             </div>
-                                            <span className="text-[var(--color-text-muted)] text-sm font-medium flex-shrink-0">
+                                            <span className="admin-card-meta flex-shrink-0">
                                                 {event.time_start}
                                             </span>
                                         </Link>

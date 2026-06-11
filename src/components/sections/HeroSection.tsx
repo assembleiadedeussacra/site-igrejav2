@@ -18,6 +18,8 @@ import { Banner } from '@/lib/database.types';
 
 interface HeroSectionProps {
     banners: Banner[];
+    /** Duração de cada slide em segundos (padrão: 6) */
+    autoplaySeconds?: number;
 }
 
 // Helper function to get button styles
@@ -80,7 +82,7 @@ const getButtonStyles = (
     return { className, style: inlineStyle };
 };
 
-export default function HeroSection({ banners = [] }: HeroSectionProps) {
+export default function HeroSection({ banners = [], autoplaySeconds = 6 }: HeroSectionProps) {
     const [isMobile, setIsMobile] = useState(false);
     const [activeIndex, setActiveIndex] = useState(0);
     const swiperRef = useRef<SwiperType | null>(null);
@@ -110,7 +112,7 @@ export default function HeroSection({ banners = [] }: HeroSectionProps) {
                     modules={[Autoplay, Pagination, EffectFade, Navigation]}
                     effect="fade"
                     autoplay={{
-                        delay: 6000,
+                        delay: Math.max(3, Math.min(60, autoplaySeconds)) * 1000,
                         disableOnInteraction: false,
                     }}
                     pagination={{
@@ -247,7 +249,7 @@ export default function HeroSection({ banners = [] }: HeroSectionProps) {
                                         initial={{ opacity: 0, y: 20 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ delay: 0.3, duration: 0.5 }}
-                                        className="text-2xl sm:text-4xl md:text-6xl lg:text-7xl font-bold mb-4 sm:mb-6 leading-tight px-1"
+                                        className="type-hero-title text-white mb-4 sm:mb-6 px-1"
                                     >
                                         {currentBanner.title}
                                     </motion.h1>
@@ -256,7 +258,7 @@ export default function HeroSection({ banners = [] }: HeroSectionProps) {
                                         initial={{ opacity: 0, y: 20 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ delay: 0.3, duration: 0.5 }}
-                                        className="text-2xl sm:text-4xl md:text-6xl lg:text-7xl font-bold mb-4 sm:mb-6 leading-tight px-1"
+                                        className="type-hero-title text-white mb-4 sm:mb-6 px-1"
                                     >
                                         Assembleia de Deus{' '}
                                         <span className="text-[var(--color-primary)]">
@@ -271,7 +273,7 @@ export default function HeroSection({ banners = [] }: HeroSectionProps) {
                                         initial={{ opacity: 0, y: 20 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ delay: 0.4, duration: 0.5 }}
-                                        className="text-base sm:text-xl md:text-2xl text-white/95 mb-6 sm:mb-10 max-w-2xl mx-auto font-light px-1"
+                                        className="type-hero-desc text-white/95 mb-6 sm:mb-10 max-w-2xl mx-auto px-1"
                                     >
                                         {currentBanner.description}
                                     </motion.p>
@@ -280,7 +282,7 @@ export default function HeroSection({ banners = [] }: HeroSectionProps) {
                                         initial={{ opacity: 0, y: 20 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ delay: 0.4, duration: 0.5 }}
-                                        className="text-base sm:text-xl md:text-2xl text-white/95 mb-6 sm:mb-10 max-w-2xl mx-auto font-light px-1"
+                                        className="type-hero-desc text-white/95 mb-6 sm:mb-10 max-w-2xl mx-auto px-1"
                                     >
                                         Uma igreja comprometida com a Palavra de Deus, a adoração e o serviço cristão
                                     </motion.p>

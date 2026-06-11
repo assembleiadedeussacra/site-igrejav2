@@ -185,6 +185,7 @@ export interface SiteSettings {
     instagram_handle: string;
     google_maps_embed: string;
     google_calendar_embed: string;
+    hero_autoplay_seconds: number;
     created_at: string;
     updated_at: string;
 }

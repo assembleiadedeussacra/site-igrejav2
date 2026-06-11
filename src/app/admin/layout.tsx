@@ -6,6 +6,8 @@ import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { createClient } from '@/lib/supabase/client';
+import { AdminThemeProvider } from '@/contexts/AdminThemeContext';
+import AdminThemeToggle from '@/components/admin/AdminThemeToggle';
 import {
     LayoutDashboard,
     Image as ImageIcon,
@@ -107,6 +109,18 @@ export default function AdminLayout({
 }: {
     children: React.ReactNode;
 }) {
+    return (
+        <AdminThemeProvider>
+            <AdminLayoutShell>{children}</AdminLayoutShell>
+        </AdminThemeProvider>
+    );
+}
+
+function AdminLayoutShell({
+    children,
+}: {
+    children: React.ReactNode;
+}) {
     const pathname = usePathname();
     const router = useRouter();
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -136,7 +150,7 @@ export default function AdminLayout({
     };
 
     return (
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen admin-shell bg-gray-50">
             {/* Sidebar */}
             <aside
                 className={`fixed inset-y-0 left-0 z-50 w-64 bg-[var(--color-accent)] transform transition-transform duration-300 ${
@@ -209,9 +223,10 @@ export default function AdminLayout({
                                 <p className="text-white/60 text-xs">Administrador</p>
                             </div>
                         </div>
+                        <AdminThemeToggle variant="sidebar" />
                         <button
                             onClick={handleLogout}
-                            className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-white/10 text-white rounded-[10px] hover:bg-white/20 transition-colors"
+                            className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-white/10 text-white rounded-[10px] hover:bg-white/20 transition-colors mt-2"
                         >
                             <LogOut className="w-4 h-4" />
                             Sair
@@ -236,27 +251,30 @@ export default function AdminLayout({
             {/* Main Content */}
             <div className="lg:pl-64">
                 {/* Top Bar */}
-                <header className="sticky top-0 z-30 bg-white border-b">
-                    <div className="flex items-center justify-between px-4 py-3">
+                <header className="sticky top-0 z-30 bg-white border-b admin-header">
+                    <div className="flex items-center justify-between px-4 py-3 gap-3">
                         <button
                             onClick={() => setIsSidebarOpen(true)}
-                            className="lg:hidden p-2 rounded-[10px] hover:bg-gray-100"
+                            className="lg:hidden p-2 rounded-[10px] hover:bg-gray-100 dark-admin-hover"
                         >
-                            <Menu className="w-6 h-6 text-gray-600" />
+                            <Menu className="w-6 h-6 text-gray-600 admin-icon-muted" />
                         </button>
-                        <div className="hidden lg:block">
-                            <h2 className="text-sm font-semibold text-[var(--color-accent)]">
+                        <div className="hidden lg:block flex-1">
+                            <h2 className="admin-breadcrumb">
                                 {menuItems.find((item) => item.href === pathname)?.label ||
                                     'Dashboard'}
                             </h2>
                         </div>
-                        <Link
-                            href="/"
-                            target="_blank"
-                            className="text-sm text-[var(--color-accent)] hover:underline"
-                        >
-                            Ver Site →
-                        </Link>
+                        <div className="flex items-center gap-2 ml-auto">
+                            <AdminThemeToggle />
+                            <Link
+                                href="/"
+                                target="_blank"
+                                className="admin-breadcrumb hover:underline whitespace-nowrap"
+                            >
+                                Ver Site →
+                            </Link>
+                        </div>
                     </div>
                 </header>
 

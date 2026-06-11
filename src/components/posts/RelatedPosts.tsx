@@ -22,7 +22,7 @@ export default function RelatedPosts({ posts, type }: RelatedPostsProps) {
 
     return (
         <section className="mt-12 pt-12 border-t border-gray-200">
-            <h2 className="text-2xl md:text-3xl font-bold text-[var(--color-accent)] mb-6">
+            <h2 className="type-section-title mb-6">
                 {type === 'blog' ? 'Artigos Relacionados' : 'Estudos Relacionados'}
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
@@ -49,7 +49,7 @@ export default function RelatedPosts({ posts, type }: RelatedPostsProps) {
                                 <Calendar className="w-3 h-3" />
                                 {formatDate(post.created_at)}
                             </div>
-                            <h3 className="font-bold text-base text-[var(--color-accent)] mb-2 line-clamp-2 group-hover:text-[var(--color-accent-light)] transition-colors">
+                            <h3 className="type-card-title mb-2 line-clamp-2 group-hover:text-[var(--color-accent-light)] transition-colors">
                                 {post.title}
                             </h3>
                             <p className="text-sm text-[var(--color-text-secondary)] line-clamp-2 mb-3">

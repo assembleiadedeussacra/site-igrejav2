@@ -43,6 +43,27 @@
   --transition-fast: 150ms ease;
   --transition-base: 300ms ease;
   --transition-slow: 500ms ease;
+
+  /* Typography scale — site público */
+  --text-display: clamp(1.75rem, 4.5vw, 4rem);
+  --text-hero-desc: clamp(1rem, 1.8vw, 1.375rem);
+  --text-page-hero: clamp(1.75rem, 3.5vw, 3rem);
+  --text-page-hero-desc: clamp(1rem, 1.6vw, 1.25rem);
+  --text-section: clamp(1.5rem, 2.8vw, 2.125rem);
+  --text-section-desc: clamp(0.9375rem, 1.5vw, 1.0625rem);
+  --text-card-title: clamp(1rem, 1.4vw, 1.125rem);
+  --text-card-desc: 0.875rem;
+  --text-body: 1rem;
+  --text-body-lg: 1.125rem;
+  --text-small: 0.8125rem;
+
+  /* Typography scale — admin */
+  --admin-title: clamp(1.375rem, 2vw, 1.625rem);
+  --admin-desc: 0.875rem;
+  --admin-section: clamp(1.0625rem, 1.6vw, 1.25rem);
+  --admin-modal: clamp(1.125rem, 1.8vw, 1.375rem);
+  --admin-card-title: 0.9375rem;
+  --admin-card-desc: 0.8125rem;
 }
 
 /* Base Styles */
@@ -130,16 +151,248 @@ img {
   }
 }
 
-/* Section headers — descrições responsivas */
+/* Section headers — hierarquia unificada */
 .section-desc {
-  font-size: 1rem;
+  font-size: var(--text-section-desc);
   line-height: 1.6;
+  color: var(--color-text-secondary);
 }
 
-@media (min-width: 768px) {
-  .section-desc {
-    font-size: 1.125rem;
-  }
+/* Tipografia pública */
+.type-display,
+.type-hero-title {
+  font-size: var(--text-display);
+  line-height: 1.1;
+  font-weight: 700;
+}
+
+.type-hero-desc {
+  font-size: var(--text-hero-desc);
+  line-height: 1.45;
+  font-weight: 300;
+}
+
+.type-page-hero-title {
+  font-size: var(--text-page-hero);
+  line-height: 1.15;
+  font-weight: 700;
+}
+
+.type-page-hero-desc {
+  font-size: var(--text-page-hero-desc);
+  line-height: 1.5;
+}
+
+.type-section-title {
+  font-size: var(--text-section);
+  line-height: 1.2;
+  font-weight: 700;
+  color: var(--color-accent);
+}
+
+.type-section-desc {
+  font-size: var(--text-section-desc);
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+}
+
+.type-card-title {
+  font-size: var(--text-card-title);
+  line-height: 1.35;
+  font-weight: 700;
+  color: var(--color-accent);
+}
+
+.type-card-desc {
+  font-size: var(--text-card-desc);
+  line-height: 1.5;
+  color: var(--color-text-secondary);
+}
+
+.type-body-lg {
+  font-size: var(--text-body-lg);
+  line-height: 1.65;
+}
+
+/* Tipografia admin */
+.admin-title,
+.admin-page-title {
+  font-size: var(--admin-title);
+  line-height: 1.2;
+  font-weight: 700;
+  color: var(--color-accent);
+}
+
+.admin-desc {
+  font-size: var(--admin-desc);
+  line-height: 1.5;
+  color: var(--color-text-secondary);
+  margin-top: 0.25rem;
+}
+
+.admin-section-title {
+  font-size: var(--admin-section);
+  line-height: 1.3;
+  font-weight: 700;
+  color: var(--color-accent);
+}
+
+.admin-section-title.text-white {
+  color: #fff;
+}
+
+.admin-modal-title {
+  font-size: var(--admin-modal);
+  line-height: 1.25;
+  font-weight: 700;
+  color: var(--color-accent);
+}
+
+.admin-card-title {
+  font-size: var(--admin-card-title);
+  line-height: 1.35;
+  font-weight: 600;
+  color: var(--color-accent);
+}
+
+.admin-card-desc {
+  font-size: var(--admin-card-desc);
+  line-height: 1.45;
+  color: var(--color-text-secondary);
+}
+
+.type-subsection-title {
+  font-size: clamp(1.125rem, 2vw, 1.375rem);
+  line-height: 1.25;
+  font-weight: 700;
+  color: var(--color-accent);
+}
+
+.admin-stat-value {
+  font-size: clamp(1.5rem, 3vw, 1.875rem);
+  line-height: 1.1;
+  font-weight: 700;
+  color: var(--color-accent);
+}
+
+.admin-stat-label {
+  font-size: var(--admin-card-desc);
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--color-text-secondary);
+}
+
+.admin-breadcrumb {
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--color-accent);
+}
+
+.admin-hero-title {
+  font-size: var(--admin-title);
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+.admin-hero-desc {
+  font-size: var(--admin-desc);
+  line-height: 1.5;
+}
+
+.admin-label {
+  display: block;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--color-text);
+}
+
+.admin-label-inline {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--color-text);
+}
+
+.admin-help {
+  font-size: var(--admin-card-desc);
+  line-height: 1.45;
+  color: var(--color-text-secondary);
+}
+
+.admin-form-subtitle {
+  font-size: var(--admin-section);
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--color-text);
+}
+
+.admin-form-group-title {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--color-text-secondary);
+}
+
+.admin-card-title-lg {
+  font-size: clamp(0.9375rem, 1.2vw, 1.0625rem);
+  line-height: 1.35;
+  font-weight: 600;
+  color: var(--color-accent);
+}
+
+.admin-card-meta {
+  font-size: var(--admin-card-desc);
+  line-height: 1.45;
+  color: var(--color-text-muted);
+}
+
+.admin-panel-hint {
+  font-size: var(--admin-desc);
+  line-height: 1.5;
+  color: var(--color-text-secondary);
+}
+
+.admin-table-head {
+  font-size: var(--admin-desc);
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--color-text);
+}
+
+.admin-empty-text {
+  font-size: var(--admin-desc);
+  line-height: 1.5;
+  color: var(--color-text-secondary);
+}
+
+.admin-list-item-title {
+  font-size: var(--admin-desc);
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--color-text);
+}
+
+.admin-upload-text {
+  font-size: var(--admin-desc);
+  line-height: 1.45;
+  color: var(--color-text-secondary);
+}
+
+.admin-upload-text strong {
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+/* Toggle de tema na tela de login */
+.admin-login-toggle {
+  background-color: rgb(255 255 255 / 0.15);
+  color: #fff;
+}
+
+.admin-login-toggle:hover {
+  background-color: rgb(255 255 255 / 0.25);
 }
 
 /* Container */
@@ -573,67 +826,27 @@ article.card-hover h2.font-bold {
   display: block;
 }
 
-/* Responsive Typography - Site Público */
+/* Responsive Typography - base semântica (componentes usam classes .type-*) */
 h1 {
-  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-size: var(--text-display);
   line-height: 1.1;
 }
 
 h2 {
-  font-size: clamp(1.5rem, 4vw, 2.5rem);
+  font-size: var(--text-section);
   line-height: 1.2;
 }
 
 h3 {
-  font-size: clamp(1.25rem, 3vw, 1.75rem);
+  font-size: var(--text-card-title);
   line-height: 1.3;
 }
 
-/* Tipografia Admin - Sobrescreve regras globais apenas no painel */
-/* Aplicado via classe específica para garantir prioridade */
-/* Exclui H1 do sidebar (logo) */
-.admin-panel h1:not(aside h1):not([class*="sidebar"]),
-.admin-panel h1[class*="text-"]:not(aside h1):not([class*="sidebar"]),
-.admin-panel h1[class*="font-bold"]:not(aside h1):not([class*="sidebar"]),
-main.admin-panel h1,
-main.admin-panel h1[class*="text-"],
-div.admin-panel h1:not(aside h1),
-div.admin-panel h1[class*="text-"]:not(aside h1) {
-  font-size: 28px !important;
-  line-height: 1.2 !important;
-  font-weight: 700 !important;
-}
-
-/* Garantir que H1 do sidebar não seja afetado */
+/* Admin: tipografia via classes (.admin-title, .admin-section-title, etc.) */
 aside h1,
 aside[class*="bg-"] h1 {
   font-size: inherit !important;
   line-height: inherit !important;
-}
-
-.admin-panel h2,
-.admin-panel h2[class*="text-"],
-.admin-panel h2[class*="font-bold"],
-main.admin-panel h2,
-main.admin-panel h2[class*="text-"],
-div.admin-panel h2,
-div.admin-panel h2[class*="text-"] {
-  font-size: 24px !important;
-  line-height: 1.3 !important;
-  font-weight: 700 !important;
-}
-
-/* Responsive: manter proporção em mobile */
-@media (max-width: 768px) {
-  .admin-panel h1,
-  .admin-panel h1[class*="text-"] {
-    font-size: 24px !important;
-  }
-  
-  .admin-panel h2,
-  .admin-panel h2[class*="text-"] {
-    font-size: 20px !important;
-  }
 }
 
 /* Print Styles */
@@ -641,6 +854,482 @@ div.admin-panel h2[class*="text-"] {
   .no-print {
     display: none !important;
   }
+}
+
+/* Admin — modo escuro (painel /admin) */
+html[data-admin-theme='dark'] {
+  color-scheme: dark;
+  --admin-bg: #0f172a;
+  --admin-surface: #1e293b;
+  --admin-surface-hover: #273449;
+  --admin-surface-inset: #0f172a;
+  --admin-border: #334155;
+  --admin-border-strong: #475569;
+  --admin-text: #e2e8f0;
+  --admin-text-secondary: #94a3b8;
+  --admin-text-muted: #64748b;
+  --admin-heading: #c7d2fe;
+  --admin-stat: #a5b4fc;
+}
+
+html[data-admin-theme='dark'] .admin-shell {
+  background-color: var(--admin-bg) !important;
+}
+
+html[data-admin-theme='dark'] .admin-header {
+  background-color: var(--admin-surface) !important;
+  border-color: var(--admin-border) !important;
+}
+
+html[data-admin-theme='dark'] .admin-header .text-\[var\(--color-accent\)\] {
+  color: var(--admin-heading) !important;
+}
+
+/* Superfícies */
+html[data-admin-theme='dark'] .admin-panel .bg-white,
+html[data-admin-theme='dark'] .admin-card,
+html[data-admin-theme='dark'] .admin-login-card,
+html[data-admin-theme='dark'] .admin-rich-editor,
+html[data-admin-theme='dark'] .admin-panel .bg-white.rounded-\[10px\] {
+  background-color: var(--admin-surface) !important;
+  color: var(--admin-text);
+}
+
+html[data-admin-theme='dark'] .admin-panel .bg-gray-50,
+html[data-admin-theme='dark'] .admin-panel .bg-gray-50\/50,
+html[data-admin-theme='dark'] .admin-panel .bg-gray-100,
+html[data-admin-theme='dark'] .admin-rich-editor .bg-gray-50 {
+  background-color: var(--admin-surface-inset) !important;
+}
+
+html[data-admin-theme='dark'] .admin-panel .bg-gray-200 {
+  background-color: var(--admin-border) !important;
+}
+
+/* QR Code precisa de fundo claro para leitura */
+html[data-admin-theme='dark'] .admin-qr-preview {
+  background-color: #ffffff !important;
+  color: var(--color-text);
+}
+
+html[data-admin-theme='dark'] .admin-panel .text-\[var\(--color-text-secondary\)\],
+html[data-admin-theme='dark'] .admin-panel .text-gray-600,
+html[data-admin-theme='dark'] .admin-panel .text-gray-500,
+html[data-admin-theme='dark'] .admin-panel .text-gray-400,
+html[data-admin-theme='dark'] .admin-panel .text-gray-700,
+html[data-admin-theme='dark'] .admin-login-card .text-gray-400,
+html[data-admin-theme='dark'] .admin-login-card .text-gray-600 {
+  color: var(--admin-text-secondary) !important;
+}
+
+html[data-admin-theme='dark'] .admin-panel .text-\[var\(--color-text-muted\)\],
+html[data-admin-theme='dark'] .admin-panel .text-gray-300 {
+  color: var(--admin-text-muted) !important;
+}
+
+html[data-admin-theme='dark'] .admin-panel .text-\[var\(--color-text\)\] {
+  color: var(--admin-text) !important;
+}
+
+html[data-admin-theme='dark'] .admin-panel .border,
+html[data-admin-theme='dark'] .admin-panel .border-gray-100,
+html[data-admin-theme='dark'] .admin-panel .border-gray-200,
+html[data-admin-theme='dark'] .admin-panel .border-gray-300,
+html[data-admin-theme='dark'] .admin-rich-editor .border-gray-200,
+html[data-admin-theme='dark'] .admin-rich-editor .border-gray-300,
+html[data-admin-theme='dark'] .admin-login-card .border-gray-200,
+html[data-admin-theme='dark'] .admin-panel .divide-gray-100 > * + *,
+html[data-admin-theme='dark'] .admin-rich-editor .divide-gray-100 > * + * {
+  border-color: var(--admin-border) !important;
+}
+
+html[data-admin-theme='dark'] .admin-input,
+html[data-admin-theme='dark'] .admin-panel input:not([type='checkbox']):not([type='radio']):not([type='color']):not([type='range']),
+html[data-admin-theme='dark'] .admin-panel textarea,
+html[data-admin-theme='dark'] .admin-panel select,
+html[data-admin-theme='dark'] .admin-login-card input:not([type='checkbox']):not([type='radio']) {
+  background-color: var(--admin-surface-inset) !important;
+  border-color: var(--admin-border-strong) !important;
+  color: #f1f5f9 !important;
+}
+
+html[data-admin-theme='dark'] .admin-panel input::placeholder,
+html[data-admin-theme='dark'] .admin-panel textarea::placeholder,
+html[data-admin-theme='dark'] .admin-login-card input::placeholder {
+  color: var(--admin-text-muted);
+}
+
+html[data-admin-theme='dark'] .dark-admin-hover:hover {
+  background-color: var(--admin-border) !important;
+}
+
+html[data-admin-theme='dark'] .admin-icon-muted {
+  color: var(--admin-text-secondary) !important;
+}
+
+/* Tipografia admin */
+html[data-admin-theme='dark'] .admin-page-title,
+html[data-admin-theme='dark'] .admin-title,
+html[data-admin-theme='dark'] .admin-section-title,
+html[data-admin-theme='dark'] .admin-modal-title,
+html[data-admin-theme='dark'] .admin-card-title,
+html[data-admin-theme='dark'] .admin-card-title-lg,
+html[data-admin-theme='dark'] .admin-breadcrumb {
+  color: var(--admin-heading) !important;
+}
+
+html[data-admin-theme='dark'] .admin-section-title.text-white,
+html[data-admin-theme='dark'] .admin-hero-title.text-white {
+  color: #fff !important;
+}
+
+html[data-admin-theme='dark'] .admin-desc,
+html[data-admin-theme='dark'] .admin-help,
+html[data-admin-theme='dark'] .admin-card-desc,
+html[data-admin-theme='dark'] .admin-card-meta,
+html[data-admin-theme='dark'] .admin-panel-hint,
+html[data-admin-theme='dark'] .admin-empty-text,
+html[data-admin-theme='dark'] .admin-stat-label {
+  color: var(--admin-text-secondary) !important;
+}
+
+html[data-admin-theme='dark'] .admin-stat-value {
+  color: var(--admin-stat) !important;
+}
+
+html[data-admin-theme='dark'] .admin-label,
+html[data-admin-theme='dark'] .admin-label-inline,
+html[data-admin-theme='dark'] .admin-form-subtitle,
+html[data-admin-theme='dark'] .admin-list-item-title {
+  color: var(--admin-text) !important;
+}
+
+html[data-admin-theme='dark'] .admin-form-group-title,
+html[data-admin-theme='dark'] .admin-table-head {
+  color: #cbd5e1 !important;
+}
+
+html[data-admin-theme='dark'] .admin-upload-text,
+html[data-admin-theme='dark'] .admin-upload-text strong {
+  color: var(--admin-text-secondary) !important;
+}
+
+html[data-admin-theme='dark'] .admin-upload-text strong {
+  color: var(--admin-text) !important;
+}
+
+html[data-admin-theme='dark'] .admin-panel-hint.text-blue-800 {
+  color: #93c5fd !important;
+}
+
+/* Sombras */
+html[data-admin-theme='dark'] .admin-panel .shadow-lg,
+html[data-admin-theme='dark'] .admin-panel .shadow-md,
+html[data-admin-theme='dark'] .admin-login-card.shadow-2xl {
+  box-shadow: 0 4px 14px rgb(0 0 0 / 0.35);
+}
+
+html[data-admin-theme='dark'] .admin-panel .shadow-2xl {
+  box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.55);
+}
+
+/* Hovers */
+html[data-admin-theme='dark'] .admin-panel .hover\:bg-gray-50:hover,
+html[data-admin-theme='dark'] .admin-login-card .hover\:bg-gray-50:hover {
+  background-color: var(--admin-surface-hover) !important;
+}
+
+html[data-admin-theme='dark'] .admin-panel .hover\:bg-gray-100:hover,
+html[data-admin-theme='dark'] .admin-rich-editor button.hover\:bg-gray-100:hover {
+  background-color: var(--admin-border) !important;
+}
+
+html[data-admin-theme='dark'] .admin-panel .hover\:bg-blue-50:hover {
+  background-color: #1e3a5f !important;
+}
+
+html[data-admin-theme='dark'] .admin-panel .hover\:bg-green-50:hover {
+  background-color: #14532d !important;
+}
+
+html[data-admin-theme='dark'] .admin-panel .hover\:bg-purple-50:hover {
+  background-color: #3b0764 !important;
+}
+
+html[data-admin-theme='dark'] .admin-panel .hover\:bg-red-50:hover {
+  background-color: #450a0a !important;
+}
+
+/* Botões de filtro / toggle inativos */
+html[data-admin-theme='dark'] .admin-panel button.bg-gray-100,
+html[data-admin-theme='dark'] .admin-panel .bg-gray-100.text-\[var\(--color-text\)\] {
+  background-color: var(--admin-surface-inset) !important;
+  color: var(--admin-text) !important;
+}
+
+html[data-admin-theme='dark'] .admin-panel button.bg-gray-100:hover,
+html[data-admin-theme='dark'] .admin-panel .hover\:bg-gray-200:hover {
+  background-color: var(--admin-surface-hover) !important;
+}
+
+/* Badges de status */
+html[data-admin-theme='dark'] .admin-panel .bg-blue-100 {
+  background-color: rgb(30 58 138 / 0.45) !important;
+}
+
+html[data-admin-theme='dark'] .admin-panel .text-blue-700,
+html[data-admin-theme='dark'] .admin-panel .text-blue-600 {
+  color: #93c5fd !important;
+}
+
+html[data-admin-theme='dark'] .admin-panel .bg-green-100 {
+  background-color: rgb(20 83 45 / 0.45) !important;
+}
+
+html[data-admin-theme='dark'] .admin-panel .bg-green-50 {
+  background-color: rgb(20 83 45 / 0.3) !important;
+}
+
+html[data-admin-theme='dark'] .admin-panel .text-green-700,
+html[data-admin-theme='dark'] .admin-panel .text-green-600 {
+  color: #4ade80 !important;
+}
+
+html[data-admin-theme='dark'] .admin-panel .bg-yellow-100 {
+  background-color: rgb(113 63 18 / 0.45) !important;
+}
+
+html[data-admin-theme='dark'] .admin-panel .text-yellow-700,
+html[data-admin-theme='dark'] .admin-panel .text-yellow-600 {
+  color: #fbbf24 !important;
+}
+
+html[data-admin-theme='dark'] .admin-panel .bg-gray-100.text-gray-600 {
+  background-color: rgb(51 65 85 / 0.6) !important;
+  color: var(--admin-text-secondary) !important;
+}
+
+/* Alertas e avisos */
+html[data-admin-theme='dark'] .admin-panel .bg-yellow-50 {
+  background-color: rgb(113 63 18 / 0.25) !important;
+}
+
+html[data-admin-theme='dark'] .admin-panel .border-yellow-200 {
+  border-color: rgb(161 98 7 / 0.5) !important;
+}
+
+html[data-admin-theme='dark'] .admin-panel .text-yellow-800 {
+  color: #fcd34d !important;
+}
+
+html[data-admin-theme='dark'] .admin-panel .bg-red-50,
+html[data-admin-theme='dark'] .admin-login-card .bg-red-50 {
+  background-color: rgb(127 29 29 / 0.35) !important;
+}
+
+html[data-admin-theme='dark'] .admin-panel .text-red-600,
+html[data-admin-theme='dark'] .admin-panel .text-red-500,
+html[data-admin-theme='dark'] .admin-login-card .text-red-600 {
+  color: #f87171 !important;
+}
+
+/* Barra de dica com ordenação */
+html[data-admin-theme='dark'] .admin-card > .bg-\[var\(--color-primary\)\]\/10,
+html[data-admin-theme='dark'] .admin-panel .bg-\[var\(--color-primary\)\]\/10 {
+  background-color: rgb(226 208 170 / 0.08) !important;
+}
+
+html[data-admin-theme='dark'] .admin-panel-hint .bg-white\/80,
+html[data-admin-theme='dark'] .admin-card .bg-white\/80 {
+  background-color: rgb(15 23 42 / 0.85) !important;
+  color: var(--admin-heading) !important;
+}
+
+/* Editor rich text */
+html[data-admin-theme='dark'] .admin-rich-editor button.bg-white.text-gray-700 {
+  background-color: var(--admin-surface-inset) !important;
+  color: var(--admin-text) !important;
+}
+
+html[data-admin-theme='dark'] .admin-rich-editor .w-px.bg-gray-300 {
+  background-color: var(--admin-border) !important;
+}
+
+html[data-admin-theme='dark'] .admin-rich-editor .ProseMirror,
+html[data-admin-theme='dark'] .admin-rich-editor .admin-editor-content,
+html[data-admin-theme='dark'] .ProseMirror {
+  background-color: var(--admin-surface-inset) !important;
+  color: var(--admin-text) !important;
+}
+
+html[data-admin-theme='dark'] .ProseMirror h1,
+html[data-admin-theme='dark'] .ProseMirror h2,
+html[data-admin-theme='dark'] .ProseMirror h3,
+html[data-admin-theme='dark'] .ProseMirror h4,
+html[data-admin-theme='dark'] .ProseMirror h5,
+html[data-admin-theme='dark'] .ProseMirror h6 {
+  color: var(--admin-heading) !important;
+}
+
+html[data-admin-theme='dark'] .admin-rich-editor .prose {
+  color: var(--admin-text);
+}
+
+html[data-admin-theme='dark'] .admin-rich-editor .prose a {
+  color: #93c5fd;
+}
+
+/* Login */
+html[data-admin-theme='dark'] .admin-login-page {
+  background: linear-gradient(
+    to bottom right,
+    #0f172a,
+    #1e293b,
+    #0f172a
+  ) !important;
+}
+
+html[data-admin-theme='dark'] .admin-login-toggle {
+  background-color: rgb(255 255 255 / 0.1);
+  color: #e2e8f0;
+}
+
+html[data-admin-theme='dark'] .admin-login-toggle:hover {
+  background-color: rgb(255 255 255 / 0.18);
+}
+
+/* Accent escuro demais no fundo escuro — clarear texto/bordas */
+html[data-admin-theme='dark'] .admin-panel .text-\[var\(--color-accent\)\],
+html[data-admin-theme='dark'] .admin-login-card .text-\[var\(--color-accent\)\] {
+  color: var(--admin-heading) !important;
+}
+
+html[data-admin-theme='dark'] .admin-panel .border-\[var\(--color-accent\)\] {
+  border-color: #818cf8 !important;
+}
+
+html[data-admin-theme='dark'] .admin-panel .hover\:border-\[var\(--color-accent\)\]:hover {
+  border-color: #a5b4fc !important;
+}
+
+/* Badges extras (eventos, banners) */
+html[data-admin-theme='dark'] .admin-panel .bg-purple-100 {
+  background-color: rgb(88 28 135 / 0.45) !important;
+}
+
+html[data-admin-theme='dark'] .admin-panel .bg-purple-50 {
+  background-color: rgb(88 28 135 / 0.22) !important;
+}
+
+html[data-admin-theme='dark'] .admin-panel .border-purple-200 {
+  border-color: rgb(147 51 234 / 0.45) !important;
+}
+
+html[data-admin-theme='dark'] .admin-panel .text-purple-600 {
+  color: #d8b4fe !important;
+}
+
+html[data-admin-theme='dark'] .admin-panel .bg-blue-50 {
+  background-color: rgb(30 58 138 / 0.22) !important;
+}
+
+html[data-admin-theme='dark'] .admin-panel .border-blue-200 {
+  border-color: rgb(59 130 246 / 0.4) !important;
+}
+
+html[data-admin-theme='dark'] .admin-panel .bg-orange-100 {
+  background-color: rgb(124 45 18 / 0.45) !important;
+}
+
+html[data-admin-theme='dark'] .admin-panel .text-orange-600 {
+  color: #fdba74 !important;
+}
+
+html[data-admin-theme='dark'] .admin-panel .bg-pink-100 {
+  background-color: rgb(131 24 67 / 0.45) !important;
+}
+
+html[data-admin-theme='dark'] .admin-panel .text-pink-600 {
+  color: #f9a8d4 !important;
+}
+
+html[data-admin-theme='dark'] .admin-panel .hover\:bg-purple-50:hover {
+  background-color: rgb(88 28 135 / 0.25) !important;
+}
+
+/* Tabelas */
+html[data-admin-theme='dark'] .admin-panel tr.hover\:bg-gray-50:hover {
+  background-color: var(--admin-surface-hover) !important;
+}
+
+html[data-admin-theme='dark'] .admin-panel tr.border-b.border-gray-100,
+html[data-admin-theme='dark'] .admin-panel thead tr.border-b.border-gray-200 {
+  border-color: var(--admin-border) !important;
+}
+
+/* Versículo — bloco de citação */
+html[data-admin-theme='dark'] .admin-verse-preview {
+  background: linear-gradient(
+    to bottom right,
+    rgb(226 208 170 / 0.12),
+    var(--admin-surface-inset)
+  ) !important;
+}
+
+/* Cards ordenáveis — ver bloco abaixo */
+
+/* Admin — cards e listas ordenáveis */
+.admin-sortable-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  background: white;
+  transition: background-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.admin-sortable-row:hover {
+  background: #f8fafc;
+}
+
+.admin-sortable-card {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.admin-sortable-card:hover {
+  border-color: color-mix(in srgb, var(--color-accent) 25%, #e5e7eb);
+  box-shadow: 0 8px 24px rgb(35 45 130 / 0.08);
+}
+
+.admin-sortable-dragging {
+  opacity: 0.92;
+  z-index: 20;
+  box-shadow: 0 12px 32px rgb(35 45 130 / 0.18) !important;
+}
+
+html[data-admin-theme='dark'] .admin-sortable-row {
+  background: #1e293b;
+}
+
+html[data-admin-theme='dark'] .admin-sortable-row:hover {
+  background: #273449;
+}
+
+html[data-admin-theme='dark'] .admin-sortable-card {
+  background: #1e293b;
+  border-color: #334155;
+}
+
+html[data-admin-theme='dark'] .admin-sortable-card:hover {
+  border-color: #475569;
+}
+
+html[data-admin-theme='dark'] .admin-drag-handle:hover {
+  background: rgb(255 255 255 / 0.08) !important;
 }
 
 /* TipTap Editor Styles */

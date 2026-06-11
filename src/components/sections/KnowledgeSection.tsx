@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 
 import { Post } from '@/lib/database.types';
+import SectionHeader from '@/components/ui/SectionHeader';
 
 interface KnowledgeSectionProps {
     posts: Post[];
@@ -56,15 +57,11 @@ export default function KnowledgeSection({ posts = [] }: KnowledgeSectionProps) 
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    className="text-center mb-12"
                 >
-                    <h2 className="text-3xl md:text-4xl font-bold text-[var(--color-accent)] mb-4 section-title">
-                        Conhecimento
-                    </h2>
-                    <p className="text-[var(--color-text-secondary)] max-w-2xl mx-auto section-desc">
-                        Estudos bíblicos, reflexões teológicas e artigos para crescimento espiritual e
-                        aprofundamento na Palavra de Deus.
-                    </p>
+                    <SectionHeader
+                        title="Conhecimento"
+                        description="Estudos bíblicos, reflexões teológicas e artigos para crescimento espiritual e aprofundamento na Palavra de Deus."
+                    />
                 </motion.div>
 
                 {/* Tabs */}
@@ -135,7 +132,7 @@ export default function KnowledgeSection({ posts = [] }: KnowledgeSectionProps) 
                                                 <Calendar className="w-4 h-4" />
                                                 {formatDate(post.created_at)}
                                             </div>
-                                            <h3 className="font-bold text-lg text-[var(--color-accent)] mb-2 line-clamp-2 group-hover:text-[var(--color-accent-light)] transition-colors">
+                                            <h3 className="type-card-title mb-2 line-clamp-2 group-hover:text-[var(--color-accent-light)] transition-colors">
                                                 {post.title}
                                             </h3>
                                             <p className="text-[var(--color-text-secondary)] text-sm mb-4 line-clamp-3">
@@ -160,7 +157,7 @@ export default function KnowledgeSection({ posts = [] }: KnowledgeSectionProps) 
                                             <Calendar className="w-4 h-4" />
                                             {formatDate(post.created_at)}
                                         </div>
-                                        <h3 className="font-bold text-lg text-[var(--color-accent)] mb-2 group-hover:text-[var(--color-accent-light)] transition-colors">
+                                        <h3 className="type-card-title mb-2 group-hover:text-[var(--color-accent-light)] transition-colors">
                                             {post.title}
                                         </h3>
                                         <p className="text-[var(--color-text-secondary)] text-sm mb-4 flex-1">

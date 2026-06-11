@@ -5,20 +5,24 @@ import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
     Plus,
-    Pencil,
-    Trash2,
-    GripVertical,
     X,
     Save,
     Loader2,
     Users,
     Upload,
-    Image as ImageIcon,
-    ChevronUp,
-    ChevronDown,
 } from 'lucide-react';
 import { api } from '@/services/api';
 import { uploadLeaderImage } from '@/lib/supabase/storage';
+import { hasValidImageUrl } from '@/lib/imageUtils';
+import { toOrderUpdates } from '@/lib/admin/reorder';
+import {
+    AdminPageHeader,
+    AdminPanel,
+    AdminSortable,
+    AdminEntityActions,
+    AdminListToolbar,
+    useAdminViewMode,
+} from '@/components/admin';
 import toast from 'react-hot-toast';
 
 interface Leader {
@@ -34,6 +38,7 @@ interface Leader {
 const titleOptions = ['Pastor', 'Presbítero', 'Diácono', 'Diaconisa', 'Evangelista', 'Missionário', 'Outro'];
 
 export default function AdminLiderancaPage() {
+    const { viewMode, setViewMode } = useAdminViewMode('lideranca', 'grid');
     const [leaders, setLeaders] = useState<Leader[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -181,117 +186,134 @@ export default function AdminLiderancaPage() {
         }
     };
 
-    const moveLeader = async (leaderId: string, direction: 'up' | 'down') => {
-        const currentIndex = leaders.findIndex(l => l.id === leaderId);
-        if (currentIndex === -1) return;
-
-        const targetIndex = direction === 'up' ? currentIndex - 1 : currentIndex + 1;
-        if (targetIndex < 0 || targetIndex >= leaders.length) return;
-
-        const currentLeader = leaders[currentIndex];
-        const targetLeader = leaders[targetIndex];
-
+    const handleReorder = async (reordered: Leader[]) => {
+        const previous = leaders;
+        setLeaders(reordered);
         try {
-            // Trocar as ordens
-            await Promise.all([
-                api.updateLeaderOrder(currentLeader.id, targetLeader.order),
-                api.updateLeaderOrder(targetLeader.id, currentLeader.order),
-            ]);
-            
-            await loadLeaders();
-            toast.success('Ordem atualizada com sucesso!');
+            await api.updateLeaderOrders(toOrderUpdates(reordered, (l) => l.id));
+            toast.success('Ordem atualizada!');
         } catch (error) {
             console.error('Erro ao atualizar ordem:', error);
+            setLeaders(previous);
             toast.error('Erro ao atualizar ordem. Tente novamente.');
         }
     };
 
     return (
         <div className="space-y-6">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                <div>
-                    <h1 className="text-2xl md:text-[28px] font-bold text-[var(--color-accent)]">Liderança</h1>
-                    <p className="text-[var(--color-text-secondary)]">Gerencie os líderes da igreja</p>
-                </div>
-                <button onClick={() => openModal()} className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--color-accent)] text-white rounded-[30px] hover:bg-[var(--color-accent-light)] transition-colors">
-                    <Plus className="w-5 h-5" /> Novo Líder
-                </button>
-            </div>
+            <AdminPageHeader
+                title="Liderança"
+                description="Gerencie os líderes exibidos na home e na página Sobre"
+                action={
+                    <button
+                        onClick={() => openModal()}
+                        className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--color-accent)] text-white rounded-[30px] hover:bg-[var(--color-accent-light)] transition-colors"
+                    >
+                        <Plus className="w-5 h-5" /> Novo Líder
+                    </button>
+                }
+            />
 
-            <div className="bg-white rounded-[10px] shadow-lg overflow-hidden">
-                {isLoading ? (
-                    <div className="p-12 text-center">
-                        <Loader2 className="w-16 h-16 mx-auto mb-4 text-gray-300 animate-spin" />
-                        <p className="text-[var(--color-text-secondary)]">Carregando líderes...</p>
-                    </div>
-                ) : leaders.length === 0 ? (
-                    <div className="p-12 text-center">
-                        <Users className="w-16 h-16 mx-auto mb-4 text-gray-300" />
-                        <p className="text-[var(--color-text-secondary)]">Nenhum líder cadastrado</p>
-                    </div>
-                ) : (
-                    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
-                        {leaders.map((leader, index) => (
-                            <motion.div
-                                key={leader.id}
-                                initial={{ opacity: 0, scale: 0.95 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                transition={{ delay: index * 0.05 }}
-                                className="bg-gray-50 rounded-[10px] p-4 flex flex-col items-center text-center group relative"
-                            >
-                                <div className="absolute top-2 left-2 flex flex-col gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-10">
-                                    <button 
-                                        onClick={() => moveLeader(leader.id, 'up')} 
-                                        disabled={index === 0}
-                                        className="p-1 rounded-[10px] bg-white text-gray-400 hover:text-[var(--color-accent)] hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors shadow-sm"
-                                        aria-label="Mover para cima"
-                                    >
-                                        <ChevronUp className="w-4 h-4" />
-                                    </button>
-                                    <button 
-                                        onClick={() => moveLeader(leader.id, 'down')} 
-                                        disabled={index === leaders.length - 1}
-                                        className="p-1 rounded-[10px] bg-white text-gray-400 hover:text-[var(--color-accent)] hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors shadow-sm"
-                                        aria-label="Mover para baixo"
-                                    >
-                                        <ChevronDown className="w-4 h-4" />
-                                    </button>
+            <AdminListToolbar viewMode={viewMode} onViewModeChange={setViewMode} />
+
+            <AdminPanel
+                isLoading={isLoading}
+                isEmpty={!isLoading && leaders.length === 0}
+                emptyIcon={Users}
+                emptyMessage="Nenhum líder cadastrado"
+                loadingMessage="Carregando líderes..."
+                hint="Arraste pelo ícone ⋮⋮ para reordenar a exibição na home"
+            >
+                <AdminSortable
+                    items={leaders}
+                    getItemId={(l) => l.id}
+                    onReorder={handleReorder}
+                    layout={viewMode}
+                    renderItem={(leader, { dragHandle, orderBadge, layout }) =>
+                        layout === 'grid' ? (
+                        <div className="flex flex-col h-full">
+                            <div className="flex items-center justify-between gap-2 px-3 py-2 border-b border-gray-100 bg-gray-50/80">
+                                <div className="flex items-center gap-2">
+                                    {dragHandle}
+                                    {orderBadge}
                                 </div>
-                                <div className="relative w-24 h-24 rounded-[10px] overflow-hidden mb-4 border-4 border-[var(--color-primary)]">
-                                    <Image src={leader.image_url} alt={leader.name} fill className="object-cover" />
+                                <AdminEntityActions
+                                    size="sm"
+                                    onEdit={() => openModal(leader)}
+                                    onDelete={() => deleteLeader(leader.id)}
+                                    editLabel={`Editar ${leader.name}`}
+                                    deleteLabel={`Excluir ${leader.name}`}
+                                />
+                            </div>
+                            <div className="flex flex-col items-center text-center p-5 flex-1">
+                                <div className="relative w-28 h-28 rounded-[12px] overflow-hidden mb-4 border-4 border-[var(--color-primary)] bg-gray-100 flex items-center justify-center shadow-sm">
+                                    {hasValidImageUrl(leader.image_url) ? (
+                                        <Image src={leader.image_url} alt={leader.name} fill className="object-cover" sizes="112px" />
+                                    ) : (
+                                        <Users className="w-12 h-12 text-gray-400" />
+                                    )}
                                     {!leader.active && (
-                                        <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-                                            <span className="text-white text-xs font-bold">INATIVO</span>
+                                        <div className="absolute inset-0 bg-black/55 flex items-center justify-center">
+                                            <span className="text-white text-xs font-bold tracking-wide">INATIVO</span>
                                         </div>
                                     )}
                                 </div>
-                                <h3 className="font-bold text-[var(--color-accent)]">{leader.name}</h3>
-                                <p className="text-sm text-[var(--color-text-secondary)]">{leader.title}</p>
+                                <h3 className="type-card-title leading-tight">{leader.name}</h3>
+                                <p className="admin-card-desc mt-1">{leader.title}</p>
                                 {leader.department && (
-                                    <p className="text-xs text-[var(--color-text-muted)] mt-1">{leader.department}</p>
-                                )}
-                                <div className="mt-2">
-                                    <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                                        leader.active 
-                                            ? 'bg-green-100 text-green-800' 
-                                            : 'bg-gray-100 text-gray-800'
-                                    }`}>
-                                        {leader.active ? '● Visível na Home' : '○ Oculto'}
+                                    <span className="mt-2 inline-block px-2.5 py-0.5 rounded-full text-xs font-medium bg-[var(--color-primary)]/30 text-[var(--color-accent)]">
+                                        {leader.department}
                                     </span>
-                                </div>
-                                <div className="flex gap-2 mt-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <button onClick={() => openModal(leader)} className="p-2 rounded-[10px] bg-blue-100 text-blue-600 hover:bg-blue-200" aria-label={`Editar ${leader.name}`}>
-                                        <Pencil className="w-4 h-4" />
-                                    </button>
-                                    <button onClick={() => deleteLeader(leader.id)} className="p-2 rounded-[10px] bg-red-100 text-red-600 hover:bg-red-200" aria-label={`Excluir ${leader.name}`}>
-                                        <Trash2 className="w-4 h-4" />
-                                    </button>
-                                </div>
-                            </motion.div>
-                        ))}
-                    </div>
-                )}
-            </div>
+                                )}
+                                <span
+                                    className={`mt-3 inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold ${
+                                        leader.active
+                                            ? 'bg-green-100 text-green-800'
+                                            : 'bg-gray-100 text-gray-600'
+                                    }`}
+                                >
+                                    {leader.active ? 'Visível na Home' : 'Oculto'}
+                                </span>
+                            </div>
+                        </div>
+                        ) : (
+                        <>
+                            {dragHandle}
+                            {orderBadge}
+                            <div className="relative w-14 h-14 rounded-[10px] overflow-hidden bg-gray-100 flex-shrink-0 border-2 border-[var(--color-primary)]">
+                                {hasValidImageUrl(leader.image_url) ? (
+                                    <Image src={leader.image_url} alt={leader.name} fill className="object-cover" sizes="56px" />
+                                ) : (
+                                    <span className="absolute inset-0 flex items-center justify-center">
+                                        <Users className="w-6 h-6 text-gray-400" />
+                                    </span>
+                                )}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                                <h3 className="admin-card-title truncate">{leader.name}</h3>
+                                <p className="admin-card-desc truncate">{leader.title}</p>
+                                {leader.department && (
+                                    <p className="admin-card-meta mt-0.5 truncate">{leader.department}</p>
+                                )}
+                            </div>
+                            <span
+                                className={`hidden sm:inline-flex px-2 py-0.5 rounded-full text-xs font-semibold shrink-0 ${
+                                    leader.active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-600'
+                                }`}
+                            >
+                                {leader.active ? 'Ativo' : 'Inativo'}
+                            </span>
+                            <AdminEntityActions
+                                onEdit={() => openModal(leader)}
+                                onDelete={() => deleteLeader(leader.id)}
+                                editLabel={`Editar ${leader.name}`}
+                                deleteLabel={`Excluir ${leader.name}`}
+                            />
+                        </>
+                        )
+                    }
+                />
+            </AdminPanel>
 
             <AnimatePresence>
                 {isModalOpen && (
@@ -299,23 +321,23 @@ export default function AdminLiderancaPage() {
                         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={closeModal} className="fixed inset-0 bg-black/50 z-50" />
                         <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} className="fixed inset-4 md:inset-auto md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:max-w-lg md:w-full bg-white rounded-[10px] shadow-2xl z-50 overflow-hidden">
                             <div className="flex items-center justify-between p-4 border-b">
-                                <h2 className="text-xl md:text-[24px] font-bold text-[var(--color-accent)]">{editingLeader ? 'Editar Líder' : 'Novo Líder'}</h2>
+                                <h2 className="admin-modal-title">{editingLeader ? 'Editar Líder' : 'Novo Líder'}</h2>
                                 <button onClick={closeModal} className="p-2 rounded-[10px] hover:bg-gray-100"><X className="w-5 h-5" /></button>
                             </div>
                             <form onSubmit={handleSubmit} className="p-4 space-y-4">
                                 <div>
-                                    <label className="block text-sm font-medium text-[var(--color-text)] mb-1">Nome *</label>
+                                    <label className="admin-label mb-1">Nome *</label>
                                     <input type="text" value={formData.name} onChange={(e) => setFormData((p) => ({ ...p, name: e.target.value }))} className="w-full px-4 py-2 rounded-[10px] border border-gray-200 focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/20 outline-none" required />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-[var(--color-text)] mb-1">Cargo *</label>
+                                    <label className="admin-label mb-1">Cargo *</label>
                                     <select value={formData.title} onChange={(e) => setFormData((p) => ({ ...p, title: e.target.value }))} className="w-full px-4 py-2 rounded-[10px] border border-gray-200 focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/20 outline-none" required>
                                         <option value="">Selecione...</option>
                                         {titleOptions.map((t) => <option key={t} value={t}>{t}</option>)}
                                     </select>
                                     {formData.title === 'Outro' && (
                                         <div className="mt-2">
-                                            <label className="block text-sm font-medium text-[var(--color-text)] mb-1">Digite o cargo *</label>
+                                            <label className="admin-label mb-1">Digite o cargo *</label>
                                             <input 
                                                 type="text" 
                                                 value={customTitle} 
@@ -328,7 +350,7 @@ export default function AdminLiderancaPage() {
                                     )}
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-[var(--color-text)] mb-1">Foto do Líder *</label>
+                                    <label className="admin-label mb-1">Foto do Líder *</label>
                                     <div className="space-y-2">
                                         <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-[10px] cursor-pointer hover:bg-gray-50 transition-colors relative overflow-hidden">
                                             {imagePreview ? (
@@ -339,8 +361,8 @@ export default function AdminLiderancaPage() {
                                             ) : (
                                                 <div className="flex flex-col items-center justify-center pt-5 pb-6">
                                                     <Upload className="w-8 h-8 mb-2 text-gray-400" />
-                                                    <p className="text-sm text-gray-500">Clique para fazer upload</p>
-                                                    <p className="text-xs text-gray-400">PNG, JPG até 5MB</p>
+                                                    <p className="admin-upload-text">Clique para fazer upload</p>
+                                                    <p className="admin-help">PNG, JPG até 5MB</p>
                                                 </div>
                                             )}
                                             <input type="file" className="hidden" accept="image/*" onChange={handleFileChange} />
@@ -354,7 +376,7 @@ export default function AdminLiderancaPage() {
                                     </div>
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-[var(--color-text)] mb-1">Departamento (opcional)</label>
+                                    <label className="admin-label mb-1">Departamento (opcional)</label>
                                     <input 
                                         type="text" 
                                         value={formData.department} 
@@ -365,8 +387,8 @@ export default function AdminLiderancaPage() {
                                 </div>
                                 <div className="flex items-center justify-between p-4 bg-gray-50 rounded-[10px]">
                                     <div>
-                                        <label className="block text-sm font-medium text-[var(--color-text)] mb-1">Status</label>
-                                        <p className="text-xs text-[var(--color-text-secondary)]">
+                                        <label className="admin-label mb-1">Status</label>
+                                        <p className="admin-help">
                                             {formData.active ? 'Líder visível na home' : 'Líder oculto na home'}
                                         </p>
                                     </div>
@@ -378,7 +400,7 @@ export default function AdminLiderancaPage() {
                                             className="sr-only peer"
                                         />
                                         <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[var(--color-accent)]/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[var(--color-accent)]"></div>
-                                        <span className="ml-3 text-sm font-medium text-[var(--color-text)]">
+                                        <span className="ml-3 admin-label-inline">
                                             {formData.active ? 'Ativo' : 'Inativo'}
                                         </span>
                                     </label>

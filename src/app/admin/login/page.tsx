@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Lock, Mail, Eye, EyeOff, Loader2 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
+import AdminThemeToggle from '@/components/admin/AdminThemeToggle';
 
 export default function AdminLoginPage() {
     const router = useRouter();
@@ -42,7 +43,10 @@ export default function AdminLoginPage() {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-[var(--color-accent)] via-[var(--color-accent-light)] to-[var(--color-accent)] flex items-center justify-center p-4">
+        <div className="admin-login-page min-h-screen bg-gradient-to-br from-[var(--color-accent)] via-[var(--color-accent-light)] to-[var(--color-accent)] flex items-center justify-center p-4 relative">
+            <div className="absolute top-4 right-4 z-10">
+                <AdminThemeToggle variant="login" />
+            </div>
             {/* Background Pattern */}
             <div className="absolute inset-0 opacity-10">
                 <div
@@ -59,7 +63,7 @@ export default function AdminLoginPage() {
                 transition={{ duration: 0.5 }}
                 className="relative w-full max-w-md"
             >
-                <div className="bg-white rounded-[10px] shadow-2xl p-8 md:p-10">
+                <div className="admin-login-card bg-white rounded-[10px] shadow-2xl p-8 md:p-10">
                     {/* Logo */}
                     <div className="text-center mb-8">
                         <div className="relative w-20 h-20 mx-auto mb-4 rounded-[10px] overflow-hidden border-4 border-[var(--color-primary)] shadow-lg">
@@ -70,10 +74,10 @@ export default function AdminLoginPage() {
                                 className="object-cover"
                             />
                         </div>
-                        <h1 className="text-2xl font-bold text-[var(--color-accent)]">
+                        <h1 className="admin-title">
                             Painel Administrativo
                         </h1>
-                        <p className="text-[var(--color-text-secondary)] mt-1">
+                        <p className="admin-desc">
                             Assembleia de Deus Missão
                         </p>
                     </div>
@@ -84,7 +88,7 @@ export default function AdminLoginPage() {
                         <div>
                             <label
                                 htmlFor="email"
-                                className="block text-sm font-medium text-[var(--color-text)] mb-2"
+                                className="admin-label mb-2"
                             >
                                 E-mail
                             </label>
@@ -106,7 +110,7 @@ export default function AdminLoginPage() {
                         <div>
                             <label
                                 htmlFor="password"
-                                className="block text-sm font-medium text-[var(--color-text)] mb-2"
+                                className="admin-label mb-2"
                             >
                                 Senha
                             </label>
@@ -167,7 +171,7 @@ export default function AdminLoginPage() {
                     </form>
 
                     {/* Footer */}
-                    <p className="text-center text-sm text-[var(--color-text-muted)] mt-8">
+                    <p className="text-center admin-help mt-8">
                         Acesso restrito aos administradores da igreja.
                     </p>
                 </div>

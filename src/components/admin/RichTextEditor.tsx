@@ -55,7 +55,7 @@ export default function RichTextEditor({ content, onChange, onImageUpload }: Ric
         },
         editorProps: {
             attributes: {
-                class: 'prose prose-sm sm:prose lg:prose-lg xl:prose-xl max-w-none focus:outline-none min-h-[400px] p-6 bg-white',
+                class: 'prose prose-sm sm:prose lg:prose-lg xl:prose-xl max-w-none focus:outline-none min-h-[400px] p-6 bg-white admin-editor-content',
             },
         },
     });
@@ -129,7 +129,7 @@ export default function RichTextEditor({ content, onChange, onImageUpload }: Ric
     }
 
     return (
-        <div className="border border-gray-200 rounded-[10px] overflow-hidden bg-white">
+        <div className="admin-rich-editor border border-gray-200 rounded-[10px] overflow-hidden bg-white">
             {/* Toolbar */}
             <div className="flex flex-wrap items-center gap-2 p-3 border-b border-gray-200 bg-gray-50 sticky top-0 z-10">
                 {/* Text Formatting */}

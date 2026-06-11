@@ -75,6 +75,9 @@ export const metadata: Metadata = {
     : {}),
   alternates: {
     canonical: SITE_URL,
+    types: {
+      'application/xml': `${SITE_URL}/sitemap.xml`,
+    },
   },
   category: 'religion',
   icons: {

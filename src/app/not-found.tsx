@@ -8,7 +8,7 @@ export default function NotFound() {
           <h1 className="text-9xl font-bold text-[var(--color-accent)] opacity-20">404</h1>
         </div>
         
-        <h2 className="text-3xl font-bold text-[var(--color-accent)] mb-4">
+        <h2 className="type-section-title mb-4">
           Página não encontrada
         </h2>
         

@@ -40,7 +40,7 @@ export default function Error({
           </svg>
         </div>
         
-        <h1 className="text-3xl font-bold text-[var(--color-accent)] mb-4">
+        <h1 className="type-page-hero-title text-[var(--color-accent)] mb-4">
           Ops! Algo deu errado
         </h1>
         

@@ -15,8 +15,7 @@ import {
     Loader2,
     ImageIcon,
     Copy,
-    ChevronUp,
-    ChevronDown,
+    Timer,
 } from 'lucide-react';
 import {
     DndContext,
@@ -33,11 +32,14 @@ import {
     sortableKeyboardCoordinates,
     useSortable,
     verticalListSortingStrategy,
+    rectSortingStrategy,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { api } from '@/services/api';
 import { Banner } from '@/lib/database.types';
 import { uploadImage, generateBannerImagePath, getFileExtension } from '@/lib/supabase/storage';
+import { AdminPageHeader, AdminListToolbar, useAdminViewMode } from '@/components/admin';
+import type { AdminViewMode } from '@/components/admin';
 import toast from 'react-hot-toast';
 import { Upload, X as XIcon } from 'lucide-react';
 
@@ -45,9 +47,7 @@ import { Upload, X as XIcon } from 'lucide-react';
 function SortableBannerItem({
     banner,
     index,
-    totalBanners,
-    onMoveUp,
-    onMoveDown,
+    layout,
     onToggleActive,
     onDuplicate,
     onEdit,
@@ -55,9 +55,7 @@ function SortableBannerItem({
 }: {
     banner: Banner;
     index: number;
-    totalBanners: number;
-    onMoveUp: () => void;
-    onMoveDown: () => void;
+    layout: AdminViewMode;
     onToggleActive: () => void;
     onDuplicate: () => void;
     onEdit: () => void;
@@ -75,32 +73,108 @@ function SortableBannerItem({
     const style = {
         transform: CSS.Transform.toString(transform),
         transition,
-        opacity: isDragging ? 0.5 : 1,
     };
 
+    const dragHandle = (
+        <button
+            type="button"
+            {...attributes}
+            {...listeners}
+            className="admin-drag-handle p-2 rounded-[10px] text-gray-400 hover:text-[var(--color-accent)] hover:bg-[var(--color-primary)]/20 cursor-grab active:cursor-grabbing transition-colors touch-none"
+            title="Arrastar para reordenar"
+        >
+            <GripVertical className="w-5 h-5" />
+        </button>
+    );
+
+    const orderBadge = (
+        <span className="inline-flex items-center justify-center min-w-[1.75rem] h-7 px-2 rounded-full bg-[var(--color-accent)] text-white text-xs font-bold tabular-nums flex-shrink-0">
+            {index + 1}
+        </span>
+    );
+
+    const actionButtons = (
+        <div className="flex items-center gap-1.5 flex-shrink-0">
+            <button
+                onClick={onToggleActive}
+                className={`p-2 rounded-[10px] transition-colors ${
+                    banner.active
+                        ? 'text-green-600 hover:bg-green-50'
+                        : 'text-gray-400 hover:bg-gray-100'
+                }`}
+                title={banner.active ? 'Desativar' : 'Ativar'}
+            >
+                {banner.active ? (
+                    <Eye className="w-5 h-5" />
+                ) : (
+                    <EyeOff className="w-5 h-5" />
+                )}
+            </button>
+            <button
+                onClick={onDuplicate}
+                className="p-2 rounded-[10px] text-purple-600 hover:bg-purple-50 transition-colors"
+                title="Duplicar"
+            >
+                <Copy className="w-5 h-5" />
+            </button>
+            <button
+                onClick={onEdit}
+                className="p-2 rounded-[10px] text-blue-600 hover:bg-blue-50 transition-colors"
+                title="Editar"
+            >
+                <Pencil className="w-5 h-5" />
+            </button>
+            <button
+                onClick={onDelete}
+                className="p-2 rounded-[10px] text-red-600 hover:bg-red-50 transition-colors"
+                title="Excluir"
+            >
+                <Trash2 className="w-5 h-5" />
+            </button>
+        </div>
+    );
+
+    if (layout === 'grid') {
+        return (
+            <div
+                ref={setNodeRef}
+                style={style}
+                className={`admin-sortable-card flex flex-col h-full ${!banner.active ? 'opacity-70' : ''} ${isDragging ? 'admin-sortable-dragging z-50' : ''}`}
+            >
+                <div className="flex items-center justify-between gap-2 px-3 py-2 border-b border-gray-100 bg-gray-50/80">
+                    <div className="flex items-center gap-2">
+                        {dragHandle}
+                        {orderBadge}
+                    </div>
+                    {actionButtons}
+                </div>
+                <div className="relative aspect-[16/9] bg-gray-100">
+                    <Image
+                        src={banner.image_desktop_url}
+                        alt={banner.alt_text}
+                        fill
+                        className="object-cover"
+                        sizes="(max-width:640px) 100vw, 33vw"
+                    />
+                </div>
+                <div className="p-4 flex-1">
+                    <p className="admin-card-title">{banner.alt_text}</p>
+                    <p className="admin-card-meta truncate mt-1">
+                        {banner.link || 'Sem link'}
+                    </p>
+                </div>
+            </div>
+        );
+    }
+
     return (
-        <motion.div
+        <div
             ref={setNodeRef}
             style={style}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: isDragging ? 0.5 : 1, y: 0 }}
-            transition={{ delay: index * 0.1 }}
-            className={`flex items-center gap-4 p-4 ${!banner.active ? 'opacity-60 bg-gray-50' : ''} ${isDragging ? 'z-50' : ''}`}
+            className={`admin-sortable-row ${!banner.active ? 'opacity-70' : ''} ${isDragging ? 'admin-sortable-dragging z-50' : ''}`}
         >
-            {/* Drag Handle */}
-            <button
-                {...attributes}
-                {...listeners}
-                className="text-gray-400 cursor-grab active:cursor-grabbing hover:text-gray-600 transition-colors"
-                title="Arrastar para reordenar"
-            >
-                <GripVertical className="w-5 h-5" />
-            </button>
-
-            {/* Position */}
-            <span className="w-8 h-8 rounded-[10px] bg-[var(--color-accent)] text-white flex items-center justify-center text-sm font-bold flex-shrink-0">
-                {index + 1}
-            </span>
+            {dragHandle}
+            {orderBadge}
 
             {/* Thumbnail */}
             <div className="relative w-32 h-20 rounded-[10px] overflow-hidden bg-gray-100 flex-shrink-0">
@@ -114,91 +188,21 @@ function SortableBannerItem({
 
             {/* Info */}
             <div className="flex-1 min-w-0">
-                <p className="font-medium text-[var(--color-text)] truncate">
+                <p className="admin-card-title truncate">
                     {banner.alt_text}
                 </p>
-                <p className="text-sm text-[var(--color-text-muted)] truncate">
+                <p className="admin-card-meta truncate">
                     {banner.link || 'Sem link'}
                 </p>
             </div>
 
-            {/* Actions */}
-            <div className="flex items-center gap-2">
-                {/* Order Controls */}
-                <div className="flex flex-col gap-1 mr-2">
-                    <button
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            onMoveUp();
-                        }}
-                        disabled={index === 0}
-                        className={`p-1.5 rounded-[8px] transition-colors ${
-                            index === 0
-                                ? 'text-gray-300 cursor-not-allowed'
-                                : 'text-blue-600 hover:bg-blue-50'
-                        }`}
-                        title="Mover para cima"
-                    >
-                        <ChevronUp className="w-4 h-4" />
-                    </button>
-                    <button
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            onMoveDown();
-                        }}
-                        disabled={index === totalBanners - 1}
-                        className={`p-1.5 rounded-[8px] transition-colors ${
-                            index === totalBanners - 1
-                                ? 'text-gray-300 cursor-not-allowed'
-                                : 'text-blue-600 hover:bg-blue-50'
-                        }`}
-                        title="Mover para baixo"
-                    >
-                        <ChevronDown className="w-4 h-4" />
-                    </button>
-                </div>
-                <button
-                    onClick={onToggleActive}
-                    className={`p-2 rounded-[10px] transition-colors ${
-                        banner.active
-                            ? 'text-green-600 hover:bg-green-50'
-                            : 'text-gray-400 hover:bg-gray-100'
-                    }`}
-                    title={banner.active ? 'Desativar' : 'Ativar'}
-                >
-                    {banner.active ? (
-                        <Eye className="w-5 h-5" />
-                    ) : (
-                        <EyeOff className="w-5 h-5" />
-                    )}
-                </button>
-                <button
-                    onClick={onDuplicate}
-                    className="p-2 rounded-[10px] text-purple-600 hover:bg-purple-50 transition-colors"
-                    title="Duplicar"
-                >
-                    <Copy className="w-5 h-5" />
-                </button>
-                <button
-                    onClick={onEdit}
-                    className="p-2 rounded-[10px] text-blue-600 hover:bg-blue-50 transition-colors"
-                    title="Editar"
-                >
-                    <Pencil className="w-5 h-5" />
-                </button>
-                <button
-                    onClick={onDelete}
-                    className="p-2 rounded-[10px] text-red-600 hover:bg-red-50 transition-colors"
-                    title="Excluir"
-                >
-                    <Trash2 className="w-5 h-5" />
-                </button>
-            </div>
-        </motion.div>
+            {actionButtons}
+        </div>
     );
 }
 
 export default function AdminBannersPage() {
+    const { viewMode, setViewMode } = useAdminViewMode('banners', 'list');
     const [banners, setBanners] = useState<Banner[]>([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingBanner, setEditingBanner] = useState<Banner | null>(null);
@@ -206,6 +210,8 @@ export default function AdminBannersPage() {
     const [isSaving, setIsSaving] = useState(false);
     const [uploading, setUploading] = useState<string | null>(null);
     const [isReordering, setIsReordering] = useState(false);
+    const [heroAutoplaySeconds, setHeroAutoplaySeconds] = useState(6);
+    const [isSavingCarousel, setIsSavingCarousel] = useState(false);
 
     const sensors = useSensors(
         useSensor(PointerSensor),
@@ -272,6 +278,15 @@ export default function AdminBannersPage() {
 
     useEffect(() => {
         loadBanners();
+        api.getAdminSettings()
+            .then((data) => {
+                if (data && typeof (data as { hero_autoplay_seconds?: number }).hero_autoplay_seconds === 'number') {
+                    setHeroAutoplaySeconds((data as { hero_autoplay_seconds: number }).hero_autoplay_seconds);
+                }
+            })
+            .catch(() => {
+                /* coluna pode não existir até rodar migration */
+            });
     }, []);
 
     const openModal = (banner?: Banner) => {
@@ -610,46 +625,6 @@ export default function AdminBannersPage() {
         toast.success('Banner duplicado! Revise os dados e salve.');
     };
 
-    const moveBanner = async (index: number, direction: 'up' | 'down') => {
-        if (direction === 'up' && index === 0) return;
-        if (direction === 'down' && index === banners.length - 1) return;
-
-        const newIndex = direction === 'up' ? index - 1 : index + 1;
-        
-        // Criar novo array com elementos trocados
-        const newBanners = [...banners];
-        const [movedBanner] = newBanners.splice(index, 1);
-        newBanners.splice(newIndex, 0, movedBanner);
-
-        // Atualizar posições numéricas
-        const updatedBanners = newBanners.map((banner, idx) => ({
-            ...banner,
-            position: idx + 1,
-        }));
-
-        // Atualizar estado imediatamente (optimistic update)
-        setBanners(updatedBanners);
-        setIsReordering(true);
-
-        try {
-            // Preparar atualizações para o banco
-            const updates = updatedBanners.map((banner, idx) => ({
-                id: banner.id,
-                position: idx + 1,
-            }));
-
-            await api.updateBannerPositions(updates);
-            toast.success('Ordem dos banners atualizada!');
-        } catch (error) {
-            console.error('Error updating banner positions:', error);
-            toast.error('Erro ao atualizar ordem dos banners.');
-            // Reverter mudanças
-            loadBanners();
-        } finally {
-            setIsReordering(false);
-        }
-    };
-
     const handleDragEnd = async (event: DragEndEvent) => {
         const { active, over } = event;
 
@@ -696,29 +671,97 @@ export default function AdminBannersPage() {
         }
     };
 
+    const saveCarouselSettings = async () => {
+        const seconds = Math.max(3, Math.min(60, heroAutoplaySeconds));
+        setHeroAutoplaySeconds(seconds);
+        setIsSavingCarousel(true);
+        try {
+            await api.updateSettings({ hero_autoplay_seconds: seconds });
+            toast.success(`Slides exibidos por ${seconds} segundos cada.`);
+        } catch (error) {
+            console.error('Error saving carousel settings:', error);
+            toast.error('Erro ao salvar. Execute supabase/migration_hero_autoplay.sql no Supabase.');
+        } finally {
+            setIsSavingCarousel(false);
+        }
+    };
+
     return (
         <div className="space-y-6">
-            {/* Header */}
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                <div>
-                    <h1 className="text-2xl md:text-[28px] font-bold text-[var(--color-accent)]">
-                        Gerenciar Banners
-                    </h1>
-                    <p className="text-[var(--color-text-secondary)]">
-                        Gerencie os banners do slider principal da página inicial
-                    </p>
+            <AdminPageHeader
+                title="Gerenciar Banners"
+                description="Gerencie os banners do slider principal da página inicial"
+                action={
+                    <button
+                        onClick={() => openModal()}
+                        className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--color-accent)] text-white rounded-[30px] hover:bg-[var(--color-accent-light)] transition-colors"
+                    >
+                        <Plus className="w-5 h-5" />
+                        Novo Banner
+                    </button>
+                }
+            />
+
+            {/* Carrossel — tempo dos slides */}
+            <div className="bg-white rounded-[10px] shadow-lg p-5 sm:p-6 admin-card">
+                <div className="flex flex-col sm:flex-row sm:items-end gap-4 sm:gap-6">
+                    <div className="flex-1">
+                <h2 className="admin-section-title flex items-center gap-2 mb-1">
+                            <Timer className="w-5 h-5" />
+                            Tempo de exibição automática
+                        </h2>
+                        <p className="admin-panel-hint mb-4">
+                            Define por quantos segundos cada slide permanece visível antes de passar para o próximo (3 a 60 segundos).
+                        </p>
+                        <div className="flex flex-wrap items-center gap-4">
+                            <div>
+                                <label htmlFor="hero-autoplay" className="admin-label mb-1">
+                                    Duração por slide (segundos)
+                                </label>
+                                <input
+                                    id="hero-autoplay"
+                                    type="number"
+                                    min={3}
+                                    max={60}
+                                    value={heroAutoplaySeconds}
+                                    onChange={(e) => setHeroAutoplaySeconds(Number(e.target.value))}
+                                    className="w-28 px-3 py-2 rounded-[10px] border focus:border-[var(--color-accent)] outline-none admin-input"
+                                />
+                            </div>
+                            <input
+                                type="range"
+                                min={3}
+                                max={60}
+                                value={heroAutoplaySeconds}
+                                onChange={(e) => setHeroAutoplaySeconds(Number(e.target.value))}
+                                className="flex-1 min-w-[120px] accent-[var(--color-accent)]"
+                                aria-label="Ajustar duração dos slides"
+                            />
+                            <span className="text-sm font-medium text-[var(--color-accent)] tabular-nums">
+                                {Math.max(3, Math.min(60, heroAutoplaySeconds))}s
+                            </span>
+                        </div>
+                    </div>
+                    <button
+                        type="button"
+                        onClick={saveCarouselSettings}
+                        disabled={isSavingCarousel}
+                        className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-[var(--color-accent)] text-white rounded-[30px] hover:bg-[var(--color-accent-light)] disabled:opacity-70 shrink-0"
+                    >
+                        {isSavingCarousel ? (
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                        ) : (
+                            <Save className="w-4 h-4" />
+                        )}
+                        Salvar tempo
+                    </button>
                 </div>
-                <button
-                    onClick={() => openModal()}
-                    className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--color-accent)] text-white rounded-[30px] hover:bg-[var(--color-accent-light)] transition-colors"
-                >
-                    <Plus className="w-5 h-5" />
-                    Novo Banner
-                </button>
             </div>
 
+            <AdminListToolbar viewMode={viewMode} onViewModeChange={setViewMode} />
+
             {/* Banners List */}
-            <div className="bg-white rounded-[10px] shadow-lg overflow-hidden">
+            <div className="admin-card bg-white rounded-[10px] shadow-lg overflow-hidden border border-gray-100">
                 {isLoading ? (
                     <div className="p-12 text-center">
                         <Loader2 className="w-8 h-8 mx-auto animate-spin text-[var(--color-accent)]" />
@@ -738,6 +781,11 @@ export default function AdminBannersPage() {
                         </button>
                     </div>
                 ) : (
+                    <>
+                        <div className="px-4 py-3 bg-[var(--color-primary)]/10 border-b border-gray-100 admin-panel-hint flex items-center gap-2">
+                            <span className="inline-flex items-center justify-center w-6 h-6 rounded-md bg-white/80 text-[var(--color-accent)] font-bold text-xs shadow-sm">⋮⋮</span>
+                            Arraste pelo ícone ⋮⋮ para reordenar os slides da home
+                        </div>
                     <DndContext
                         sensors={sensors}
                         collisionDetection={closestCenter}
@@ -745,17 +793,15 @@ export default function AdminBannersPage() {
                     >
                         <SortableContext
                             items={banners.map((b) => b.id)}
-                            strategy={verticalListSortingStrategy}
+                            strategy={viewMode === 'grid' ? rectSortingStrategy : verticalListSortingStrategy}
                         >
-                            <div className="divide-y">
+                            <div className={viewMode === 'grid' ? 'grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 p-4' : 'divide-y'}>
                                 {banners.map((banner, index) => (
                                     <SortableBannerItem
                                         key={banner.id}
                                         banner={banner}
                                         index={index}
-                                        totalBanners={banners.length}
-                                        onMoveUp={() => moveBanner(index, 'up')}
-                                        onMoveDown={() => moveBanner(index, 'down')}
+                                        layout={viewMode}
                                         onToggleActive={() => toggleActive(banner.id, banner.active)}
                                         onDuplicate={() => duplicateBanner(banner)}
                                         onEdit={() => openModal(banner)}
@@ -765,6 +811,7 @@ export default function AdminBannersPage() {
                             </div>
                         </SortableContext>
                     </DndContext>
+                    </>
                 )}
             </div>
 
@@ -789,7 +836,7 @@ export default function AdminBannersPage() {
                             className="fixed inset-4 md:inset-auto md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:max-w-2xl md:w-full bg-white rounded-[10px] shadow-2xl z-50 overflow-hidden flex flex-col max-h-[90vh]"
                         >
                             <div className="flex items-center justify-between p-4 border-b flex-shrink-0">
-                                <h2 className="text-xl md:text-[24px] font-bold text-[var(--color-accent)]">
+                                <h2 className="admin-modal-title">
                                     {editingBanner ? 'Editar Banner' : 'Novo Banner'}
                                 </h2>
                                 <button
@@ -803,7 +850,7 @@ export default function AdminBannersPage() {
                             <form onSubmit={handleSubmit} className="p-4 space-y-4 overflow-y-auto flex-1">
                                 {/* Desktop Image Upload */}
                                 <div>
-                                    <label className="block text-sm font-medium text-[var(--color-text)] mb-1">
+                                    <label className="admin-label mb-1">
                                         Imagem Desktop *
                                     </label>
                                     <div className="space-y-2">
@@ -844,7 +891,7 @@ export default function AdminBannersPage() {
 
                                 {/* Mobile Image Upload */}
                                 <div>
-                                    <label className="block text-sm font-medium text-[var(--color-text)] mb-1">
+                                    <label className="admin-label mb-1">
                                         Imagem Mobile *
                                     </label>
                                     <div className="space-y-2">
@@ -885,7 +932,7 @@ export default function AdminBannersPage() {
 
                                 {/* Logo Upload */}
                                 <div>
-                                    <label className="block text-sm font-medium text-[var(--color-text)] mb-1">
+                                    <label className="admin-label mb-1">
                                         Logo (opcional)
                                     </label>
                                     <div className="space-y-2">
@@ -926,7 +973,7 @@ export default function AdminBannersPage() {
 
                                 {/* Title */}
                                 <div>
-                                    <label className="block text-sm font-medium text-[var(--color-text)] mb-1">
+                                    <label className="admin-label mb-1">
                                         Título (opcional)
                                     </label>
                                     <input
@@ -942,7 +989,7 @@ export default function AdminBannersPage() {
 
                                 {/* Description */}
                                 <div>
-                                    <label className="block text-sm font-medium text-[var(--color-text)] mb-1">
+                                    <label className="admin-label mb-1">
                                         Descrição (opcional)
                                     </label>
                                     <textarea
@@ -959,7 +1006,7 @@ export default function AdminBannersPage() {
                                 {/* Overlay Opacity Control */}
                                 <div className="p-4 bg-purple-50 rounded-[10px] border border-purple-200 space-y-4">
                                     <div>
-                                        <label className="block text-sm font-medium text-[var(--color-text)] mb-2">
+                                        <label className="admin-label mb-2">
                                             Cor do Overlay
                                         </label>
                                         <input
@@ -968,12 +1015,12 @@ export default function AdminBannersPage() {
                                             onChange={(e) => setFormData((p) => ({ ...p, overlay_color: e.target.value }))}
                                             className="w-full h-12 rounded-[10px] border border-gray-200 cursor-pointer"
                                         />
-                                        <p className="text-xs text-gray-500 mt-1">
+                                        <p className="admin-help mt-1">
                                             Escolha a cor do overlay que será aplicado sobre a imagem do banner.
                                         </p>
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-medium text-[var(--color-text)] mb-2">
+                                        <label className="admin-label mb-2">
                                             Escuridão do Fundo (Overlay)
                                         </label>
                                         <div className="space-y-2">
@@ -986,13 +1033,13 @@ export default function AdminBannersPage() {
                                                 className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-[var(--color-accent)]"
                                             />
                                             <div className="flex justify-between items-center">
-                                                <span className="text-xs text-gray-600">Transparente (0%)</span>
-                                                <span className="text-sm font-semibold text-[var(--color-accent)]">
+                                                <span className="admin-help">Transparente (0%)</span>
+                                                <span className="admin-stat-value text-base">
                                                     {formData.overlay_opacity}%
                                                 </span>
-                                                <span className="text-xs text-gray-600">Muito Escuro (100%)</span>
+                                                <span className="admin-help">Muito Escuro (100%)</span>
                                             </div>
-                                            <p className="text-xs text-gray-500">
+                                            <p className="admin-help">
                                                 Controla o quanto escuro fica o overlay sobre a imagem do banner para melhorar a legibilidade do texto.
                                             </p>
                                         </div>
@@ -1002,7 +1049,7 @@ export default function AdminBannersPage() {
                                 {/* Global Button Style */}
                                 {(formData.button1_text || formData.button2_text) && (
                                     <div className="p-4 bg-blue-50 rounded-[10px] border border-blue-200">
-                                        <label className="block text-sm font-medium text-[var(--color-text)] mb-2">
+                                        <label className="admin-label mb-2">
                                             Estilo Global dos Botões
                                         </label>
                                         <select
@@ -1013,7 +1060,7 @@ export default function AdminBannersPage() {
                                             <option value="individual">Individual (cada botão com seu próprio estilo)</option>
                                             <option value="unified">Unificado (todos os botões com o mesmo estilo do botão 1)</option>
                                         </select>
-                                        <p className="text-xs text-gray-500 mt-1">
+                                        <p className="admin-help mt-1">
                                             {formData.buttons_global_style === 'unified' 
                                                 ? 'Quando unificado, o botão 2 usará as mesmas configurações do botão 1'
                                                 : 'Cada botão pode ter suas próprias configurações de cor, tamanho e estilo'}
@@ -1023,7 +1070,7 @@ export default function AdminBannersPage() {
 
                                 {/* Button 1 */}
                                 <div className="space-y-2">
-                                    <label className="block text-sm font-medium text-[var(--color-text)] mb-1">
+                                    <label className="admin-label mb-1">
                                         Botão 1 (opcional)
                                     </label>
                                     <div className="grid grid-cols-2 gap-2">
@@ -1050,10 +1097,10 @@ export default function AdminBannersPage() {
                                     {/* Button 1 Style Options */}
                                     {(formData.button1_text || formData.button1_link) && (
                                         <div className="mt-4 p-4 bg-gray-50 rounded-[10px] space-y-3">
-                                            <h4 className="text-sm font-semibold text-gray-700">Personalização do Botão 1</h4>
+                                            <h4 className="admin-form-group-title">Personalização do Botão 1</h4>
                                             <div className="grid grid-cols-2 gap-3">
                                                 <div>
-                                                    <label className="block text-xs text-gray-600 mb-1">Cor de Fundo</label>
+                                                    <label className="admin-form-group-title mb-1">Cor de Fundo</label>
                                                     <input
                                                         type="color"
                                                         value={formData.button1_bg_color}
@@ -1062,7 +1109,7 @@ export default function AdminBannersPage() {
                                                     />
                                                 </div>
                                                 <div>
-                                                    <label className="block text-xs text-gray-600 mb-1">Cor do Texto</label>
+                                                    <label className="admin-form-group-title mb-1">Cor do Texto</label>
                                                     <input
                                                         type="color"
                                                         value={formData.button1_text_color}
@@ -1071,7 +1118,7 @@ export default function AdminBannersPage() {
                                                     />
                                                 </div>
                                                 <div>
-                                                    <label className="block text-xs text-gray-600 mb-1">Hover - Fundo</label>
+                                                    <label className="admin-form-group-title mb-1">Hover - Fundo</label>
                                                     <input
                                                         type="color"
                                                         value={formData.button1_hover_bg_color}
@@ -1080,7 +1127,7 @@ export default function AdminBannersPage() {
                                                     />
                                                 </div>
                                                 <div>
-                                                    <label className="block text-xs text-gray-600 mb-1">Hover - Texto</label>
+                                                    <label className="admin-form-group-title mb-1">Hover - Texto</label>
                                                     <input
                                                         type="color"
                                                         value={formData.button1_hover_text_color}
@@ -1089,7 +1136,7 @@ export default function AdminBannersPage() {
                                                     />
                                                 </div>
                                                 <div>
-                                                    <label className="block text-xs text-gray-600 mb-1">Tamanho</label>
+                                                    <label className="admin-form-group-title mb-1">Tamanho</label>
                                                     <select
                                                         value={formData.button1_size}
                                                         onChange={(e) => setFormData((p) => ({ ...p, button1_size: e.target.value as 'sm' | 'md' | 'lg' }))}
@@ -1101,7 +1148,7 @@ export default function AdminBannersPage() {
                                                     </select>
                                                 </div>
                                                 <div>
-                                                    <label className="block text-xs text-gray-600 mb-1">Estilo</label>
+                                                    <label className="admin-form-group-title mb-1">Estilo</label>
                                                     <select
                                                         value={formData.button1_style}
                                                         onChange={(e) => setFormData((p) => ({ ...p, button1_style: e.target.value as 'solid' | 'outline' | 'ghost' }))}
@@ -1113,7 +1160,7 @@ export default function AdminBannersPage() {
                                                     </select>
                                                 </div>
                                                 <div>
-                                                    <label className="block text-xs text-gray-600 mb-1">Border Radius (px)</label>
+                                                    <label className="admin-form-group-title mb-1">Border Radius (px)</label>
                                                     <input
                                                         type="number"
                                                         min="0"
@@ -1124,7 +1171,7 @@ export default function AdminBannersPage() {
                                                     />
                                                 </div>
                                                 <div>
-                                                    <label className="flex items-center gap-2 text-xs text-gray-600 cursor-pointer">
+                                                    <label className="admin-label-inline cursor-pointer">
                                                         <input
                                                             type="checkbox"
                                                             checked={formData.button1_open_new_tab}
@@ -1141,7 +1188,7 @@ export default function AdminBannersPage() {
 
                                 {/* Button 2 */}
                                 <div className="space-y-2">
-                                    <label className="block text-sm font-medium text-[var(--color-text)] mb-1">
+                                    <label className="admin-label mb-1">
                                         Botão 2 (opcional)
                                     </label>
                                     <div className="grid grid-cols-2 gap-2">
@@ -1168,10 +1215,10 @@ export default function AdminBannersPage() {
                                     {/* Button 2 Style Options */}
                                     {(formData.button2_text || formData.button2_link) && (
                                         <div className="mt-4 p-4 bg-gray-50 rounded-[10px] space-y-3">
-                                            <h4 className="text-sm font-semibold text-gray-700">Personalização do Botão 2</h4>
+                                            <h4 className="admin-form-group-title">Personalização do Botão 2</h4>
                                             <div className="grid grid-cols-2 gap-3">
                                                 <div>
-                                                    <label className="block text-xs text-gray-600 mb-1">Cor de Fundo</label>
+                                                    <label className="admin-form-group-title mb-1">Cor de Fundo</label>
                                                     <input
                                                         type="color"
                                                         value={formData.button2_bg_color}
@@ -1181,7 +1228,7 @@ export default function AdminBannersPage() {
                                                     />
                                                 </div>
                                                 <div>
-                                                    <label className="block text-xs text-gray-600 mb-1">Cor do Texto</label>
+                                                    <label className="admin-form-group-title mb-1">Cor do Texto</label>
                                                     <input
                                                         type="color"
                                                         value={formData.button2_text_color}
@@ -1191,7 +1238,7 @@ export default function AdminBannersPage() {
                                                     />
                                                 </div>
                                                 <div>
-                                                    <label className="block text-xs text-gray-600 mb-1">Hover - Fundo</label>
+                                                    <label className="admin-form-group-title mb-1">Hover - Fundo</label>
                                                     <input
                                                         type="color"
                                                         value={formData.button2_hover_bg_color}
@@ -1201,7 +1248,7 @@ export default function AdminBannersPage() {
                                                     />
                                                 </div>
                                                 <div>
-                                                    <label className="block text-xs text-gray-600 mb-1">Hover - Texto</label>
+                                                    <label className="admin-form-group-title mb-1">Hover - Texto</label>
                                                     <input
                                                         type="color"
                                                         value={formData.button2_hover_text_color}
@@ -1211,7 +1258,7 @@ export default function AdminBannersPage() {
                                                     />
                                                 </div>
                                                 <div>
-                                                    <label className="block text-xs text-gray-600 mb-1">Tamanho</label>
+                                                    <label className="admin-form-group-title mb-1">Tamanho</label>
                                                     <select
                                                         value={formData.button2_size}
                                                         onChange={(e) => setFormData((p) => ({ ...p, button2_size: e.target.value as 'sm' | 'md' | 'lg' }))}
@@ -1224,7 +1271,7 @@ export default function AdminBannersPage() {
                                                     </select>
                                                 </div>
                                                 <div>
-                                                    <label className="block text-xs text-gray-600 mb-1">Estilo</label>
+                                                    <label className="admin-form-group-title mb-1">Estilo</label>
                                                     <select
                                                         value={formData.button2_style}
                                                         onChange={(e) => setFormData((p) => ({ ...p, button2_style: e.target.value as 'solid' | 'outline' | 'ghost' }))}
@@ -1237,7 +1284,7 @@ export default function AdminBannersPage() {
                                                     </select>
                                                 </div>
                                                 <div>
-                                                    <label className="block text-xs text-gray-600 mb-1">Border Radius (px)</label>
+                                                    <label className="admin-form-group-title mb-1">Border Radius (px)</label>
                                                     <input
                                                         type="number"
                                                         min="0"
@@ -1248,7 +1295,7 @@ export default function AdminBannersPage() {
                                                     />
                                                 </div>
                                                 <div>
-                                                    <label className="flex items-center gap-2 text-xs text-gray-600 cursor-pointer">
+                                                    <label className="admin-label-inline cursor-pointer">
                                                         <input
                                                             type="checkbox"
                                                             checked={formData.button2_open_new_tab}
@@ -1265,7 +1312,7 @@ export default function AdminBannersPage() {
 
                                 {/* Alt Text */}
                                 <div>
-                                    <label className="block text-sm font-medium text-[var(--color-text)] mb-1">
+                                    <label className="admin-label mb-1">
                                         Texto Alternativo *
                                     </label>
                                     <input
@@ -1282,7 +1329,7 @@ export default function AdminBannersPage() {
 
                                 {/* Link */}
                                 <div>
-                                    <label className="block text-sm font-medium text-[var(--color-text)] mb-1">
+                                    <label className="admin-label mb-1">
                                         Link (opcional)
                                     </label>
                                     <input

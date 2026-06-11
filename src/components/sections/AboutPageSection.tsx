@@ -9,6 +9,7 @@ import type { Swiper as SwiperType } from 'swiper';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import type { AboutPageCover, Department, DepartmentMember, Leader } from '@/lib/database.types';
 import LeadershipSection from './LeadershipSection';
+import SectionHeader from '@/components/ui/SectionHeader';
 
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -50,7 +51,7 @@ export default function AboutPageSection({
                         <motion.h1
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
-                            className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 sm:mb-6"
+                            className="type-page-hero-title text-white mb-4 sm:mb-6"
                         >
                             {cover.title}
                         </motion.h1>
@@ -58,7 +59,7 @@ export default function AboutPageSection({
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.1 }}
-                            className="text-base sm:text-lg md:text-xl text-white/90 max-w-3xl mx-auto px-1"
+                            className="type-page-hero-desc text-white/90 max-w-3xl mx-auto px-1"
                         >
                             {cover.description}
                         </motion.p>
@@ -133,14 +134,11 @@ export default function AboutPageSection({
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        className="text-center mb-12"
                     >
-                        <h2 className="text-3xl md:text-4xl font-bold text-[var(--color-accent)] mb-4 section-title">
-                            Nossos Departamentos
-                        </h2>
-                        <p className="text-[var(--color-text-secondary)] max-w-2xl mx-auto text-lg">
-                            Conheça os departamentos e ministérios da nossa igreja
-                        </p>
+                        <SectionHeader
+                            title="Nossos Departamentos"
+                            description="Conheça os departamentos e ministérios da nossa igreja"
+                        />
                     </motion.div>
 
                     {/* Department Buttons */}

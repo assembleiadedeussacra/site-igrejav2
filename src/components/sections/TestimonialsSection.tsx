@@ -11,6 +11,7 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 
 import { Testimonial } from '@/lib/database.types';
+import SectionHeader from '@/components/ui/SectionHeader';
 
 interface TestimonialsSectionProps {
     testimonials: Testimonial[];
@@ -50,14 +51,11 @@ export default function TestimonialsSection({ testimonials = [] }: TestimonialsS
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    className="text-center mb-12"
                 >
-                    <h2 className="text-3xl md:text-4xl font-bold text-[var(--color-accent)] mb-4 section-title">
-                        Depoimentos
-                    </h2>
-                    <p className="text-[var(--color-text-secondary)] max-w-2xl mx-auto text-lg">
-                        Testemunhos de membros sobre a experiência na comunidade
-                    </p>
+                    <SectionHeader
+                        title="Depoimentos"
+                        description="Testemunhos de membros sobre a experiência na comunidade"
+                    />
                 </motion.div>
 
                 {/* Testimonials Carousel */}

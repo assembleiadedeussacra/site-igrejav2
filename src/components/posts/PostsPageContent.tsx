@@ -10,6 +10,7 @@ import { useRef } from 'react';
 import { Search, Tag, Calendar, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { api } from '@/services/api';
 import type { Post, PageBanner } from '@/lib/database.types';
+import SectionHeader from '@/components/ui/SectionHeader';
 
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -152,7 +153,7 @@ export default function PostsPageContent({
                         <motion.h1
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
-                            className="text-2xl sm:text-4xl md:text-5xl font-bold text-white mb-4"
+                            className="type-page-hero-title text-white mb-4"
                         >
                             {pageType === 'blog' ? 'Blog' : 'Estudos & Reflexões'}
                         </motion.h1>
@@ -243,19 +244,10 @@ export default function PostsPageContent({
             {topPosts.length > 0 && (
                 <section className="section-padding bg-white">
                     <div className="container-custom">
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            className="text-center mb-12"
-                        >
-                            <h2 className="text-3xl md:text-4xl font-bold text-[var(--color-accent)] mb-4 section-title">
-                                Mais Acessados do Mês
-                            </h2>
-                            <p className="text-[var(--color-text-secondary)] max-w-2xl mx-auto text-lg">
-                                Os {pageType === 'blog' ? 'artigos' : 'estudos'} mais populares deste mês
-                            </p>
-                        </motion.div>
+                        <SectionHeader
+                            title="Mais Acessados do Mês"
+                            description={`Os ${pageType === 'blog' ? 'artigos' : 'estudos'} mais populares deste mês`}
+                        />
 
                         <TopPostsCarousel posts={topPosts} pageType={pageType} formatDate={formatDate} />
                     </div>

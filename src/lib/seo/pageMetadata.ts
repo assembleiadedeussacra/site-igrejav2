@@ -47,5 +47,15 @@ export function generatePageMetadata({
         alternates: {
             canonical: canonicalUrl,
         },
+        robots: {
+            index: true,
+            follow: true,
+            googleBot: {
+                index: true,
+                follow: true,
+                'max-image-preview': 'large',
+                'max-snippet': -1,
+            },
+        },
     };
 }

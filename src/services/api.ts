@@ -1,6 +1,20 @@
 import { createClient } from '../lib/supabase/client';
 import { Database, AboutPageCover, Post, PageBanner } from '../lib/database.types';
 
+async function batchUpdateOrders(
+    table: 'leaders' | 'events' | 'departments' | 'department_members' | 'gallery_links',
+    updates: { id: string; order: number }[]
+) {
+    const supabase = createClient();
+    const results = await Promise.all(
+        updates.map(({ id, order }) =>
+            (supabase as any).from(table).update({ order }).eq('id', id)
+        )
+    );
+    const failed = results.find((r) => r.error);
+    if (failed?.error) throw failed.error;
+}
+
 export const api = {
     getBanners: async () => {
         const supabase = createClient();
@@ -276,6 +290,10 @@ export const api = {
         return data;
     },
 
+    updateLeaderOrders: async (updates: { id: string; order: number }[]) => {
+        await batchUpdateOrders('leaders', updates);
+    },
+
     getAdminPosts: async () => {
         const supabase = createClient();
         const { data, error } = await supabase
@@ -437,6 +455,10 @@ export const api = {
         return data;
     },
 
+    updateEventOrders: async (updates: { id: string; order: number }[]) => {
+        await batchUpdateOrders('events', updates);
+    },
+
     deleteEvent: async (id: string) => {
         const supabase = createClient();
         const { error } = await (supabase as any)
@@ -492,6 +514,10 @@ export const api = {
             .eq('id', id);
 
         if (error) throw error;
+    },
+
+    updateGalleryLinkOrders: async (updates: { id: string; order: number }[]) => {
+        await batchUpdateOrders('gallery_links', updates);
     },
 
     // Admin Testimonials
@@ -758,6 +784,10 @@ export const api = {
         return data;
     },
 
+    updateDepartmentOrders: async (updates: { id: string; order: number }[]) => {
+        await batchUpdateOrders('departments', updates);
+    },
+
     // Department Members
     getDepartmentMembers: async (departmentId?: string) => {
         const supabase = createClient();
@@ -843,6 +873,10 @@ export const api = {
 
         if (error) throw error;
         return data;
+    },
+
+    updateDepartmentMemberOrders: async (updates: { id: string; order: number }[]) => {
+        await batchUpdateOrders('department_members', updates);
     },
 
     // Page Banners

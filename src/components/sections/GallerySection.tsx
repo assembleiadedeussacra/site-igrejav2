@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { Images, ExternalLink, Church, PartyPopper, Users } from 'lucide-react';
 
 import { GalleryLink } from '@/lib/database.types';
+import SectionHeader from '@/components/ui/SectionHeader';
 
 interface GallerySectionProps {
     items: GalleryLink[];
@@ -34,14 +35,11 @@ export default function GallerySection({ items = [] }: GallerySectionProps) {
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    className="text-center mb-12"
                 >
-                    <h2 className="text-3xl md:text-4xl font-bold text-[var(--color-accent)] mb-4 section-title">
-                        Galeria de Fotos
-                    </h2>
-                    <p className="text-[var(--color-text-secondary)] max-w-2xl mx-auto text-lg">
-                        Registros fotográficos de cultos, eventos e atividades ministeriais
-                    </p>
+                    <SectionHeader
+                        title="Galeria de Fotos"
+                        description="Registros fotográficos de cultos, eventos e atividades ministeriais"
+                    />
                 </motion.div>
 
                 {/* Gallery Grid */}
@@ -93,7 +91,7 @@ export default function GallerySection({ items = [] }: GallerySectionProps) {
                                             <IconComponent className="w-6 h-6" />
                                         </div>
                                         <div>
-                                            <h3 className="font-bold text-lg text-[var(--color-accent)] group-hover:text-[var(--color-accent-light)] transition-colors">
+                                            <h3 className="type-card-title group-hover:text-[var(--color-accent-light)] transition-colors">
                                                 {item.title}
                                             </h3>
                                             <p className="text-sm text-[var(--color-text-muted)]">
