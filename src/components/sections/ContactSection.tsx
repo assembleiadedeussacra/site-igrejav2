@@ -22,8 +22,8 @@ export default function ContactSection({ settings }: ContactSectionProps) {
         {
             icon: Mail,
             title: 'E-mail',
-            value: settings?.email || 'assembleiadedeussacra20@gmail.com',
-            href: settings?.email ? `mailto:${settings.email}` : 'mailto:assembleiadedeussacra20@gmail.com',
+            value: settings?.email || 'contato@assembleiadedeussacramento.com.br',
+            href: settings?.email ? `mailto:${settings.email}` : 'mailto:contato@assembleiadedeussacramento.com.br',
             color: 'from-blue-500 to-blue-600',
         },
         {

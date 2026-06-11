@@ -12,7 +12,7 @@ public/google7d14be63a87a54c3.html
 
 O arquivo estará acessível em:
 ```
-https://assembleiasacramento.vercel.app/google7d14be63a87a54c3.html
+https://www.assembleiadedeussacramento.com.br/google7d14be63a87a54c3.html
 ```
 
 ---
@@ -28,7 +28,7 @@ https://assembleiasacramento.vercel.app/google7d14be63a87a54c3.html
 2. **Adicione a Propriedade**
    - Clique em "Adicionar propriedade"
    - Selecione "Prefixo do URL"
-   - Digite: `https://assembleiasacramento.vercel.app`
+   - Digite: `https://www.assembleiadedeussacramento.com.br`
 
 3. **Escolha o Método de Verificação**
    - Selecione "Arquivo HTML"
@@ -36,7 +36,7 @@ https://assembleiasacramento.vercel.app/google7d14be63a87a54c3.html
 
 4. **Verifique**
    - Clique em "Verificar"
-   - O Google irá buscar o arquivo em: `https://assembleiasacramento.vercel.app/google7d14be63a87a54c3.html`
+   - O Google irá buscar o arquivo em: `https://www.assembleiadedeussacramento.com.br/google7d14be63a87a54c3.html`
    - Se o arquivo estiver acessível, a verificação será bem-sucedida
 
 ---
@@ -66,7 +66,7 @@ Para testar localmente:
 
 Uma vez verificado, você poderá:
 
-- ✅ **Enviar sitemap** - `https://assembleiasacramento.vercel.app/sitemap.xml`
+- ✅ **Enviar sitemap** - `https://www.assembleiadedeussacramento.com.br/sitemap.xml`
 - ✅ **Monitorar indexação** - Ver quais páginas estão indexadas
 - ✅ **Analisar performance** - Ver métricas de busca
 - ✅ **Corrigir problemas** - Identificar e corrigir erros de indexação
@@ -84,7 +84,7 @@ Após a verificação, envie o sitemap:
 
 O sitemap está disponível em:
 ```
-https://assembleiasacramento.vercel.app/sitemap.xml
+https://www.assembleiadedeussacramento.com.br/sitemap.xml
 ```
 
 ---

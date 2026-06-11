@@ -6,6 +6,7 @@
 import { remark } from 'remark';
 import remarkHtml from 'remark-html';
 import sanitizeHtml from 'sanitize-html';
+import { SITE_URL } from '@/lib/seo/constants';
 
 /**
  * Detects if content is Markdown or HTML
@@ -93,7 +94,7 @@ export function sanitizeHtmlContent(html: string): string {
         transformTags: {
             'a': (tagName, attribs) => {
                 // Add rel="noopener noreferrer" to external links
-                if (attribs.href && attribs.href.startsWith('http') && !attribs.href.includes(process.env.NEXT_PUBLIC_SITE_URL || '')) {
+                if (attribs.href && attribs.href.startsWith('http') && !attribs.href.includes(SITE_URL)) {
                     return {
                         tagName: 'a',
                         attribs: {

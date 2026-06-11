@@ -235,6 +235,12 @@ export interface PageView {
     user_agent: string | null;
     ip_address: string | null;
     session_id: string | null;
+    device_type: string | null;
+    browser: string | null;
+    os: string | null;
+    city: string | null;
+    region: string | null;
+    country: string | null;
     created_at: string;
 }
 
@@ -250,6 +256,53 @@ export interface DailyPageViews {
     date: string;
     view_count: number;
     unique_views: number;
+}
+
+export interface AnalyticsSummary {
+    period_views: number;
+    unique_visitors: number;
+    unique_pages: number;
+    avg_daily_views: number;
+}
+
+export interface DeviceBreakdown {
+    device_type: string;
+    browser: string;
+    os: string;
+    view_count: number;
+    unique_views: number;
+}
+
+export interface LocationBreakdown {
+    city: string;
+    region: string;
+    country: string;
+    view_count: number;
+    unique_views: number;
+}
+
+export interface RecentPageView {
+    id: string;
+    page_path: string;
+    page_title: string | null;
+    city: string | null;
+    region: string | null;
+    device_type: string | null;
+    browser: string | null;
+    created_at: string;
+}
+
+export interface AnalyticsRpcFilters {
+    days_back?: number;
+    page_category?: string | null;
+    device_filter?: string | null;
+    city_filter?: string | null;
+}
+
+export interface AnalyticsCitiesFilters {
+    days_back?: number;
+    page_category?: string | null;
+    device_filter?: string | null;
 }
 
 type TableDef<Row, Insert, Update> = {
@@ -344,13 +397,68 @@ export type Database = {
         };
         Functions: {
             get_page_view_stats: {
-                Args: { days_back?: number };
+                Args: {
+                    days_back?: number;
+                    page_category?: string | null;
+                    device_filter?: string | null;
+                    city_filter?: string | null;
+                };
                 Returns: PageViewStats[];
             };
             get_daily_page_views: {
-                Args: { days_back?: number };
+                Args: {
+                    days_back?: number;
+                    page_category?: string | null;
+                    device_filter?: string | null;
+                    city_filter?: string | null;
+                };
                 Returns: DailyPageViews[];
             };
+            get_analytics_summary: {
+                Args: {
+                    days_back?: number;
+                    page_category?: string | null;
+                    device_filter?: string | null;
+                    city_filter?: string | null;
+                };
+                Returns: AnalyticsSummary[];
+            };
+            get_device_breakdown: {
+                Args: {
+                    days_back?: number;
+                    page_category?: string | null;
+                    device_filter?: string | null;
+                    city_filter?: string | null;
+                };
+                Returns: DeviceBreakdown[];
+            };
+            get_location_breakdown: {
+                Args: {
+                    days_back?: number;
+                    page_category?: string | null;
+                    device_filter?: string | null;
+                    city_filter?: string | null;
+                };
+                Returns: LocationBreakdown[];
+            };
+            get_analytics_cities: {
+                Args: {
+                    days_back?: number;
+                    page_category?: string | null;
+                    device_filter?: string | null;
+                };
+                Returns: { city: string }[];
+            };
+            is_site_admin: {
+                Args: Record<string, never>;
+                Returns: boolean;
+            };
+        };
+        Enums: {
+            [_ in never]: never;
+        };
+        CompositeTypes: {
+            [_ in never]: never;
         };
     };
 };

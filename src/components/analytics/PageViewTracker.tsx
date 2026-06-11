@@ -42,6 +42,7 @@ export default function PageViewTracker() {
                         referrer,
                         user_agent: userAgent,
                         session_id: sessionId,
+                        viewport_width: window.innerWidth,
                     }),
                 });
 

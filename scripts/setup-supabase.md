@@ -20,6 +20,8 @@ Se o projeto já foi criado com versões antigas do schema, rode **apenas** as m
 5. `supabase/migration_create_page_views.sql`
 6. `supabase/migrations/add_seo_fields.sql`
 7. `supabase/migration_admin_rls_testimonials_order.sql`
+8. `supabase/migration_analytics_enrichment.sql`
+9. `supabase/migration_analytics_realtime.sql`
 
 Use `node scripts/verify-supabase.mjs` para ver o que falta.
 
@@ -50,4 +52,10 @@ npm run verify:supabase
 
 ## Variáveis na Vercel
 
-Configure `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` e `REVALIDATION_SECRET` (opcional, para webhook de revalidação).
+Configure:
+
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `NEXT_PUBLIC_SITE_URL` = `https://www.assembleiadedeussacramento.com.br`
+- `CORS_ORIGIN` = `https://www.assembleiadedeussacramento.com.br`
+- `REVALIDATION_SECRET` (opcional, para webhook de revalidação)

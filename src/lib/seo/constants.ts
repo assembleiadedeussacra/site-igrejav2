@@ -1,5 +1,9 @@
-export const SITE_URL =
-    (process.env.NEXT_PUBLIC_SITE_URL || 'https://assembleiasacramento.vercel.app').replace(/\/+$/, '');
+/** URL pública definitiva do site (com www, sem barra final) */
+export const PRODUCTION_SITE_URL = 'https://www.assembleiadedeussacramento.com.br';
+
+export const SITE_URL = (
+    process.env.NEXT_PUBLIC_SITE_URL || PRODUCTION_SITE_URL
+).replace(/\/+$/, '');
 
 export const SITE_NAME = 'AD Missão Sacramento';
 export const CHURCH_NAME = 'Assembleia de Deus Missão de Sacramento MG';

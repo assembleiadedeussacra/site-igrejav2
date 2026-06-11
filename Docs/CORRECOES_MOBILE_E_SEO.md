@@ -122,12 +122,12 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=sua_anon_key_do_supabase
    - Use "Solicitar indexação" no Google Search Console para acelerar
 
 2. **Verificar depois do deploy**
-   - Teste o favicon: `https://assembleiasacramento.vercel.app/favicon.ico`
-   - Teste o manifest: `https://assembleiasacramento.vercel.app/manifest.json`
+   - Teste o favicon: `https://www.assembleiadedeussacramento.com.br/favicon.ico`
+   - Teste o manifest: `https://www.assembleiadedeussacramento.com.br/manifest.json`
 
 3. **Forçar re-indexação no Google**
    - Google Search Console > Inspeção de URL
-   - Digite: `https://assembleiasacramento.vercel.app`
+   - Digite: `https://www.assembleiadedeussacramento.com.br`
    - Clique em "Solicitar indexação"
 
 ---

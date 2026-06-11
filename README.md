@@ -117,6 +117,7 @@ Crie um arquivo `.env.local` na raiz com:
 ```env
 NEXT_PUBLIC_SUPABASE_URL=sua_url_do_supabase
 NEXT_PUBLIC_SUPABASE_ANON_KEY=sua_anon_key_do_supabase
+# Local: http://localhost:3000 | Produção: https://www.assembleiadedeussacramento.com.br
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
 ```
 
@@ -179,8 +180,10 @@ Acesse o painel administrativo em: [http://localhost:3000/admin](http://localhos
    - Selecione o repositório
 
 3. **Configure as variáveis de ambiente:**
-   - Adicione `NEXT_PUBLIC_SUPABASE_URL`
-   - Adicione `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+   - `NEXT_PUBLIC_SUPABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+   - `NEXT_PUBLIC_SITE_URL` = `https://www.assembleiadedeussacramento.com.br`
+   - `CORS_ORIGIN` = `https://www.assembleiadedeussacramento.com.br`
 
 4. **Deploy!**
 
@@ -199,6 +202,8 @@ O site é totalmente responsivo e otimizado para:
 - 📱 Mobile (< 640px)
 - 📱 Tablet (640px - 1024px)
 - 💻 Desktop (> 1024px)
+
+O site em produção: [https://www.assembleiadedeussacramento.com.br/](https://www.assembleiadedeussacramento.com.br/)
 
 ## 🔍 SEO
 

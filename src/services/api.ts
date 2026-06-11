@@ -1,5 +1,12 @@
 import { createClient } from '../lib/supabase/client';
 import { Database, AboutPageCover, Post, PageBanner } from '../lib/database.types';
+import { filtersToRpcParams, type AnalyticsFilters } from '@/lib/analytics/filters';
+import type {
+    AnalyticsSummary,
+    DeviceBreakdown,
+    LocationBreakdown,
+    RecentPageView,
+} from '@/lib/database.types';
 
 async function batchUpdateOrders(
     table: 'leaders' | 'events' | 'departments' | 'department_members' | 'gallery_links' | 'testimonials',
@@ -1150,6 +1157,83 @@ export const api = {
     },
 
     // Analytics
+    getAnalyticsDashboard: async (filters: AnalyticsFilters) => {
+        const supabase = createClient();
+        const params = filtersToRpcParams(filters);
+
+        const [summary, pageStats, daily, devices, locations, cities, total] =
+            await Promise.allSettled([
+                (supabase as any).rpc('get_analytics_summary', params),
+                (supabase as any).rpc('get_page_view_stats', params),
+                (supabase as any).rpc('get_daily_page_views', params),
+                (supabase as any).rpc('get_device_breakdown', params),
+                (supabase as any).rpc('get_location_breakdown', params),
+                (supabase as any).rpc('get_analytics_cities', {
+                    days_back: params.days_back,
+                    page_category: params.page_category,
+                    device_filter: params.device_filter,
+                }),
+                (supabase as any)
+                    .from('page_views')
+                    .select('*', { count: 'exact', head: true }),
+            ]);
+
+        const emptySummary: AnalyticsSummary = {
+            period_views: 0,
+            unique_visitors: 0,
+            unique_pages: 0,
+            avg_daily_views: 0,
+        };
+
+        return {
+            summary:
+                summary.status === 'fulfilled' && summary.value.data?.[0]
+                    ? (summary.value.data[0] as AnalyticsSummary)
+                    : emptySummary,
+            pageStats:
+                pageStats.status === 'fulfilled' && pageStats.value.data
+                    ? pageStats.value.data
+                    : [],
+            dailyViews:
+                daily.status === 'fulfilled' && daily.value.data
+                    ? daily.value.data
+                    : [],
+            devices:
+                devices.status === 'fulfilled' && devices.value.data
+                    ? (devices.value.data as DeviceBreakdown[])
+                    : [],
+            locations:
+                locations.status === 'fulfilled' && locations.value.data
+                    ? (locations.value.data as LocationBreakdown[])
+                    : [],
+            cities:
+                cities.status === 'fulfilled' && cities.value.data
+                    ? (cities.value.data as { city: string }[]).map((c) => c.city)
+                    : [],
+            totalViewsAllTime:
+                total.status === 'fulfilled' ? total.value.count || 0 : 0,
+            errors: [
+                summary.status === 'rejected' ? summary.reason : null,
+                pageStats.status === 'rejected' ? pageStats.reason : null,
+            ].filter(Boolean),
+        };
+    },
+
+    getRecentPageViews: async (limit = 30) => {
+        const supabase = createClient();
+        const { data, error } = await (supabase as any)
+            .from('page_views')
+            .select('id, page_path, page_title, city, region, device_type, browser, created_at')
+            .order('created_at', { ascending: false })
+            .limit(limit);
+
+        if (error) {
+            console.error('Error fetching recent page views:', error);
+            return [];
+        }
+        return (data || []) as RecentPageView[];
+    },
+
     getPageViewStats: async (daysBack: number = 30) => {
         const supabase = createClient();
         

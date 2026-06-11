@@ -44,6 +44,17 @@ const nextConfig: NextConfig = {
   },
 
   // Security headers
+  async redirects() {
+    return [
+      {
+        source: '/:path*',
+        has: [{ type: 'host', value: 'assembleiadedeussacramento.com.br' }],
+        destination: 'https://www.assembleiadedeussacramento.com.br/:path*',
+        permanent: true,
+      },
+    ];
+  },
+
   async headers() {
     return [
       {

@@ -45,7 +45,8 @@ WITH ranked AS (
 UPDATE testimonials t
 SET "order" = r.rn
 FROM ranked r
-WHERE t.id = r.id;
+WHERE t.id = r.id
+  AND t."order" = 0;
 
 CREATE INDEX IF NOT EXISTS idx_testimonials_order ON testimonials("order");
 

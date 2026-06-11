@@ -32,7 +32,7 @@ Arquivos criados/atualizados:
    - Faça login
 
 2. **Inspeção de URL**
-   - Na barra superior, digite: `https://assembleiasacramento.vercel.app`
+   - Na barra superior, digite: `https://www.assembleiadedeussacramento.com.br`
    - Clique em "Enter"
 
 3. **Solicitar Indexação**
@@ -41,9 +41,9 @@ Arquivos criados/atualizados:
    - Aguarde a confirmação
 
 4. **Repetir para páginas principais** (opcional):
-   - `https://assembleiasacramento.vercel.app/blog`
-   - `https://assembleiasacramento.vercel.app/estudos`
-   - `https://assembleiasacramento.vercel.app/sobre-nos`
+   - `https://www.assembleiadedeussacramento.com.br/blog`
+   - `https://www.assembleiadedeussacramento.com.br/estudos`
+   - `https://www.assembleiadedeussacramento.com.br/sobre-nos`
 
 ### Opção 2: Aguardar Naturalmente
 
@@ -69,8 +69,8 @@ Acesse:
 ### 2. Teste em Produção (Vercel)
 
 Acesse:
-- `https://assembleiasacramento.vercel.app/favicon.ico`
-- `https://assembleiasacramento.vercel.app/manifest.json`
+- `https://www.assembleiadedeussacramento.com.br/favicon.ico`
+- `https://www.assembleiadedeussacramento.com.br/manifest.json`
 - Abra o site e verifique a aba do navegador
 
 ---
@@ -83,7 +83,7 @@ Acesse:
    - URL: https://search.google.com/test/rich-results
    
 2. **Digite a URL:**
-   - `https://assembleiasacramento.vercel.app`
+   - `https://www.assembleiadedeussacramento.com.br`
 
 3. **Clique em "Testar URL"**
    - Veja como o Google vê seu site
@@ -164,7 +164,7 @@ O Google pode:
 ## 🔍 Troubleshooting
 
 ### Favicon não aparece no Google após 2 semanas
-1. Verifique se está acessível: `https://assembleiasacramento.vercel.app/favicon.ico`
+1. Verifique se está acessível: `https://www.assembleiadedeussacramento.com.br/favicon.ico`
 2. Verifique no Google Search Console se há erros de indexação
 3. Solicite nova indexação
 

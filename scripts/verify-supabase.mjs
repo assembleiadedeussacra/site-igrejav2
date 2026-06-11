@@ -56,6 +56,8 @@ const columnChecks = [
   { table: 'posts', column: 'slug' },
   { table: 'banners', column: 'overlay_opacity' },
   { table: 'testimonials', column: 'order' },
+  { table: 'page_views', column: 'device_type' },
+  { table: 'page_views', column: 'city' },
 ];
 
 console.log('Verificando Supabase:', url);
@@ -86,7 +88,14 @@ for (const { table, column } of columnChecks) {
   }
 }
 
-const rpcChecks = ['get_page_view_stats', 'get_daily_page_views', 'is_site_admin'];
+const rpcChecks = [
+  'get_page_view_stats',
+  'get_daily_page_views',
+  'get_analytics_summary',
+  'get_device_breakdown',
+  'get_location_breakdown',
+  'is_site_admin',
+];
 for (const fn of rpcChecks) {
   const res = await fetch(`${url}/rest/v1/rpc/${fn}`, {
     method: 'POST',
