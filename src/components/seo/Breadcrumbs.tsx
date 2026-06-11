@@ -29,7 +29,7 @@ export default function Breadcrumbs({ items, className = '' }: BreadcrumbsProps)
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
             />
             <nav
-                className={`flex items-center gap-2 text-sm text-[var(--color-text-muted)] mb-6 ${className}`}
+                className={`flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-[var(--color-text-muted)] mb-6 ${className}`}
                 aria-label="Breadcrumb"
             >
                 {items.map((item, index) => (
@@ -38,7 +38,7 @@ export default function Breadcrumbs({ items, className = '' }: BreadcrumbsProps)
                             <ChevronRight className="w-4 h-4 text-[var(--color-text-muted)]" />
                         )}
                         {index === items.length - 1 ? (
-                            <span className="text-[var(--color-text)] font-medium">
+                            <span className="text-[var(--color-text)] font-medium line-clamp-2 sm:line-clamp-1 max-w-[min(100%,280px)] sm:max-w-none">
                                 {item.label}
                             </span>
                         ) : (

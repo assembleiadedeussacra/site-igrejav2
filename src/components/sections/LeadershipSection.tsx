@@ -78,7 +78,7 @@ export default function LeadershipSection({
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="relative mt-20"
+            className="relative mt-12 md:mt-20"
         >
             {/* Header */}
             <div className="text-center mb-12">
@@ -86,7 +86,7 @@ export default function LeadershipSection({
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    className="text-3xl md:text-4xl font-bold text-[var(--color-accent)] mb-4 section-title flex items-center justify-center gap-3"
+                    className="text-2xl sm:text-3xl md:text-4xl font-bold text-[var(--color-accent)] mb-4 section-title flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 px-2"
                 >
                     <Users className="w-8 h-8 text-[var(--color-primary)]" />
                     {title}

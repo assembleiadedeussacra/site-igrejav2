@@ -64,7 +64,7 @@ export default function VerseSection({ verse }: VerseSectionProps) {
                     transition={{ delay: 0.2 }}
                     className="max-w-4xl mx-auto"
                 >
-                    <div className="relative bg-gradient-to-br from-[var(--color-primary)]/20 via-white to-[var(--color-primary)]/10 rounded-[10px] p-8 md:p-12 shadow-xl overflow-hidden">
+                    <div className="relative bg-gradient-to-br from-[var(--color-primary)]/20 via-white to-[var(--color-primary)]/10 rounded-[10px] p-5 sm:p-8 md:p-12 shadow-xl overflow-hidden">
                         {/* Decorative Elements */}
                         <div className="absolute top-0 right-0 w-40 h-40 bg-[var(--color-accent)]/5 rounded-[10px] -translate-y-1/2 translate-x-1/2" />
                         <div className="absolute bottom-0 left-0 w-32 h-32 bg-[var(--color-primary)]/30 rounded-[10px] translate-y-1/2 -translate-x-1/2" />
@@ -90,7 +90,7 @@ export default function VerseSection({ verse }: VerseSectionProps) {
                                     animate={{ opacity: 1 }}
                                     transition={{ duration: 0.5 }}
                                 >
-                                    <blockquote className="text-xl md:text-2xl lg:text-3xl font-medium text-[var(--color-accent)] text-center leading-relaxed mb-6 italic">
+                                    <blockquote className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-medium text-[var(--color-accent)] text-center leading-relaxed mb-4 sm:mb-6 italic px-1">
                                         &ldquo;{verse.text}&rdquo;
                                     </blockquote>
                                     <cite className="block text-center text-lg md:text-xl font-bold text-[var(--color-accent)] not-italic">
@@ -104,7 +104,7 @@ export default function VerseSection({ verse }: VerseSectionProps) {
                             )}
 
                             {/* Actions */}
-                            <div className="flex flex-wrap items-center justify-center gap-4 mt-8">
+                            <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center justify-center gap-3 sm:gap-4 mt-6 sm:mt-8">
                                 {verse && verse.bible_link && (
                                     <a
                                         href={verse.bible_link}

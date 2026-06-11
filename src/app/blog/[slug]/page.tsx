@@ -103,11 +103,11 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             <JsonLd data={schema} />
             <Header settings={settings} />
                 <PostViewTracker post={post} />
-            <main className="pt-24">
+            <main className="pt-20 sm:pt-24">
                 <article>
                     {/* Cover Image */}
                     {post.cover_image && (
-                        <div className="relative h-[50vh] min-h-[400px] overflow-hidden -mt-24">
+                        <div className="relative h-[35vh] min-h-[240px] sm:h-[50vh] sm:min-h-[400px] overflow-hidden -mt-20 sm:-mt-24">
                             <Image
                                 src={post.cover_image}
                                 alt={post.title}
@@ -120,7 +120,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                         </div>
                     )}
 
-                    <div className="container-custom py-12 bg-[var(--color-background)]">
+                    <div className="container-custom py-8 sm:py-12 bg-[var(--color-background)]">
                         <div className="max-w-4xl mx-auto">
                             {/* Breadcrumbs */}
                             <Breadcrumbs items={breadcrumbItems} />
@@ -152,11 +152,11 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                                     )}
                                 </div>
 
-                                <h1 className="text-4xl md:text-5xl font-bold text-[var(--color-accent)] mb-4">
+                                <h1 className="text-2xl sm:text-3xl md:text-5xl font-bold text-[var(--color-accent)] mb-4">
                                     {post.title}
                                 </h1>
 
-                                <p className="text-xl text-[var(--color-text-secondary)] mb-6">
+                                <p className="text-base sm:text-lg md:text-xl text-[var(--color-text-secondary)] mb-6">
                                     {post.excerpt || post.description}
                                 </p>
 
@@ -176,7 +176,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                             </div>
 
                             {/* Content */}
-                            <div className="prose prose-lg max-w-none bg-white rounded-[10px] p-8 md:p-12 shadow-sm">
+                            <div className="prose prose-lg max-w-none bg-white rounded-[10px] p-4 sm:p-8 md:p-12 shadow-sm overflow-x-auto">
                                 <ServerContent content={post.content} />
                             </div>
 

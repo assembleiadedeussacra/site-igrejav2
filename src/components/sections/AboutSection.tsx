@@ -56,7 +56,7 @@ export default function AboutSection({ leaders = [] }: AboutSectionProps) {
                     <h2 className="text-3xl md:text-4xl font-bold text-[var(--color-accent)] mb-4 section-title">
                         Sobre Nós
                     </h2>
-                    <p className="text-[var(--color-text-secondary)] max-w-2xl mx-auto text-lg">
+                    <p className="text-[var(--color-text-secondary)] max-w-2xl mx-auto section-desc">
                         Conheça nossa história e missão
                     </p>
                 </motion.div>
@@ -96,7 +96,7 @@ export default function AboutSection({ leaders = [] }: AboutSectionProps) {
                         whileInView={{ opacity: 1, x: 0 }}
                         viewport={{ once: true }}
                         transition={{ duration: 0.6 }}
-                        className="grid grid-cols-2 gap-4"
+                        className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4"
                     >
                         {features.map((feature, index) => (
                             <motion.div

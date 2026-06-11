@@ -61,7 +61,7 @@ export default function KnowledgeSection({ posts = [] }: KnowledgeSectionProps) 
                     <h2 className="text-3xl md:text-4xl font-bold text-[var(--color-accent)] mb-4 section-title">
                         Conhecimento
                     </h2>
-                    <p className="text-[var(--color-text-secondary)] max-w-2xl mx-auto text-lg">
+                    <p className="text-[var(--color-text-secondary)] max-w-2xl mx-auto section-desc">
                         Estudos bíblicos, reflexões teológicas e artigos para crescimento espiritual e
                         aprofundamento na Palavra de Deus.
                     </p>
@@ -72,13 +72,13 @@ export default function KnowledgeSection({ posts = [] }: KnowledgeSectionProps) 
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    className="flex justify-center gap-4 mb-12"
+                    className="flex flex-col sm:flex-row flex-wrap justify-center gap-2 sm:gap-4 mb-8 sm:mb-12 px-1"
                 >
                     {tabs.map((tab) => (
                         <button
                             key={tab.id}
                             onClick={() => setActiveTab(tab.id as 'studies' | 'blog')}
-                            className={`flex items-center gap-2 px-6 py-3 rounded-[30px] font-semibold transition-all ${activeTab === tab.id
+                            className={`flex items-center justify-center gap-2 w-full sm:w-auto px-4 py-2.5 sm:px-6 sm:py-3 text-sm sm:text-base rounded-[30px] font-semibold transition-all ${activeTab === tab.id
                                 ? 'bg-[var(--color-accent)] text-white shadow-lg'
                                 : 'bg-white text-[var(--color-accent)] hover:bg-[var(--color-primary)]/20 border border-[var(--color-accent)]/20'
                                 }`}

@@ -78,7 +78,7 @@ export default function Footer({ settings }: FooterProps) {
 
             <div className="container-custom relative">
                 {/* Main Footer Content */}
-                <div className="py-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+                <div className="py-10 sm:py-12 md:py-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 md:gap-12">
                     {/* Brand Column */}
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
@@ -242,7 +242,7 @@ export default function Footer({ settings }: FooterProps) {
             {/* Back to Top Button */}
             <button
                 onClick={scrollToTop}
-                className="fixed bottom-6 right-6 w-12 h-12 bg-[var(--color-primary)] text-[var(--color-accent)] rounded-[10px] shadow-lg flex items-center justify-center hover:scale-110 transition-transform z-40"
+                className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 w-11 h-11 sm:w-12 sm:h-12 bg-[var(--color-primary)] text-[var(--color-accent)] rounded-[10px] shadow-lg flex items-center justify-center hover:scale-110 transition-transform z-40 safe-bottom"
                 aria-label="Voltar ao topo"
             >
                 <ChevronUp className="w-6 h-6" />

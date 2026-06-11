@@ -137,7 +137,7 @@ export default function PostsPageContent({
         <>
             {/* Banner Section */}
             {banner && (
-                <section className="relative h-[50vh] min-h-[400px] flex items-center justify-center overflow-hidden">
+                <section className="relative h-[40vh] min-h-[280px] sm:h-[50vh] sm:min-h-[400px] flex items-center justify-center overflow-hidden">
                     <div className="absolute inset-0 z-0">
                         <Image
                             src={banner.image_url}
@@ -148,11 +148,11 @@ export default function PostsPageContent({
                         />
                     </div>
                     <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70 z-10" />
-                    <div className="relative z-20 container-custom text-center px-4 pt-[73px]">
+                    <div className="relative z-20 container-custom text-center px-4 pt-20 sm:pt-[73px]">
                         <motion.h1
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
-                            className="text-4xl md:text-5xl font-bold text-white mb-4"
+                            className="text-2xl sm:text-4xl md:text-5xl font-bold text-white mb-4"
                         >
                             {pageType === 'blog' ? 'Blog' : 'Estudos & Reflexões'}
                         </motion.h1>
@@ -161,7 +161,7 @@ export default function PostsPageContent({
             )}
 
             {/* Search Section */}
-            <section className="py-8 bg-white border-b">
+            <section className="py-5 sm:py-8 bg-white border-b">
                 <div className="container-custom">
                     <div className="max-w-[1000px] mx-auto">
                         <div className="relative">
@@ -209,7 +209,7 @@ export default function PostsPageContent({
                         <>
                             {displayedPosts.length > 0 ? (
                                 <>
-                                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
                                         {displayedPosts.map((post) => (
                                             <PostCard key={post.id} post={post} pageType={pageType} formatDate={formatDate} />
                                         ))}
@@ -327,13 +327,13 @@ function PostCard({
                 </div>
             )}
 
-            <div className="p-6">
+            <div className="p-4 sm:p-6">
                 <div className="flex items-center gap-2 text-sm text-[var(--color-text-muted)] mb-3">
                     <Calendar className="w-4 h-4" />
                     {formatDate(post.created_at)}
                 </div>
 
-                <h2 className="font-bold text-[24px] text-[var(--color-accent)] mb-3 line-clamp-2 group-hover:text-[var(--color-accent-light)] transition-colors">
+                <h2 className="font-bold text-xl sm:text-2xl text-[var(--color-accent)] mb-3 line-clamp-2 group-hover:text-[var(--color-accent-light)] transition-colors">
                     {post.title}
                 </h2>
 

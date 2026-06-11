@@ -35,7 +35,7 @@ export default function AboutPageSection({
         <>
             {/* Cover Section */}
             {cover && (
-                <section className="relative h-[60vh] min-h-[400px] flex items-center justify-center overflow-hidden">
+                <section className="relative h-[50vh] min-h-[320px] sm:min-h-[400px] flex items-center justify-center overflow-hidden">
                     <div className="absolute inset-0 z-0">
                         <Image
                             src={cover.image_url}
@@ -46,11 +46,11 @@ export default function AboutPageSection({
                         />
                     </div>
                     <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70 z-10" />
-                    <div className="relative z-20 container-custom text-center px-4">
+                    <div className="relative z-20 container-custom text-center px-4 pt-20 sm:pt-0">
                         <motion.h1
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
-                            className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6"
+                            className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 sm:mb-6"
                         >
                             {cover.title}
                         </motion.h1>
@@ -58,7 +58,7 @@ export default function AboutPageSection({
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.1 }}
-                            className="text-lg md:text-xl text-white/90 max-w-3xl mx-auto"
+                            className="text-base sm:text-lg md:text-xl text-white/90 max-w-3xl mx-auto px-1"
                         >
                             {cover.description}
                         </motion.p>
@@ -88,7 +88,7 @@ export default function AboutPageSection({
 
                             {/* Image */}
                             {cover.church_image_url && (
-                                <div className="relative w-full h-[400px] md:h-[500px] rounded-[10px] overflow-hidden">
+                                <div className="relative w-full h-[240px] sm:h-[400px] md:h-[500px] rounded-[10px] overflow-hidden">
                                     <Image
                                         src={cover.church_image_url}
                                         alt="Igreja"
@@ -180,12 +180,12 @@ export default function AboutPageSection({
                                     const members = departmentMembers[department.id] || [];
 
                                     return (
-                                        <div className="bg-white rounded-[10px] shadow-sm border border-gray-200 p-6 space-y-8">
+                                        <div className="bg-white rounded-[10px] shadow-sm border border-gray-200 p-4 sm:p-6 space-y-6 sm:space-y-8">
                                             {/* Members Carousel */}
                                             {members.length > 0 && (
                                                 <div>
-                                                    <div className="flex items-center justify-between mb-6">
-                                                        <h4 className="text-[24px] font-bold text-[var(--color-accent)]">
+                                                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
+                                                        <h4 className="text-lg sm:text-2xl font-bold text-[var(--color-accent)]">
                                                             Liderança e Integrantes
                                                         </h4>
                                                         <span className="text-sm text-[var(--color-text-secondary)] bg-[var(--color-primary-light)] px-3 py-1 rounded-full">
@@ -202,7 +202,7 @@ export default function AboutPageSection({
                                                     initial={{ opacity: 0, y: 20 }}
                                                     animate={{ opacity: 1, y: 0 }}
                                                     transition={{ delay: 0.2 }}
-                                                    className="relative w-full min-h-[400px] rounded-[10px] overflow-hidden bg-gray-100 flex items-center justify-center"
+                                                    className="relative w-full min-h-[220px] sm:min-h-[400px] rounded-[10px] overflow-hidden bg-gray-100 flex items-center justify-center"
                                                 >
                                                     <Image
                                                         src={department.image_url}

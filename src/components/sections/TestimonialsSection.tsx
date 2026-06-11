@@ -65,7 +65,7 @@ export default function TestimonialsSection({ testimonials = [] }: TestimonialsS
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    className="relative px-4 md:px-8"
+                    className="relative px-0 sm:px-4 md:px-8"
                 >
                     {/* Navigation Buttons */}
                     <div className="hidden md:flex absolute -left-2 -right-2 top-1/2 -translate-y-1/2 justify-between pointer-events-none z-10">

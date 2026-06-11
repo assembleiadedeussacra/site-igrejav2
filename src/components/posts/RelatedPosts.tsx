@@ -25,7 +25,7 @@ export default function RelatedPosts({ posts, type }: RelatedPostsProps) {
             <h2 className="text-2xl md:text-3xl font-bold text-[var(--color-accent)] mb-6">
                 {type === 'blog' ? 'Artigos Relacionados' : 'Estudos Relacionados'}
             </h2>
-            <div className="grid md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
                 {posts.map((post) => (
                     <Link
                         key={post.id}

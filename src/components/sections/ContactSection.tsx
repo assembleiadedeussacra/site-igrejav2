@@ -68,7 +68,7 @@ export default function ContactSection({ settings }: ContactSectionProps) {
                 </motion.div>
 
                 {/* Contact Cards */}
-                <div className="grid md:grid-cols-3 gap-6 mb-12">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 mb-8 sm:mb-12">
                     {contactItems.map((item, index) => (
                         <motion.div
                             key={item.title}
@@ -82,7 +82,7 @@ export default function ContactSection({ settings }: ContactSectionProps) {
                                     href={item.href}
                                     target={item.href.startsWith('http') ? '_blank' : undefined}
                                     rel={item.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-                                    className="block bg-white rounded-[10px] p-6 shadow-lg hover:shadow-xl transition-all duration-300 group card-hover h-full"
+                                    className="block bg-white rounded-[10px] p-4 sm:p-6 shadow-lg hover:shadow-xl transition-all duration-300 group card-hover h-full"
                                     aria-label={`${item.title}: ${item.value}. Abrir em nova aba`}
                                 >
                                     <div
@@ -102,7 +102,7 @@ export default function ContactSection({ settings }: ContactSectionProps) {
                                     </div>
                                 </a>
                             ) : (
-                                <div className="bg-white rounded-[10px] p-6 shadow-lg h-full">
+                                <div className="bg-white rounded-[10px] p-4 sm:p-6 shadow-lg h-full">
                                     <div
                                         className={`w-14 h-14 rounded-[10px] bg-gradient-to-br ${item.color} flex items-center justify-center mb-4 text-white`}
                                     >

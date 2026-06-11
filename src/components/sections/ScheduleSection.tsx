@@ -83,7 +83,7 @@ export default function ScheduleSection({ events = [] }: ScheduleSectionProps) {
                     className="mb-12"
                 >
                     <div className="bg-white rounded-[10px] shadow-lg overflow-hidden">
-                        <div className="aspect-[16/14] md:aspect-[21/9]">
+                        <div className="aspect-[4/5] sm:aspect-[16/14] md:aspect-[21/9]">
                             <iframe
                                 src={googleCalendarUrl}
                                 className="w-full h-full border-0"
@@ -92,8 +92,8 @@ export default function ScheduleSection({ events = [] }: ScheduleSectionProps) {
                             />
                         </div>
                     </div>
-                    <div className="flex items-center justify-center gap-2 mt-4 text-[var(--color-text-secondary)] text-sm">
-                        <Info className="w-4 h-4" />
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-2 mt-4 text-[var(--color-text-secondary)] text-sm text-center sm:text-left px-2">
+                        <Info className="w-4 h-4 flex-shrink-0" />
                         <span>
                             A programação está sujeita a alterações. Para confirmação, entre em contato
                             conosco ou consulte os avisos durante os cultos.
@@ -114,7 +114,7 @@ export default function ScheduleSection({ events = [] }: ScheduleSectionProps) {
                         </h3>
                     </div>
 
-                    <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
                         {events.map((event, index) => {
                             const config = eventTypeConfig[event.type];
                             const IconComponent = config.icon;

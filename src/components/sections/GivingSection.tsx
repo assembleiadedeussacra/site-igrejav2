@@ -59,7 +59,7 @@ export default function GivingSection({ financials }: GivingSectionProps) {
                     viewport={{ once: true }}
                     className="max-w-4xl mx-auto"
                 >
-                    <div className="relative bg-gradient-to-br from-[var(--color-accent)] to-[var(--color-accent-light)] rounded-[10px] p-8 md:p-12 shadow-2xl overflow-hidden">
+                    <div className="relative bg-gradient-to-br from-[var(--color-accent)] to-[var(--color-accent-light)] rounded-[10px] p-5 sm:p-8 md:p-12 shadow-2xl overflow-hidden">
                         {/* Decorative Elements */}
                         <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-[10px] -translate-y-1/2 translate-x-1/2" />
                         <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-[10px] translate-y-1/2 -translate-x-1/2" />
@@ -77,12 +77,12 @@ export default function GivingSection({ financials }: GivingSectionProps) {
                             <div className="grid md:grid-cols-2 gap-8 items-center">
                                 {/* PIX Key */}
                                 <div className="space-y-6">
-                                    <div className="bg-white/10 backdrop-blur-sm rounded-[10px] p-6">
+                                    <div className="bg-white/10 backdrop-blur-sm rounded-[10px] p-4 sm:p-6">
                                         <p className="text-white/80 text-sm uppercase tracking-wider mb-2">
                                             Chave PIX (Telefone)
                                         </p>
-                                        <div className="flex items-center gap-3">
-                                            <span className="text-2xl md:text-3xl font-bold text-white font-mono">
+                                        <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+                                            <span className="text-xl sm:text-2xl md:text-3xl font-bold text-white font-mono break-all">
                                                 {financials.pix_key}
                                             </span>
                                             <motion.button
@@ -114,8 +114,8 @@ export default function GivingSection({ financials }: GivingSectionProps) {
                                     </div>
 
                                     <p className="text-white/80 text-sm">
-                                        Escaneie o QR Code ao lado utilizando o aplicativo do seu banco
-                                        ou copie a chave PIX acima.
+                                        <span className="hidden sm:inline">Escaneie o QR Code ao lado utilizando o aplicativo do seu banco ou copie a chave PIX acima.</span>
+                                        <span className="sm:hidden">Escaneie o QR Code abaixo no app do seu banco ou copie a chave PIX acima.</span>
                                     </p>
                                 </div>
 

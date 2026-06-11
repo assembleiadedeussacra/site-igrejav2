@@ -65,9 +65,9 @@ export default function Header({ settings }: HeaderProps) {
     return (
         <>
             <header
-                className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-white ${isScrolled
+                className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-white safe-top ${isScrolled
                     ? 'shadow-lg py-2'
-                    : 'shadow-sm py-4'
+                    : 'shadow-sm py-3 sm:py-4'
                     }`}
             >
                 <div className="container-custom">
@@ -225,7 +225,7 @@ export default function Header({ settings }: HeaderProps) {
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             onClick={() => setIsMobileMenuOpen(false)}
-                            className="fixed inset-0 bg-black/50 z-50 lg:hidden"
+                            className="fixed inset-0 bg-black/50 z-[60] lg:hidden"
                         />
 
                         {/* Menu Panel */}
@@ -234,7 +234,7 @@ export default function Header({ settings }: HeaderProps) {
                             animate={{ x: 0 }}
                             exit={{ x: '100%' }}
                             transition={{ type: 'spring', damping: 20 }}
-                            className="fixed top-0 right-0 bottom-0 w-80 max-w-[85vw] bg-white z-50 lg:hidden shadow-2xl"
+                            className="fixed top-0 right-0 bottom-0 w-80 max-w-[85vw] bg-white z-[70] lg:hidden shadow-2xl safe-top safe-bottom"
                         >
                             <div className="flex flex-col h-full">
                                 {/* Header */}

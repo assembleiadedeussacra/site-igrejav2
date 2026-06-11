@@ -41,9 +41,9 @@ const getButtonStyles = (
     
     // Size classes
     const sizeClasses = {
-        sm: 'px-4 py-2 text-sm',
-        md: 'px-8 py-4 text-base',
-        lg: 'px-12 py-6 text-lg',
+        sm: 'px-3 py-2 text-xs sm:px-4 sm:py-2 sm:text-sm',
+        md: 'px-5 py-3 text-sm sm:px-8 sm:py-4 sm:text-base',
+        lg: 'px-6 py-3 text-base sm:px-12 sm:py-6 sm:text-lg',
     };
     
     // Base classes (border-radius será aplicado via inline style)
@@ -103,7 +103,7 @@ export default function HeroSection({ banners = [] }: HeroSectionProps) {
     };
 
     return (
-        <section id="inicio" className="relative h-screen min-h-[600px] max-h-[900px]">
+        <section id="inicio" className="relative min-h-[100svh] max-h-[900px] h-[85svh] sm:h-screen sm:min-h-[560px]">
             {/* Background Slider */}
             <div className="absolute inset-0">
                 <Swiper
@@ -183,24 +183,24 @@ export default function HeroSection({ banners = [] }: HeroSectionProps) {
                     <>
                         <button
                             onClick={() => swiperRef.current?.slidePrev()}
-                            className="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm hover:bg-white/30 transition-all flex items-center justify-center text-white border-2 border-white/30 hover:border-white/50"
+                            className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-20 w-9 h-9 sm:w-12 sm:h-12 rounded-full bg-white/20 backdrop-blur-sm hover:bg-white/30 transition-all flex items-center justify-center text-white border-2 border-white/30 hover:border-white/50"
                             aria-label="Slide anterior"
                         >
-                            <ChevronLeft className="w-6 h-6" />
+                            <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
                         </button>
                         <button
                             onClick={() => swiperRef.current?.slideNext()}
-                            className="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm hover:bg-white/30 transition-all flex items-center justify-center text-white border-2 border-white/30 hover:border-white/50"
+                            className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-20 w-9 h-9 sm:w-12 sm:h-12 rounded-full bg-white/20 backdrop-blur-sm hover:bg-white/30 transition-all flex items-center justify-center text-white border-2 border-white/30 hover:border-white/50"
                             aria-label="Próximo slide"
                         >
-                            <ChevronRight className="w-6 h-6" />
+                            <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
                         </button>
                     </>
                 )}
             </div>
 
             {/* Content Overlay */}
-            <div className="relative z-10 h-full flex flex-col items-center justify-center text-center text-white px-4">
+            <div className="relative z-10 h-full flex flex-col items-center justify-center text-center text-white px-4 pt-16 sm:pt-20 pb-16">
                 <AnimatePresence mode="wait">
                     {banners.length > 0 && banners[activeIndex] && (() => {
                         const currentBanner = banners[activeIndex];
@@ -247,7 +247,7 @@ export default function HeroSection({ banners = [] }: HeroSectionProps) {
                                         initial={{ opacity: 0, y: 20 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ delay: 0.3, duration: 0.5 }}
-                                        className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight"
+                                        className="text-2xl sm:text-4xl md:text-6xl lg:text-7xl font-bold mb-4 sm:mb-6 leading-tight px-1"
                                     >
                                         {currentBanner.title}
                                     </motion.h1>
@@ -256,7 +256,7 @@ export default function HeroSection({ banners = [] }: HeroSectionProps) {
                                         initial={{ opacity: 0, y: 20 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ delay: 0.3, duration: 0.5 }}
-                                        className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight"
+                                        className="text-2xl sm:text-4xl md:text-6xl lg:text-7xl font-bold mb-4 sm:mb-6 leading-tight px-1"
                                     >
                                         Assembleia de Deus{' '}
                                         <span className="text-[var(--color-primary)]">
@@ -271,7 +271,7 @@ export default function HeroSection({ banners = [] }: HeroSectionProps) {
                                         initial={{ opacity: 0, y: 20 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ delay: 0.4, duration: 0.5 }}
-                                        className="text-xl md:text-2xl text-white/95 mb-10 max-w-2xl mx-auto font-light"
+                                        className="text-base sm:text-xl md:text-2xl text-white/95 mb-6 sm:mb-10 max-w-2xl mx-auto font-light px-1"
                                     >
                                         {currentBanner.description}
                                     </motion.p>
@@ -280,7 +280,7 @@ export default function HeroSection({ banners = [] }: HeroSectionProps) {
                                         initial={{ opacity: 0, y: 20 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ delay: 0.4, duration: 0.5 }}
-                                        className="text-xl md:text-2xl text-white/95 mb-10 max-w-2xl mx-auto font-light"
+                                        className="text-base sm:text-xl md:text-2xl text-white/95 mb-6 sm:mb-10 max-w-2xl mx-auto font-light px-1"
                                     >
                                         Uma igreja comprometida com a Palavra de Deus, a adoração e o serviço cristão
                                     </motion.p>
@@ -292,7 +292,7 @@ export default function HeroSection({ banners = [] }: HeroSectionProps) {
                                         initial={{ opacity: 0, y: 20 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ delay: 0.5, duration: 0.5 }}
-                                        className="flex flex-col sm:flex-row gap-4 justify-center"
+                                        className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center w-full max-w-md sm:max-w-none mx-auto"
                                     >
                                         {hasButton1 && (() => {
                                             const buttonStyles = getButtonStyles(currentBanner, 1);
@@ -373,18 +373,18 @@ export default function HeroSection({ banners = [] }: HeroSectionProps) {
                                         initial={{ opacity: 0, y: 20 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ delay: 0.5, duration: 0.5 }}
-                                        className="flex flex-col sm:flex-row gap-4 justify-center"
+                                        className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center w-full max-w-md sm:max-w-none mx-auto"
                                     >
                                         <Link
                                             href="#contato"
-                                            className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-[var(--color-primary)] text-[var(--color-accent)] font-semibold rounded-[30px] hover:bg-white transition-all shadow-lg hover:shadow-xl"
+                                            className="inline-flex items-center justify-center gap-2 px-5 py-3 sm:px-8 sm:py-4 text-sm sm:text-base bg-[var(--color-primary)] text-[var(--color-accent)] font-semibold rounded-[30px] hover:bg-white transition-all shadow-lg hover:shadow-xl w-full sm:w-auto"
                                         >
                                             <MapPin className="w-5 h-5" />
                                             Visite-nos
                                         </Link>
                                         <Link
                                             href="#sobre"
-                                            className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white/10 backdrop-blur-sm text-white font-semibold rounded-[30px] border-2 border-white/30 hover:bg-white/20 transition-all"
+                                            className="inline-flex items-center justify-center gap-2 px-5 py-3 sm:px-8 sm:py-4 text-sm sm:text-base bg-white/10 backdrop-blur-sm text-white font-semibold rounded-[30px] border-2 border-white/30 hover:bg-white/20 transition-all w-full sm:w-auto"
                                         >
                                             <Info className="w-5 h-5" />
                                             Conheça Nossa História
@@ -402,7 +402,7 @@ export default function HeroSection({ banners = [] }: HeroSectionProps) {
                     animate={{ opacity: 1 }}
                     transition={{ delay: 1, duration: 0.5 }}
                     onClick={scrollToContent}
-                    className="absolute bottom-8 left-1/2 -translate-x-1/2 text-white/80 hover:text-white transition-colors"
+                    className="absolute bottom-4 sm:bottom-8 left-1/2 -translate-x-1/2 text-white/80 hover:text-white transition-colors"
                     aria-label="Rolar para baixo"
                 >
                     <motion.div
