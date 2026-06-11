@@ -43,11 +43,24 @@ export async function updateSession(request: NextRequest) {
                     data: { user },
                 } = await supabase.auth.getUser();
 
+                const isLoginRoute = request.nextUrl.pathname.startsWith('/admin/login');
+
                 // Protect admin routes
-                if (!user && !request.nextUrl.pathname.startsWith('/admin/login')) {
+                if (!user && !isLoginRoute) {
                     const url = request.nextUrl.clone();
                     url.pathname = '/admin/login';
                     return NextResponse.redirect(url);
+                }
+
+                if (user && !isLoginRoute) {
+                    const { data: isAdmin, error: adminError } = await supabase.rpc('is_site_admin');
+
+                    if (adminError || !isAdmin) {
+                        const url = request.nextUrl.clone();
+                        url.pathname = '/admin/login';
+                        url.searchParams.set('error', 'unauthorized');
+                        return NextResponse.redirect(url);
+                    }
                 }
             } catch (authError) {
                 // If auth check fails, allow access to login page only

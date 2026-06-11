@@ -4,6 +4,11 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Header, Footer } from '@/components';
 import PostViewTracker from '@/components/posts/PostViewTracker';
+import {
+  getCachedPostBySlug,
+  getCachedSettings,
+  getCachedRelatedPosts,
+} from '@/lib/cache';
 import { serverApi } from '@/services/server';
 import { generatePostMetadata } from '@/lib/seo/generateMetadata';
 import { generateArticleSchema } from '@/lib/seo/schema';
@@ -22,7 +27,7 @@ export async function generateMetadata(
     { params }: BlogPostPageProps
 ): Promise<Metadata> {
     const { slug } = await params;
-    const post = await serverApi.getPostBySlug(slug, 'blog');
+    const post = await getCachedPostBySlug(slug, 'blog');
     
     if (!post) {
         return {
@@ -44,7 +49,7 @@ export async function generateStaticParams() {
     try {
         // Get top 20 most viewed blog posts of all time for static generation
         // Use build client (no cookies needed)
-        const topPosts = await serverApi.getTopPostsAllTime('blog', 20, true);
+        const topPosts = await serverApi.getTopPostsAllTime('blog', 20);
         return (topPosts as Post[])
             .filter((post: Post) => post.published && post.slug)
             .map((post: Post) => ({
@@ -59,10 +64,10 @@ export async function generateStaticParams() {
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
     const { slug } = await params;
     const [postResult, settings, relatedPosts] = await Promise.all([
-        serverApi.getPostBySlug(slug, 'blog'),
-        serverApi.getSettings(),
-        serverApi.getPostBySlug(slug, 'blog').then((p: Post | null) => 
-            p ? serverApi.getRelatedPosts(p.id, 'blog', 3) : []
+        getCachedPostBySlug(slug, 'blog'),
+        getCachedSettings(),
+        getCachedPostBySlug(slug, 'blog').then((p: Post | null) =>
+            p ? getCachedRelatedPosts(p.id, 'blog', 3) : []
         ),
     ]);
 
@@ -106,7 +111,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             <JsonLd data={schema} />
             <Header settings={settings} />
                 <PostViewTracker post={post} />
-            <main className="pt-20 sm:pt-24">
+            <main id="main" className="pt-20 sm:pt-24">
                 <article>
                     {/* Cover Image */}
                     {post.cover_image && (

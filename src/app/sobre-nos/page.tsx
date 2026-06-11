@@ -4,7 +4,13 @@ import {
   ContactSection,
 } from '@/components';
 import AboutPageSection from '@/components/sections/AboutPageSection';
-import { serverApi } from '@/services/server';
+import {
+  getCachedAboutPageCover,
+  getCachedDepartments,
+  getCachedDepartmentMembers,
+  getCachedLeaders,
+  getCachedSettings,
+} from '@/lib/cache';
 import { generatePageMetadata } from '@/lib/seo/pageMetadata';
 import type {
   SiteSettings,
@@ -27,6 +33,8 @@ export const metadata = generatePageMetadata({
   ],
 });
 
+export const revalidate = 300;
+
 export default async function SobreNosPage() {
   let cover: AboutPageCover | null = null;
   let departments: Department[] = [];
@@ -36,10 +44,10 @@ export default async function SobreNosPage() {
 
   try {
     const results = await Promise.allSettled([
-      serverApi.getAboutPageCover(),
-      serverApi.getDepartments(),
-      serverApi.getLeaders(),
-      serverApi.getSettings(),
+      getCachedAboutPageCover(),
+      getCachedDepartments(),
+      getCachedLeaders(),
+      getCachedSettings(),
     ]);
 
     cover = results[0].status === 'fulfilled' ? results[0].value : null;
@@ -51,7 +59,7 @@ export default async function SobreNosPage() {
     if (departments.length > 0) {
       const memberPromises = departments.map(async (dept) => {
         try {
-          const members = await serverApi.getDepartmentMembers(dept.id);
+          const members = await getCachedDepartmentMembers(dept.id);
           return { departmentId: dept.id, members };
         } catch (error) {
           console.error(`Error loading members for department ${dept.id}:`, error);
@@ -73,7 +81,7 @@ export default async function SobreNosPage() {
   return (
     <>
       <Header settings={settings} />
-      <main>
+      <main id="main">
         <AboutPageSection
           cover={cover}
           departments={departments}

@@ -4,10 +4,10 @@
 
 Execute no [SQL Editor](https://supabase.com/dashboard) do Supabase:
 
-1. **`supabase/schema.sql`** — schema consolidado (tabelas, RLS, índices, analytics, SEO, relações)
+1. **`supabase/schema.sql`** — schema consolidado (idempotente: pode reexecutar em banco existente)
 2. **`supabase/create_storage_buckets.sql`** — buckets de upload
 
-Em seguida configure autenticação e storage (abaixo).
+> **Banco já existente:** rode o `schema.sql` completo de novo — triggers, policies e colunas faltantes serão aplicados sem duplicar dados iniciais.
 
 ## Banco já existente (atualizar)
 
@@ -19,14 +19,23 @@ Se o projeto já foi criado com versões antigas do schema, rode **apenas** as m
 4. `supabase/migration_create_post_relations.sql`
 5. `supabase/migration_create_page_views.sql`
 6. `supabase/migrations/add_seo_fields.sql`
+7. `supabase/migration_admin_rls_testimonials_order.sql`
 
 Use `node scripts/verify-supabase.mjs` para ver o que falta.
 
 ## Autenticação (admin)
 
 1. **Authentication → Providers** — habilite Email
-2. **Authentication → Users** — crie o usuário admin
+2. **Authentication → Users** — crie o usuário admin (mesmo e-mail cadastrado em `admin_users`)
 3. **Authentication → Settings** — desabilite "Enable sign ups" em produção
+4. **SQL Editor** — confirme o e-mail na whitelist:
+
+```sql
+INSERT INTO admin_users (email) VALUES ('seu@email.com')
+ON CONFLICT (email) DO NOTHING;
+```
+
+> Ao reaplicar `schema.sql`, o e-mail de `site_settings` é inserido automaticamente em `admin_users`.
 
 ## Storage
 

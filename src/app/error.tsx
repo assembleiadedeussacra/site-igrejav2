@@ -45,7 +45,7 @@ export default function Error({
         </h1>
         
         <p className="text-[var(--color-text-secondary)] mb-6 text-lg">
-          Pedimos desculpas pelo inconveniente. Nossa equipe foi notificada e está trabalhando para resolver o problema.
+          Ocorreu um erro inesperado. Tente novamente ou volte para a página inicial.
         </p>
         
         {process.env.NODE_ENV === 'development' && error.message && (

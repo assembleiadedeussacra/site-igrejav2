@@ -45,6 +45,7 @@ const tables = [
   'about_page_cover',
   'departments',
   'department_members',
+  'admin_users',
 ];
 
 /** Colunas críticas por tabela (select=id,col) */
@@ -54,6 +55,7 @@ const columnChecks = [
   { table: 'events', column: 'order' },
   { table: 'posts', column: 'slug' },
   { table: 'banners', column: 'overlay_opacity' },
+  { table: 'testimonials', column: 'order' },
 ];
 
 console.log('Verificando Supabase:', url);
@@ -84,7 +86,7 @@ for (const { table, column } of columnChecks) {
   }
 }
 
-const rpcChecks = ['get_page_view_stats', 'get_daily_page_views'];
+const rpcChecks = ['get_page_view_stats', 'get_daily_page_views', 'is_site_admin'];
 for (const fn of rpcChecks) {
   const res = await fetch(`${url}/rest/v1/rpc/${fn}`, {
     method: 'POST',

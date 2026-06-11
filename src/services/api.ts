@@ -2,7 +2,7 @@ import { createClient } from '../lib/supabase/client';
 import { Database, AboutPageCover, Post, PageBanner } from '../lib/database.types';
 
 async function batchUpdateOrders(
-    table: 'leaders' | 'events' | 'departments' | 'department_members' | 'gallery_links',
+    table: 'leaders' | 'events' | 'departments' | 'department_members' | 'gallery_links' | 'testimonials',
     updates: { id: string; order: number }[]
 ) {
     const supabase = createClient();
@@ -60,6 +60,70 @@ export const api = {
         return data;
     },
 
+    getAdminVerses: async () => {
+        const supabase = createClient();
+        const { data, error } = await supabase
+            .from('verses')
+            .select('*')
+            .order('active_date', { ascending: false });
+
+        if (error) throw error;
+        return data;
+    },
+
+    upsertVerseForDate: async (payload: {
+        active_date: string;
+        text: string;
+        reference: string;
+        bible_link?: string | null;
+    }) => {
+        const supabase = createClient();
+        const { data: existing } = await supabase
+            .from('verses')
+            .select('id')
+            .eq('active_date', payload.active_date)
+            .maybeSingle();
+
+        if (existing) {
+            const { data, error } = await supabase
+                .from('verses')
+                .update({
+                    text: payload.text,
+                    reference: payload.reference,
+                    bible_link: payload.bible_link ?? null,
+                })
+                .eq('id', existing.id)
+                .select()
+                .single();
+
+            if (error) throw error;
+            return data;
+        }
+
+        const { data, error } = await supabase
+            .from('verses')
+            .insert([
+                {
+                    text: payload.text,
+                    reference: payload.reference,
+                    bible_link: payload.bible_link ?? null,
+                    active_date: payload.active_date,
+                },
+            ])
+            .select()
+            .single();
+
+        if (error) throw error;
+        return data;
+    },
+
+    deleteVerse: async (id: string) => {
+        const supabase = createClient();
+        const { error } = await supabase.from('verses').delete().eq('id', id);
+
+        if (error) throw error;
+    },
+
     getEvents: async () => {
         const supabase = createClient();
         const { data, error } = await supabase
@@ -81,7 +145,7 @@ export const api = {
             .from('testimonials')
             .select('*')
             .eq('active', true)
-            .order('created_at', { ascending: false });
+            .order('order', { ascending: true });
 
         if (error) {
             console.error('Error fetching testimonials:', error);
@@ -526,7 +590,7 @@ export const api = {
         const { data, error } = await supabase
             .from('testimonials')
             .select('*')
-            .order('created_at', { ascending: false });
+            .order('order', { ascending: true });
 
         if (error) throw error;
         return data;
@@ -565,6 +629,10 @@ export const api = {
             .eq('id', id);
 
         if (error) throw error;
+    },
+
+    updateTestimonialOrders: async (updates: { id: string; order: number }[]) => {
+        await batchUpdateOrders('testimonials', updates);
     },
 
     // Admin Financials

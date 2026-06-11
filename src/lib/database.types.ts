@@ -170,6 +170,7 @@ export interface Testimonial {
     rating: number;
     avatar_url: string | null;
     active: boolean;
+    order: number;
     created_at: string;
 }
 

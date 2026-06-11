@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Lock, Mail, Eye, EyeOff, Loader2 } from 'lucide-react';
@@ -9,12 +9,29 @@ import { createClient } from '@/lib/supabase/client';
 import AdminThemeToggle from '@/components/admin/AdminThemeToggle';
 
 export default function AdminLoginPage() {
+    return (
+        <Suspense fallback={null}>
+            <AdminLoginForm />
+        </Suspense>
+    );
+}
+
+function AdminLoginForm() {
     const router = useRouter();
+    const searchParams = useSearchParams();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        if (searchParams.get('error') === 'unauthorized') {
+            setError('Sua conta não tem permissão de administrador. Solicite acesso ao responsável.');
+            const supabase = createClient();
+            supabase.auth.signOut();
+        }
+    }, [searchParams]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -30,6 +47,13 @@ export default function AdminLoginPage() {
 
             if (error) {
                 setError('E-mail ou senha inválidos.');
+                return;
+            }
+
+            const { data: isAdmin, error: adminError } = await supabase.rpc('is_site_admin');
+            if (adminError || !isAdmin) {
+                await supabase.auth.signOut();
+                setError('Sua conta não tem permissão de administrador.');
                 return;
             }
 

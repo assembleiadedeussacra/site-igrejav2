@@ -8,9 +8,11 @@ import { api } from '@/services/api';
 import { Testimonial } from '@/lib/database.types';
 import { uploadTestimonialAvatar } from '@/lib/supabase/storage';
 import { hasValidImageUrl } from '@/lib/imageUtils';
+import { toOrderUpdates } from '@/lib/admin/reorder';
 import {
     AdminPageHeader,
     AdminPanel,
+    AdminSortable,
     AdminEntityActions,
     AdminListToolbar,
     useAdminViewMode,
@@ -122,12 +124,14 @@ export default function AdminDepoimentosPage() {
                     avatar_url: avatarUrl || null,
                 });
             } else {
+                const maxOrder = testimonials.length > 0 ? Math.max(...testimonials.map((t) => t.order || 0)) : 0;
                 await api.createTestimonial({
                     name: formData.name,
                     text: formData.text,
                     rating: formData.rating,
                     active: formData.active,
                     avatar_url: avatarUrl || null,
+                    order: maxOrder + 1,
                 });
             }
 
@@ -159,6 +163,20 @@ export default function AdminDepoimentosPage() {
         }
     };
 
+    const handleReorder = async (reordered: Testimonial[]) => {
+        const previous = testimonials;
+        setTestimonials(reordered);
+        try {
+            await api.updateTestimonialOrders(toOrderUpdates(reordered, (t) => t.id));
+            toast.success('Ordem atualizada!');
+            await triggerContentRevalidation();
+        } catch (error) {
+            console.error('Error updating testimonial order:', error);
+            setTestimonials(previous);
+            toast.error('Erro ao atualizar ordem. Tente novamente.');
+        }
+    };
+
     return (
         <div className="space-y-6">
             <AdminPageHeader
@@ -178,13 +196,25 @@ export default function AdminDepoimentosPage() {
                 isEmpty={!isLoading && testimonials.length === 0}
                 emptyIcon={MessageSquare}
                 emptyMessage="Nenhum depoimento cadastrado"
+                hint="Arraste pelo ícone ⋮⋮ para reordenar o carrossel da home"
             >
-                {viewMode === 'grid' ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 p-4">
-                    {testimonials.map((t) => (
-                        <article key={t.id} className="admin-sortable-card flex flex-col h-full">
+                <AdminSortable
+                    items={testimonials}
+                    getItemId={(t) => t.id}
+                    onReorder={handleReorder}
+                    layout={viewMode}
+                    renderItem={(t, { dragHandle, orderBadge, layout }) =>
+                        layout === 'grid' ? (
+                        <div className="flex flex-col h-full">
                             <div className="flex items-center justify-between gap-2 px-3 py-2 border-b border-gray-100 bg-gray-50/80">
                                 <div className="flex items-center gap-2">
+                                    {dragHandle}
+                                    {orderBadge}
+                                </div>
+                                <AdminEntityActions size="sm" onEdit={() => openModal(t)} onDelete={() => deleteTestimonial(t.id)} />
+                            </div>
+                            <div className="p-4 flex-1 flex flex-col">
+                                <div className="flex items-center gap-3 mb-3">
                                     <div className="relative w-10 h-10 rounded-full overflow-hidden bg-gray-200 flex-shrink-0">
                                         {hasValidImageUrl(t.avatar_url) ? (
                                             <Image src={t.avatar_url!} alt={t.name} fill className="object-cover" sizes="40px" />
@@ -203,9 +233,6 @@ export default function AdminDepoimentosPage() {
                                         </div>
                                     </div>
                                 </div>
-                                <AdminEntityActions size="sm" onEdit={() => openModal(t)} onDelete={() => deleteTestimonial(t.id)} />
-                            </div>
-                            <div className="p-4 flex-1 flex flex-col">
                                 <p className="text-[var(--color-text-secondary)] italic admin-card-desc leading-relaxed line-clamp-4 flex-1">
                                     &ldquo;{t.text}&rdquo;
                                 </p>
@@ -213,13 +240,11 @@ export default function AdminDepoimentosPage() {
                                     {t.active ? 'Ativo' : 'Inativo'}
                                 </span>
                             </div>
-                        </article>
-                    ))}
-                </div>
-                ) : (
-                <div className="divide-y divide-gray-100">
-                    {testimonials.map((t) => (
-                        <div key={t.id} className="admin-sortable-row">
+                        </div>
+                        ) : (
+                        <>
+                            {dragHandle}
+                            {orderBadge}
                             <div className="relative w-12 h-12 rounded-full overflow-hidden bg-gray-200 flex-shrink-0">
                                 {hasValidImageUrl(t.avatar_url) ? (
                                     <Image src={t.avatar_url!} alt={t.name} fill className="object-cover" sizes="48px" />
@@ -244,10 +269,10 @@ export default function AdminDepoimentosPage() {
                                 {t.active ? 'Ativo' : 'Inativo'}
                             </span>
                             <AdminEntityActions onEdit={() => openModal(t)} onDelete={() => deleteTestimonial(t.id)} />
-                        </div>
-                    ))}
-                </div>
-                )}
+                        </>
+                        )
+                    }
+                />
             </AdminPanel>
 
             <AnimatePresence>

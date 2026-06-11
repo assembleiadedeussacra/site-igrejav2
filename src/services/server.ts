@@ -1,11 +1,16 @@
-import { createClient, createClientForBuild } from '../lib/supabase/server';
+import { createClientForBuild } from '../lib/supabase/server';
 import { fetchDailyVerse } from './verse-api';
 import type { Post } from '../lib/database.types';
+
+/** Cliente anônimo sem cookies — permite ISR/cache nas páginas públicas */
+function getPublicSupabase() {
+    return createClientForBuild();
+}
 
 export const serverApi = {
     getBanners: async () => {
         try {
-            const supabase = await createClient();
+            const supabase = getPublicSupabase();
             const result = await supabase
                 .from('banners')
                 .select('*')
@@ -20,7 +25,7 @@ export const serverApi = {
 
     getDailyVerse: async () => {
         try {
-            const supabase = await createClient();
+            const supabase = getPublicSupabase();
             // Usar data no fuso horário de Brasília para garantir consistência
             const now = new Date();
             const brasiliaTime = new Date(now.toLocaleString('en-US', { timeZone: 'America/Sao_Paulo' }));
@@ -85,7 +90,7 @@ export const serverApi = {
 
     getEvents: async () => {
         try {
-            const supabase = await createClient();
+            const supabase = getPublicSupabase();
             const { data } = await supabase
                 .from('events')
                 .select('*')
@@ -100,12 +105,12 @@ export const serverApi = {
 
     getTestimonials: async () => {
         try {
-            const supabase = await createClient();
+            const supabase = getPublicSupabase();
             const { data } = await supabase
                 .from('testimonials')
                 .select('*')
                 .eq('active', true)
-                .order('created_at', { ascending: false });
+                .order('order', { ascending: true });
             return data || [];
         } catch (error) {
             console.error('Error fetching testimonials:', error);
@@ -115,7 +120,7 @@ export const serverApi = {
 
     getFinancials: async () => {
         try {
-            const supabase = await createClient();
+            const supabase = getPublicSupabase();
             const { data } = await supabase
                 .from('financials')
                 .select('*')
@@ -131,7 +136,7 @@ export const serverApi = {
 
     getSettings: async () => {
         try {
-            const supabase = await createClient();
+            const supabase = getPublicSupabase();
             const { data } = await supabase
                 .from('site_settings')
                 .select('*')
@@ -146,7 +151,7 @@ export const serverApi = {
 
     getGalleryLinks: async () => {
         try {
-            const supabase = await createClient();
+            const supabase = getPublicSupabase();
             const { data } = await supabase
                 .from('gallery_links')
                 .select('*')
@@ -161,7 +166,7 @@ export const serverApi = {
 
     getPosts: async (limit = 3) => {
         try {
-            const supabase = await createClient();
+            const supabase = getPublicSupabase();
             const { data } = await supabase
                 .from('posts')
                 .select('*')
@@ -177,7 +182,7 @@ export const serverApi = {
 
     getPostsByType: async (type: 'blog' | 'study', limit?: number, offset?: number) => {
         try {
-            const supabase = await createClient();
+            const supabase = getPublicSupabase();
             let query = supabase
                 .from('posts')
                 .select('*')
@@ -200,7 +205,7 @@ export const serverApi = {
 
     getAllPostsByType: async (type: 'blog' | 'study') => {
         try {
-            const supabase = await createClient();
+            const supabase = getPublicSupabase();
             const { data } = await supabase
                 .from('posts')
                 .select('*')
@@ -214,10 +219,9 @@ export const serverApi = {
         }
     },
 
-    getTopPostsThisMonth: async (type: 'blog' | 'study', limit = 8, useBuildClient = false) => {
+    getTopPostsThisMonth: async (type: 'blog' | 'study', limit = 8) => {
         try {
-            // Use build client if specified (for generateStaticParams)
-            const supabase = useBuildClient ? createClientForBuild() : await createClient();
+            const supabase = getPublicSupabase();
             const startOfMonth = new Date();
             startOfMonth.setDate(1);
             startOfMonth.setHours(0, 0, 0, 0);
@@ -237,10 +241,9 @@ export const serverApi = {
         }
     },
 
-    getTopPostsAllTime: async (type: 'blog' | 'study', limit = 20, useBuildClient = false) => {
+    getTopPostsAllTime: async (type: 'blog' | 'study', limit = 20) => {
         try {
-            // Use build client if specified (for generateStaticParams)
-            const supabase = useBuildClient ? createClientForBuild() : await createClient();
+            const supabase = getPublicSupabase();
 
             const { data } = await supabase
                 .from('posts')
@@ -258,7 +261,7 @@ export const serverApi = {
 
     getPageBanner: async (pageType: 'estudos' | 'blog') => {
         try {
-            const supabase = await createClient();
+            const supabase = getPublicSupabase();
             const { data } = await supabase
                 .from('page_banners')
                 .select('*')
@@ -275,7 +278,7 @@ export const serverApi = {
 
     getLeaders: async () => {
         try {
-            const supabase = await createClient();
+            const supabase = getPublicSupabase();
             const { data } = await supabase
                 .from('leaders')
                 .select('*')
@@ -290,7 +293,7 @@ export const serverApi = {
 
     getAboutPageCover: async () => {
         try {
-            const supabase = await createClient();
+            const supabase = getPublicSupabase();
             const { data } = await supabase
                 .from('about_page_cover')
                 .select('*')
@@ -306,7 +309,7 @@ export const serverApi = {
 
     getDepartments: async () => {
         try {
-            const supabase = await createClient();
+            const supabase = getPublicSupabase();
             const { data } = await supabase
                 .from('departments')
                 .select('*')
@@ -321,7 +324,7 @@ export const serverApi = {
 
     getDepartmentMembers: async (departmentId: string) => {
         try {
-            const supabase = await createClient();
+            const supabase = getPublicSupabase();
             const { data } = await supabase
                 .from('department_members')
                 .select('*')
@@ -337,7 +340,7 @@ export const serverApi = {
 
     getPostById: async (id: string) => {
         try {
-            const supabase = await createClient();
+            const supabase = getPublicSupabase();
             const { data } = await supabase
                 .from('posts')
                 .select('*')
@@ -353,7 +356,7 @@ export const serverApi = {
 
     getPostBySlug: async (slug: string, type?: 'blog' | 'study') => {
         try {
-            const supabase = await createClient();
+            const supabase = getPublicSupabase();
             let query = supabase
                 .from('posts')
                 .select('*')
@@ -385,7 +388,7 @@ export const serverApi = {
     // Get related posts by tags or explicit relations
     getRelatedPosts: async (postId: string, type: 'blog' | 'study', limit = 3) => {
         try {
-            const supabase = await createClient();
+            const supabase = getPublicSupabase();
             
             // First, get the current post to check its tags
             const { data: currentPostData } = await supabase

@@ -1,8 +1,15 @@
 import { Header, Footer } from '@/components';
 import PostsPageContent from '@/components/posts/PostsPageContent';
-import { serverApi } from '@/services/server';
+import {
+  getCachedAllPostsByType,
+  getCachedPageBanner,
+  getCachedTopPosts,
+  getCachedSettings,
+} from '@/lib/cache';
 import { generatePageMetadata } from '@/lib/seo/pageMetadata';
-import type { Post, PageBanner } from '@/lib/database.types';
+import type { Post, PageBanner, SiteSettings } from '@/lib/database.types';
+
+export const revalidate = 300;
 
 export const metadata = generatePageMetadata({
     title: 'Estudos e Reflexões',
@@ -16,25 +23,28 @@ export default async function EstudosPage() {
     let posts: Post[] = [];
     let banner: PageBanner | null = null;
     let topPosts: Post[] = [];
+    let settings: SiteSettings | null = null;
 
     try {
         const results = await Promise.allSettled([
-            serverApi.getAllPostsByType('study'),
-            serverApi.getPageBanner('estudos'),
-            serverApi.getTopPostsThisMonth('study', 8),
+            getCachedAllPostsByType('study'),
+            getCachedPageBanner('estudos'),
+            getCachedTopPosts('study', 8),
+            getCachedSettings(),
         ]);
 
         posts = results[0].status === 'fulfilled' ? results[0].value : [];
         banner = results[1].status === 'fulfilled' ? results[1].value : null;
         topPosts = results[2].status === 'fulfilled' ? results[2].value : [];
+        settings = results[3].status === 'fulfilled' ? results[3].value : null;
     } catch (error) {
         console.error('Erro ao carregar dados da página de estudos:', error);
     }
 
     return (
         <>
-            <Header settings={null} />
-            <main>
+            <Header settings={settings} />
+            <main id="main">
                 <PostsPageContent
                     initialPosts={posts}
                     pageType="study"
@@ -42,7 +52,7 @@ export default async function EstudosPage() {
                     topPosts={topPosts}
                 />
             </main>
-            <Footer settings={null} />
+            <Footer settings={settings} />
         </>
     );
 }

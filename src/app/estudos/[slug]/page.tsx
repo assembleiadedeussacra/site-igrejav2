@@ -4,6 +4,11 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Header, Footer } from '@/components';
 import PostViewTracker from '@/components/posts/PostViewTracker';
+import {
+  getCachedPostBySlug,
+  getCachedSettings,
+  getCachedRelatedPosts,
+} from '@/lib/cache';
 import { serverApi } from '@/services/server';
 import { generatePostMetadata } from '@/lib/seo/generateMetadata';
 import { generateArticleSchema } from '@/lib/seo/schema';
@@ -22,7 +27,7 @@ export async function generateMetadata(
     { params }: EstudoPostPageProps
 ): Promise<Metadata> {
     const { slug } = await params;
-    const post = await serverApi.getPostBySlug(slug, 'study');
+    const post = await getCachedPostBySlug(slug, 'study');
     
     if (!post) {
         return {
@@ -44,7 +49,7 @@ export async function generateStaticParams() {
     try {
         // Get top 20 most viewed study posts of all time for static generation
         // Use build client (no cookies needed)
-        const topPosts = await serverApi.getTopPostsAllTime('study', 20, true);
+        const topPosts = await serverApi.getTopPostsAllTime('study', 20);
         return (topPosts as Post[])
             .filter((post: Post) => post.published && post.slug)
             .map((post: Post) => ({
@@ -59,10 +64,10 @@ export async function generateStaticParams() {
 export default async function EstudoPostPage({ params }: EstudoPostPageProps) {
     const { slug } = await params;
     const [postResult, settings, relatedPosts] = await Promise.all([
-        serverApi.getPostBySlug(slug, 'study'),
-        serverApi.getSettings(),
-        serverApi.getPostBySlug(slug, 'study').then((p: Post | null) => 
-            p ? serverApi.getRelatedPosts(p.id, 'study', 3) : []
+        getCachedPostBySlug(slug, 'study'),
+        getCachedSettings(),
+        getCachedPostBySlug(slug, 'study').then((p: Post | null) =>
+            p ? getCachedRelatedPosts(p.id, 'study', 3) : []
         ),
     ]);
 
@@ -106,7 +111,7 @@ export default async function EstudoPostPage({ params }: EstudoPostPageProps) {
             <JsonLd data={schema} />
             <Header settings={settings} />
                 <PostViewTracker post={post} />
-            <main className="pt-20 sm:pt-24">
+            <main id="main" className="pt-20 sm:pt-24">
                 <article>
                     {/* Cover Image */}
                     {post.cover_image && (

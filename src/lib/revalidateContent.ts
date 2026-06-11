@@ -1,4 +1,5 @@
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, revalidateTag } from 'next/cache';
+import { ALL_CONTENT_TAGS } from '@/lib/cacheTags';
 
 export interface RevalidateContentOptions {
     type?: 'blog' | 'study';
@@ -21,6 +22,7 @@ export function revalidatePublicContent(options: RevalidateContentOptions = {}) 
     if (slug && type) {
         const prefix = type === 'study' ? '/estudos' : '/blog';
         revalidatePath(`${prefix}/${slug}`);
+        revalidateTag(`post-${slug}`, 'max');
     }
 
     if (type === 'blog' || !type) {
@@ -28,5 +30,9 @@ export function revalidatePublicContent(options: RevalidateContentOptions = {}) 
     }
     if (type === 'study' || !type) {
         revalidatePath('/estudos/[slug]', 'page');
+    }
+
+    for (const tag of ALL_CONTENT_TAGS) {
+        revalidateTag(tag, 'max');
     }
 }

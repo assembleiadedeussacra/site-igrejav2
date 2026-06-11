@@ -12,7 +12,17 @@ import {
   ContactSection,
 } from '@/components';
 import JsonLd from '@/components/seo/JsonLd';
-import { serverApi } from '@/services/server';
+import {
+  getCachedBanners,
+  getCachedDailyVerse,
+  getCachedEvents,
+  getCachedTestimonials,
+  getCachedFinancials,
+  getCachedSettings,
+  getCachedGalleryLinks,
+  getCachedHomePosts,
+  getCachedLeaders,
+} from '@/lib/cache';
 import { generateEventsSchema } from '@/lib/seo/schema';
 import type {
   Banner,
@@ -25,6 +35,8 @@ import type {
   Post,
   Leader,
 } from '@/lib/database.types';
+
+export const revalidate = 300;
 
 export default async function Home() {
   // Tratamento de erros para evitar falhas no build
@@ -40,15 +52,15 @@ export default async function Home() {
 
   try {
     const results = await Promise.allSettled([
-      serverApi.getBanners(),
-      serverApi.getDailyVerse(),
-      serverApi.getEvents(),
-      serverApi.getTestimonials(),
-      serverApi.getFinancials(),
-      serverApi.getSettings(),
-      serverApi.getGalleryLinks(),
-      serverApi.getPosts(),
-      serverApi.getLeaders()
+      getCachedBanners(),
+      getCachedDailyVerse(),
+      getCachedEvents(),
+      getCachedTestimonials(),
+      getCachedFinancials(),
+      getCachedSettings(),
+      getCachedGalleryLinks(),
+      getCachedHomePosts(),
+      getCachedLeaders()
     ]);
 
     banners = results[0].status === 'fulfilled' ? results[0].value : [];
@@ -71,7 +83,7 @@ export default async function Home() {
     <>
       {eventsSchema.length > 0 && <JsonLd data={eventsSchema} />}
       <Header settings={settings} />
-      <main>
+      <main id="main">
         <HeroSection
           banners={banners}
           autoplaySeconds={settings?.hero_autoplay_seconds ?? 6}
