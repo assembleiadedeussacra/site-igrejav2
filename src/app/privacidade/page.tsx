@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
+import PageHeader, { ContentSectionTitle } from '@/components/ui/PageHeader';
 import { getCachedSettings } from '@/lib/cache';
 import { SITE_URL, SITE_NAME } from '@/lib/seo/constants';
 
@@ -16,24 +17,24 @@ export const revalidate = 86400;
 
 export default async function PrivacidadePage() {
     const settings = await getCachedSettings();
+    const updatedAt = new Date().toLocaleDateString('pt-BR');
 
     return (
         <>
             <Header settings={settings} />
-            <main id="main" className="section-padding bg-[var(--color-background)] min-h-[60vh]">
+            <main id="main" className="section-padding bg-[var(--color-background)] min-h-[60vh] pt-24 sm:pt-28">
                 <div className="container-custom max-w-3xl">
-                    <h1 className="type-page-title text-[var(--color-accent)] mb-2">
-                        Política de Privacidade
-                    </h1>
-                    <p className="text-[var(--color-text-secondary)] mb-8">
-                        Última atualização: {new Date().toLocaleDateString('pt-BR')}
-                    </p>
+                    <PageHeader
+                        align="left"
+                        eyebrow="Transparência"
+                        title="Política de Privacidade"
+                        meta={`Última atualização: ${updatedAt}`}
+                        className="mb-10"
+                    />
 
-                    <div className="prose prose-neutral max-w-none space-y-6 text-[var(--color-text-secondary)]">
+                    <div className="prose prose-neutral max-w-none space-y-8 text-[var(--color-text-secondary)]">
                         <section>
-                            <h2 className="type-subsection-title text-[var(--color-accent)] mb-3">
-                                1. Quem somos
-                            </h2>
+                            <ContentSectionTitle>1. Quem somos</ContentSectionTitle>
                             <p>
                                 Esta Política de Privacidade descreve como a{' '}
                                 <strong>Assembleia de Deus Missão de Sacramento/MG</strong>{' '}
@@ -49,9 +50,7 @@ export default async function PrivacidadePage() {
                         </section>
 
                         <section>
-                            <h2 className="type-subsection-title text-[var(--color-accent)] mb-3">
-                                2. Dados que coletamos
-                            </h2>
+                            <ContentSectionTitle>2. Dados que coletamos</ContentSectionTitle>
                             <ul className="list-disc pl-6 space-y-2">
                                 <li>
                                     <strong>Formulário de contato:</strong> nome, e-mail, telefone e
@@ -74,9 +73,7 @@ export default async function PrivacidadePage() {
                         </section>
 
                         <section>
-                            <h2 className="type-subsection-title text-[var(--color-accent)] mb-3">
-                                3. Finalidade do tratamento
-                            </h2>
+                            <ContentSectionTitle>3. Finalidade do tratamento</ContentSectionTitle>
                             <ul className="list-disc pl-6 space-y-2">
                                 <li>Responder mensagens e pedidos de oração.</li>
                                 <li>Melhorar a experiência e o conteúdo do site.</li>
@@ -85,9 +82,7 @@ export default async function PrivacidadePage() {
                         </section>
 
                         <section>
-                            <h2 className="type-subsection-title text-[var(--color-accent)] mb-3">
-                                4. Cookies
-                            </h2>
+                            <ContentSectionTitle>4. Cookies</ContentSectionTitle>
                             <p>
                                 Ao visitar o site, você verá um banner solicitando consentimento
                                 para cookies analíticos. Você pode aceitar ou recusar. Cookies
@@ -97,9 +92,7 @@ export default async function PrivacidadePage() {
                         </section>
 
                         <section>
-                            <h2 className="type-subsection-title text-[var(--color-accent)] mb-3">
-                                5. Compartilhamento
-                            </h2>
+                            <ContentSectionTitle>5. Compartilhamento</ContentSectionTitle>
                             <p>
                                 Não vendemos seus dados. Utilizamos provedores de infraestrutura
                                 (hospedagem e banco de dados) para operar o site. Dados analíticos
@@ -109,9 +102,7 @@ export default async function PrivacidadePage() {
                         </section>
 
                         <section>
-                            <h2 className="type-subsection-title text-[var(--color-accent)] mb-3">
-                                6. Seus direitos (LGPD)
-                            </h2>
+                            <ContentSectionTitle>6. Seus direitos (LGPD)</ContentSectionTitle>
                             <p>Você pode solicitar:</p>
                             <ul className="list-disc pl-6 space-y-2 mt-2">
                                 <li>Confirmação e acesso aos seus dados;</li>
@@ -123,7 +114,7 @@ export default async function PrivacidadePage() {
                                 Para exercer seus direitos, entre em contato pelo e-mail{' '}
                                 <a
                                     href={`mailto:${settings?.email || 'contato@assembleiadedeussacramento.com.br'}`}
-                                    className="text-[var(--color-accent)] underline"
+                                    className="text-[var(--color-accent)] underline contact-value"
                                 >
                                     {settings?.email || 'contato@assembleiadedeussacramento.com.br'}
                                 </a>
@@ -132,9 +123,7 @@ export default async function PrivacidadePage() {
                         </section>
 
                         <section>
-                            <h2 className="type-subsection-title text-[var(--color-accent)] mb-3">
-                                7. Retenção
-                            </h2>
+                            <ContentSectionTitle>7. Retenção</ContentSectionTitle>
                             <p>
                                 Mensagens de contato são mantidas pelo tempo necessário para
                                 atendimento e registro interno. Dados analíticos são mantidos de
@@ -143,9 +132,7 @@ export default async function PrivacidadePage() {
                         </section>
 
                         <section>
-                            <h2 className="type-subsection-title text-[var(--color-accent)] mb-3">
-                                8. Alterações
-                            </h2>
+                            <ContentSectionTitle>8. Alterações</ContentSectionTitle>
                             <p>
                                 Esta política pode ser atualizada periodicamente. Recomendamos
                                 revisitar esta página para acompanhar eventuais mudanças.

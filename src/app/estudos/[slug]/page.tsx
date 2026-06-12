@@ -16,8 +16,9 @@ import Breadcrumbs from '@/components/seo/Breadcrumbs';
 import JsonLd from '@/components/seo/JsonLd';
 import ServerContent from '@/components/content/ServerContent';
 import RelatedPosts from '@/components/posts/RelatedPosts';
+import PostArticleHeader from '@/components/posts/PostArticleHeader';
 import type { Post, SiteSettings } from '@/lib/database.types';
-import { Calendar, Tag, ArrowLeft, Eye } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 
 interface EstudoPostPageProps {
     params: Promise<{ slug: string }>;
@@ -142,46 +143,7 @@ export default async function EstudoPostPage({ params }: EstudoPostPageProps) {
                                 Voltar para Estudos
                             </Link>
 
-                            {/* Header */}
-                            <div className="mb-8">
-                                <div className="flex flex-wrap items-center gap-4 text-sm text-[var(--color-text-muted)] mb-4">
-                                    <div className="flex items-center gap-2">
-                                        <Calendar className="w-4 h-4" />
-                                        {formatDate(post.created_at)}
-                                    </div>
-                                    {post.views !== undefined && (
-                                        <div className="flex items-center gap-2">
-                                            <Eye className="w-4 h-4" />
-                                            {post.views} visualizações
-                                        </div>
-                                    )}
-                                    {post.author && (
-                                        <span>Por {post.author}</span>
-                                    )}
-                                </div>
-
-                                <h1 className="type-page-hero-title text-[var(--color-accent)] mb-4">
-                                    {post.title}
-                                </h1>
-
-                                <p className="type-page-hero-desc text-[var(--color-text-secondary)] mb-6">
-                                    {post.excerpt || post.description}
-                                </p>
-
-                                {post.tags && post.tags.length > 0 && (
-                                    <div className="flex flex-wrap gap-2">
-                                        {post.tags.map((tag) => (
-                                            <span
-                                                key={tag}
-                                                className="inline-flex items-center gap-1 px-3 py-1 bg-[var(--color-primary)]/20 text-[var(--color-accent)] rounded-full text-sm font-medium"
-                                            >
-                                                <Tag className="w-3 h-3" />
-                                                {tag}
-                                            </span>
-                                        ))}
-                                    </div>
-                                )}
-                            </div>
+                            <PostArticleHeader post={post} formatDate={formatDate} />
 
                             {/* Content */}
                             <div className="prose prose-lg max-w-none bg-white rounded-[10px] p-4 sm:p-8 md:p-12 shadow-sm overflow-x-auto">

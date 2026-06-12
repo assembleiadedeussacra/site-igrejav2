@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import PageHeader from '@/components/ui/PageHeader';
 
 export default function Error({
   error,
@@ -40,13 +41,12 @@ export default function Error({
           </svg>
         </div>
         
-        <h1 className="type-page-hero-title text-[var(--color-accent)] mb-4">
-          Ops! Algo deu errado
-        </h1>
-        
-        <p className="text-[var(--color-text-secondary)] mb-6 text-lg">
-          Ocorreu um erro inesperado. Tente novamente ou volte para a página inicial.
-        </p>
+        <PageHeader
+          eyebrow="Erro inesperado"
+          title="Ops! Algo deu errado"
+          description="Ocorreu um erro inesperado. Tente novamente ou volte para a página inicial."
+          className="mb-6"
+        />
         
         {process.env.NODE_ENV === 'development' && error.message && (
           <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-[10px] text-left">

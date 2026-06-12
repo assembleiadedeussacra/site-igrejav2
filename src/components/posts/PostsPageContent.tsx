@@ -11,6 +11,7 @@ import { Search, Tag, Calendar, ArrowRight, ChevronLeft, ChevronRight } from 'lu
 import { api } from '@/services/api';
 import type { Post, PageBanner } from '@/lib/database.types';
 import SectionHeader from '@/components/ui/SectionHeader';
+import PageHeader from '@/components/ui/PageHeader';
 
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -149,14 +150,38 @@ export default function PostsPageContent({
                         />
                     </div>
                     <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70 z-10" />
-                    <div className="relative z-20 container-custom text-center px-4 pt-20 sm:pt-[73px]">
-                        <motion.h1
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            className="type-page-hero-title text-white mb-4"
-                        >
-                            {pageType === 'blog' ? 'Blog' : 'Estudos & Reflexões'}
-                        </motion.h1>
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="relative z-20 container-custom px-4 pt-20 sm:pt-[73px]"
+                    >
+                        <PageHeader
+                            variant="hero"
+                            eyebrow={pageType === 'blog' ? 'Publicações' : 'Palavra de Deus'}
+                            title={pageType === 'blog' ? 'Blog' : 'Estudos & Reflexões'}
+                            description={
+                                pageType === 'blog'
+                                    ? 'Notícias, eventos e artigos sobre a vida da nossa comunidade'
+                                    : 'Estudos bíblicos e reflexões para fortalecer sua fé'
+                            }
+                        />
+                    </motion.div>
+                </section>
+            )}
+
+            {!banner && (
+                <section className="section-padding bg-[var(--color-background)] pt-24 sm:pt-28 pb-8">
+                    <div className="container-custom">
+                        <PageHeader
+                            align="left"
+                            eyebrow={pageType === 'blog' ? 'Publicações' : 'Palavra de Deus'}
+                            title={pageType === 'blog' ? 'Blog' : 'Estudos & Reflexões'}
+                            description={
+                                pageType === 'blog'
+                                    ? 'Notícias, eventos e artigos sobre a vida da nossa comunidade'
+                                    : 'Estudos bíblicos e reflexões para fortalecer sua fé'
+                            }
+                        />
                     </div>
                 </section>
             )}
@@ -202,6 +227,12 @@ export default function PostsPageContent({
             {/* Posts Grid */}
             <section className="section-padding bg-[var(--color-background)]">
                 <div className="container-custom">
+                    <SectionHeader
+                        align="left"
+                        eyebrow="Arquivo"
+                        title={pageType === 'blog' ? 'Todos os artigos' : 'Todos os estudos'}
+                        className="mb-8 sm:mb-10"
+                    />
                     {isLoading ? (
                         <div className="text-center py-12">
                             <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--color-accent)]"></div>

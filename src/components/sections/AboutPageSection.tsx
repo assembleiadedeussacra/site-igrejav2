@@ -10,6 +10,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import type { AboutPageCover, Department, DepartmentMember, Leader } from '@/lib/database.types';
 import LeadershipSection from './LeadershipSection';
 import SectionHeader from '@/components/ui/SectionHeader';
+import PageHeader from '@/components/ui/PageHeader';
 
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -47,22 +48,31 @@ export default function AboutPageSection({
                         />
                     </div>
                     <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70 z-10" />
-                    <div className="relative z-20 container-custom text-center px-4 pt-20 sm:pt-0">
-                        <motion.h1
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            className="type-page-hero-title text-white mb-4 sm:mb-6"
-                        >
-                            {cover.title}
-                        </motion.h1>
-                        <motion.p
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.1 }}
-                            className="type-page-hero-desc text-white/90 max-w-3xl mx-auto px-1"
-                        >
-                            {cover.description}
-                        </motion.p>
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.05 }}
+                        className="relative z-20 container-custom px-4 pt-20 sm:pt-0"
+                    >
+                        <PageHeader
+                            variant="hero"
+                            eyebrow="Nossa igreja"
+                            title={cover.title}
+                            description={cover.description}
+                        />
+                    </motion.div>
+                </section>
+            )}
+
+            {!cover && (
+                <section className="section-padding bg-[var(--color-background)] pt-24 sm:pt-28 pb-4">
+                    <div className="container-custom">
+                        <PageHeader
+                            align="left"
+                            eyebrow="Nossa igreja"
+                            title="Sobre Nós"
+                            description="Conheça a história, departamentos e liderança da nossa comunidade"
+                        />
                     </div>
                 </section>
             )}
@@ -71,6 +81,12 @@ export default function AboutPageSection({
             {cover && (cover.church_text_part1 || cover.church_image_url || cover.church_text_part2) && (
                 <section className="section-padding bg-[var(--color-background)]">
                     <div className="container-custom">
+                        <SectionHeader
+                            align="left"
+                            eyebrow="História"
+                            title="Nossa História"
+                            className="mb-8 sm:mb-10"
+                        />
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             whileInView={{ opacity: 1, y: 0 }}

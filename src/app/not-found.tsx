@@ -2,6 +2,7 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import { Home, BookOpen, GraduationCap, Users, Mail } from 'lucide-react';
 import { Header, Footer } from '@/components';
+import PageHeader from '@/components/ui/PageHeader';
 import { getCachedSettings } from '@/lib/cache';
 import { SITE_NAME } from '@/lib/seo/constants';
 
@@ -30,16 +31,18 @@ export default async function NotFound() {
   return (
     <>
       <Header settings={settings} />
-      <main id="main" className="min-h-[60vh] flex items-center bg-[var(--color-background)]">
+      <main id="main" className="min-h-[60vh] flex items-center bg-[var(--color-background)] pt-20">
         <div className="container mx-auto px-4 py-16 md:py-24">
           <div className="max-w-2xl mx-auto text-center">
-            <p className="text-8xl md:text-9xl font-bold text-[var(--color-accent)] opacity-15 leading-none select-none">
+            <p className="text-8xl md:text-9xl font-bold text-[var(--color-accent)] opacity-15 leading-none select-none mb-2">
               404
             </p>
-            <h1 className="type-section-title mt-2 mb-4">Página não encontrada</h1>
-            <p className="type-section-desc mb-8 max-w-md mx-auto">
-              O endereço pode estar incorreto ou a página foi removida. Use os links abaixo para continuar navegando.
-            </p>
+            <PageHeader
+              eyebrow="Erro"
+              title="Página não encontrada"
+              description="O endereço pode estar incorreto ou a página foi removida. Use os links abaixo para continuar navegando."
+              className="mb-8"
+            />
 
             <div className="flex flex-wrap justify-center gap-3 mb-10">
               {quickLinks.map(({ href, label, icon: Icon }) => (
