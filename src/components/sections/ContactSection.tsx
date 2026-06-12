@@ -11,7 +11,7 @@ import {
 } from 'lucide-react';
 
 import { SiteSettings } from '@/lib/database.types';
-import SectionHeader from '@/components/ui/SectionHeader';
+import SectionHeader, { SubsectionHeader } from '@/components/ui/SectionHeader';
 
 interface ContactSectionProps {
     settings: SiteSettings | null;
@@ -60,6 +60,7 @@ export default function ContactSection({ settings }: ContactSectionProps) {
                     viewport={{ once: true }}
                 >
                     <SectionHeader
+                        eyebrow="Fale conosco"
                         title="Contato"
                         description="Entre em contato conosco ou venha nos visitar!"
                     />
@@ -80,7 +81,7 @@ export default function ContactSection({ settings }: ContactSectionProps) {
                                     href={item.href}
                                     target={item.href.startsWith('http') ? '_blank' : undefined}
                                     rel={item.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-                                    className="block bg-white rounded-[10px] p-4 sm:p-6 shadow-md hover:shadow-lg transition-all duration-300 group card-hover h-full"
+                                    className="block surface-card p-4 sm:p-6 hover:shadow-lg transition-all duration-300 group card-hover h-full"
                                     aria-label={`${item.title}: ${item.value}. Abrir em nova aba`}
                                 >
                                     <div
@@ -100,7 +101,7 @@ export default function ContactSection({ settings }: ContactSectionProps) {
                                     </div>
                                 </a>
                             ) : (
-                                <div className="bg-white rounded-[10px] p-4 sm:p-6 shadow-md h-full">
+                                <div className="surface-card p-4 sm:p-6 h-full">
                                     <div
                                         className={`w-11 h-11 sm:w-14 sm:h-14 rounded-[10px] bg-gradient-to-br ${item.color} flex items-center justify-center mb-3 sm:mb-4 text-white`}
                                     >
@@ -124,14 +125,9 @@ export default function ContactSection({ settings }: ContactSectionProps) {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                 >
-                    <div className="flex items-center gap-3 mb-6">
-                        <MapPin className="w-8 h-8 text-[var(--color-primary)]" />
-                        <h3 className="type-subsection-title">
-                            Nossa Localização
-                        </h3>
-                    </div>
+                    <SubsectionHeader title="Nossa Localização" icon={MapPin} />
 
-                    <div className="relative bg-white rounded-[10px] shadow-lg overflow-hidden">
+                    <div className="relative surface-card overflow-hidden">
                         <div className="aspect-[16/9] md:aspect-[21/9]">
                             <iframe
                                 src={googleMapsEmbedUrl}

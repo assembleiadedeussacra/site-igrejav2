@@ -136,6 +136,7 @@ export default function AboutPageSection({
                         viewport={{ once: true }}
                     >
                         <SectionHeader
+                            eyebrow="Ministérios"
                             title="Nossos Departamentos"
                             description="Conheça os departamentos e ministérios da nossa igreja"
                         />

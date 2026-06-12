@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Calendar, ArrowRight } from 'lucide-react';
 import type { Post } from '@/lib/database.types';
+import SectionHeader from '@/components/ui/SectionHeader';
 
 interface RelatedPostsProps {
     posts: Post[];
@@ -22,9 +23,11 @@ export default function RelatedPosts({ posts, type }: RelatedPostsProps) {
 
     return (
         <section className="mt-12 pt-12 border-t border-gray-200">
-            <h2 className="type-section-title mb-6">
-                {type === 'blog' ? 'Artigos Relacionados' : 'Estudos Relacionados'}
-            </h2>
+            <SectionHeader
+                align="left"
+                title={type === 'blog' ? 'Artigos Relacionados' : 'Estudos Relacionados'}
+                className="mb-8"
+            />
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
                 {posts.map((post) => (
                     <Link

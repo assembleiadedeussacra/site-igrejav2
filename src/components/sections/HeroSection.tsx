@@ -249,7 +249,7 @@ export default function HeroSection({ banners = [], autoplaySeconds = 6 }: HeroS
                                         initial={{ opacity: 0, y: 20 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ delay: 0.3, duration: 0.5 }}
-                                        className="type-hero-title text-white mb-4 sm:mb-6 px-1"
+                                        className="type-hero-title text-white hero-text-shadow mb-4 sm:mb-6 px-1"
                                     >
                                         {currentBanner.title}
                                     </motion.h1>
@@ -258,7 +258,7 @@ export default function HeroSection({ banners = [], autoplaySeconds = 6 }: HeroS
                                         initial={{ opacity: 0, y: 20 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ delay: 0.3, duration: 0.5 }}
-                                        className="type-hero-title text-white mb-4 sm:mb-6 px-1"
+                                        className="type-hero-title text-white hero-text-shadow mb-4 sm:mb-6 px-1"
                                     >
                                         Assembleia de Deus{' '}
                                         <span className="text-[var(--color-primary)]">
@@ -273,7 +273,7 @@ export default function HeroSection({ banners = [], autoplaySeconds = 6 }: HeroS
                                         initial={{ opacity: 0, y: 20 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ delay: 0.4, duration: 0.5 }}
-                                        className="type-hero-desc text-white/95 mb-6 sm:mb-10 max-w-2xl mx-auto px-1"
+                                        className="type-hero-desc text-white/95 hero-text-shadow-sm mb-6 sm:mb-10 max-w-2xl mx-auto px-1"
                                     >
                                         {currentBanner.description}
                                     </motion.p>
@@ -282,7 +282,7 @@ export default function HeroSection({ banners = [], autoplaySeconds = 6 }: HeroS
                                         initial={{ opacity: 0, y: 20 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ delay: 0.4, duration: 0.5 }}
-                                        className="type-hero-desc text-white/95 mb-6 sm:mb-10 max-w-2xl mx-auto px-1"
+                                        className="type-hero-desc text-white/95 hero-text-shadow-sm mb-6 sm:mb-10 max-w-2xl mx-auto px-1"
                                     >
                                         Uma igreja comprometida com a Palavra de Deus, a adoração e o serviço cristão
                                     </motion.p>
@@ -378,14 +378,14 @@ export default function HeroSection({ banners = [], autoplaySeconds = 6 }: HeroS
                                         className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center w-full max-w-md sm:max-w-none mx-auto"
                                     >
                                         <Link
-                                            href="#contato"
+                                            href="/#contato"
                                             className="inline-flex items-center justify-center gap-2 px-5 py-3 sm:px-8 sm:py-4 text-sm sm:text-base bg-[var(--color-primary)] text-[var(--color-accent)] font-semibold rounded-[30px] hover:bg-white transition-all shadow-lg hover:shadow-xl w-full sm:w-auto"
                                         >
                                             <MapPin className="w-5 h-5" />
                                             Visite-nos
                                         </Link>
                                         <Link
-                                            href="#sobre"
+                                            href="/#sobre"
                                             className="inline-flex items-center justify-center gap-2 px-5 py-3 sm:px-8 sm:py-4 text-sm sm:text-base bg-white/10 backdrop-blur-sm text-white font-semibold rounded-[30px] border-2 border-white/30 hover:bg-white/20 transition-all w-full sm:w-auto"
                                         >
                                             <Info className="w-5 h-5" />

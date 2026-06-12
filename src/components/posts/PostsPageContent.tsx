@@ -245,6 +245,7 @@ export default function PostsPageContent({
                 <section className="section-padding bg-white">
                     <div className="container-custom">
                         <SectionHeader
+                            eyebrow="Em destaque"
                             title="Mais Acessados do Mês"
                             description={`Os ${pageType === 'blog' ? 'artigos' : 'estudos'} mais populares deste mês`}
                         />

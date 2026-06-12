@@ -116,6 +116,7 @@ export default function TestimonialsSection({ testimonials = [] }: TestimonialsS
                     viewport={{ once: true }}
                 >
                     <SectionHeader
+                        eyebrow="Testemunhos"
                         title="Depoimentos"
                         description="Testemunhos de membros sobre a experiência na comunidade"
                     />

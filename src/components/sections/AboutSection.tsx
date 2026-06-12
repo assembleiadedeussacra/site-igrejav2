@@ -54,6 +54,7 @@ export default function AboutSection({ leaders = [] }: AboutSectionProps) {
                     viewport={{ once: true }}
                 >
                     <SectionHeader
+                        eyebrow="Nossa igreja"
                         title="Sobre Nós"
                         description="Conheça nossa história e missão"
                     />

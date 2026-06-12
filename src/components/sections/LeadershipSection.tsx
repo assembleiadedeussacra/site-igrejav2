@@ -8,6 +8,7 @@ import { Navigation, Pagination, FreeMode } from 'swiper/modules';
 import type { Swiper as SwiperType } from 'swiper';
 import { Users, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Leader } from '@/lib/database.types';
+import SectionHeader from '@/components/ui/SectionHeader';
 
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -80,27 +81,17 @@ export default function LeadershipSection({
             transition={{ duration: 0.6 }}
             className="relative mt-12 md:mt-20"
         >
-            {/* Header */}
-            <div className="text-center mb-12">
-                <motion.h3 
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    className="type-section-title section-title flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 px-2 mb-4"
-                >
-                    <Users className="w-8 h-8 text-[var(--color-primary)]" />
-                    {title}
-                </motion.h3>
-                <motion.p 
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.1 }}
-                    className="type-section-desc max-w-2xl mx-auto"
-                >
-                    {subtitle}
-                </motion.p>
-            </div>
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+            >
+                <SectionHeader
+                    eyebrow="Liderança"
+                    title={title}
+                    description={subtitle}
+                />
+            </motion.div>
 
             {/* Cards Container */}
             <div className="relative">

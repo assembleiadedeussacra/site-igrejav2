@@ -45,6 +45,7 @@ export default function GivingSection({ financials }: GivingSectionProps) {
                     viewport={{ once: true }}
                 >
                     <SectionHeader
+                        eyebrow="Contribua"
                         title="Dízimos e Ofertas"
                         description="Contribua com a obra missionária e ministerial através de dízimos e ofertas"
                     />

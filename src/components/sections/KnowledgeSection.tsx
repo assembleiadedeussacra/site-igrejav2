@@ -59,6 +59,7 @@ export default function KnowledgeSection({ posts = [] }: KnowledgeSectionProps) 
                     viewport={{ once: true }}
                 >
                     <SectionHeader
+                        eyebrow="Crescimento espiritual"
                         title="Conhecimento"
                         description="Estudos bíblicos, reflexões teológicas e artigos para crescimento espiritual e aprofundamento na Palavra de Deus."
                     />

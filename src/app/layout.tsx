@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
+import { Analytics } from '@vercel/analytics/next';
 import './globals.css';
 import Toaster from '@/components/ui/Toaster';
 import ConsentAwareAnalytics from '@/components/analytics/ConsentAwareAnalytics';
@@ -129,6 +130,7 @@ export default function RootLayout({
         <Toaster />
         <CookieConsent />
         <ConsentAwareAnalytics />
+        <Analytics />
         <PwaServiceWorker />
       </body>
     </html>

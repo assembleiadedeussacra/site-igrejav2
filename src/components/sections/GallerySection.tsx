@@ -37,6 +37,7 @@ export default function GallerySection({ items = [] }: GallerySectionProps) {
                     viewport={{ once: true }}
                 >
                     <SectionHeader
+                        eyebrow="Momentos"
                         title="Galeria de Fotos"
                         description="Registros fotográficos de cultos, eventos e atividades ministeriais"
                     />

@@ -49,6 +49,7 @@ export default function VerseSection({ verse }: VerseSectionProps) {
                     viewport={{ once: true }}
                 >
                     <SectionHeader
+                        eyebrow="Palavra de Deus"
                         title="Versículo do Dia"
                         description="Meditação diária da Palavra de Deus para edificação espiritual"
                     />

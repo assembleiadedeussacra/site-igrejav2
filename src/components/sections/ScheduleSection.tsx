@@ -13,7 +13,7 @@ import {
 } from 'lucide-react';
 
 import { Event as DBEvent } from '@/lib/database.types';
-import SectionHeader from '@/components/ui/SectionHeader';
+import SectionHeader, { SubsectionHeader } from '@/components/ui/SectionHeader';
 
 interface ScheduleSectionProps {
     events: DBEvent[];
@@ -71,6 +71,7 @@ export default function ScheduleSection({ events = [], googleCalendarEmbed }: Sc
                     viewport={{ once: true }}
                 >
                     <SectionHeader
+                        eyebrow="Programação"
                         title="Agenda"
                         description="Programação de cultos, estudos bíblicos e atividades ministeriais"
                     />
@@ -108,12 +109,7 @@ export default function ScheduleSection({ events = [], googleCalendarEmbed }: Sc
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                 >
-                    <div className="flex items-center gap-3 mb-8">
-                        <Clock className="w-8 h-8 text-[var(--color-primary)]" />
-                        <h3 className="type-subsection-title">
-                            Programação Fixa
-                        </h3>
-                    </div>
+                    <SubsectionHeader title="Programação Fixa" icon={Clock} className="mb-8" />
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
                         {events.map((event, index) => {
