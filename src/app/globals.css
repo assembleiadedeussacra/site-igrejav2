@@ -580,6 +580,17 @@ img {
   overflow: hidden;
 }
 
+/* Testimonials swiper pagination */
+.testimonials-swiper .swiper-pagination-bullet {
+  background: var(--color-accent);
+  opacity: 0.25;
+}
+
+.testimonials-swiper .swiper-pagination-bullet-active {
+  opacity: 1;
+  background: var(--color-accent);
+}
+
 /* Testimonials Section Styles */
 #depoimentos.section-padding {
   margin-top: 10px;

@@ -24,7 +24,6 @@ import {
     Images,
     MessageSquare,
     BarChart3,
-    Mail,
 } from 'lucide-react';
 
 const menuItems = [
@@ -72,11 +71,6 @@ const menuItems = [
         href: '/admin/depoimentos',
         label: 'Depoimentos',
         icon: MessageSquare,
-    },
-    {
-        href: '/admin/contatos',
-        label: 'Contatos',
-        icon: Mail,
     },
     {
         href: '/admin/sobre',

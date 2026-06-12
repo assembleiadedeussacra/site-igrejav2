@@ -6,7 +6,6 @@ import type {
     DeviceBreakdown,
     LocationBreakdown,
     RecentPageView,
-    ContactMessage,
 } from '@/lib/database.types';
 
 async function batchUpdateOrders(
@@ -1138,40 +1137,6 @@ export const api = {
 
     incrementPostViews: async (postId: string) => {
         await fetch(`/api/posts/${postId}/view`, { method: 'POST' });
-    },
-
-    getContactMessages: async (): Promise<ContactMessage[]> => {
-        const supabase = createClient();
-        const { data, error } = await (supabase as any)
-            .from('contact_messages')
-            .select('*')
-            .order('created_at', { ascending: false });
-
-        if (error) {
-            console.error('Error fetching contact messages:', error);
-            throw error;
-        }
-        return (data || []) as ContactMessage[];
-    },
-
-    updateContactMessageStatus: async (id: string, status: ContactMessage['status']) => {
-        const supabase = createClient();
-        const { error } = await (supabase as any)
-            .from('contact_messages')
-            .update({ status })
-            .eq('id', id);
-
-        if (error) throw error;
-    },
-
-    deleteContactMessage: async (id: string) => {
-        const supabase = createClient();
-        const { error } = await (supabase as any)
-            .from('contact_messages')
-            .delete()
-            .eq('id', id);
-
-        if (error) throw error;
     },
 
     // Analytics
