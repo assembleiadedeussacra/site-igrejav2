@@ -1048,6 +1048,40 @@ html[data-admin-theme='dark'] .admin-panel .shadow-2xl {
 .admin-analytics-panel {
   background-color: #ffffff;
   border-color: #f3f4f6;
+  overflow: visible;
+}
+
+.admin-analytics-chart {
+  overflow: visible;
+  position: relative;
+}
+
+.admin-analytics-chart .recharts-wrapper,
+.admin-analytics-chart .recharts-surface {
+  overflow: visible;
+}
+
+.admin-analytics-chart .recharts-legend-wrapper {
+  width: 100% !important;
+  left: 0 !important;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+.admin-analytics-chart .recharts-legend-item-text {
+  font-size: 12px !important;
+}
+
+.admin-analytics-chart .recharts-cartesian-axis-tick-value {
+  font-size: 11px;
+}
+
+.admin-analytics-chart-tooltip {
+  z-index: 20;
+}
+
+.admin-analytics-feed {
+  scrollbar-gutter: stable;
 }
 
 .admin-analytics-stat {

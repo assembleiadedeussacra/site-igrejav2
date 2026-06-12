@@ -41,7 +41,17 @@ import AnalyticsLiveFeed from '@/components/admin/analytics/AnalyticsLiveFeed';
 import { useAdminTheme } from '@/contexts/AdminThemeContext';
 import { useAnalyticsRealtime, ANALYTICS_LIVE_INTERVAL_MS } from '@/hooks/useAnalyticsRealtime';
 import { getChartTheme } from '@/lib/analytics/chartTheme';
-import { formatLastUpdated } from '@/lib/analytics/formatRelativeTime';
+import {
+    CHART_MARGINS,
+    axisTickStyle,
+    formatChartTick,
+    legendProps,
+    truncateLabel,
+    yAxisWidthForLabels,
+    horizontalChartHeight,
+} from '@/lib/analytics/chartConfig';
+import AnalyticsChartTooltip from '@/components/admin/analytics/AnalyticsChartTooltip';
+import { formatNumber, formatCountry } from '@/components/admin/analytics/analyticsFormat';
 import type {
     PageViewStats,
     DailyPageViews,
@@ -60,6 +70,7 @@ import {
     getPageName,
 } from '@/lib/analytics/filters';
 import { deviceTypeLabel } from '@/lib/analytics/userAgent';
+import { formatLastUpdated } from '@/lib/analytics/formatRelativeTime';
 import toast from 'react-hot-toast';
 
 const PERIODS: { value: AnalyticsPeriod; label: string }[] = [
@@ -93,11 +104,7 @@ const DEVICE_COLORS: Record<string, string> = {
 };
 
 const PANEL =
-    'admin-analytics-panel admin-card rounded-[10px] p-5 md:p-6 shadow-lg border border-gray-100';
-
-function formatNumber(num: number) {
-    return new Intl.NumberFormat('pt-BR').format(num);
-}
+    'admin-analytics-panel admin-card rounded-[10px] p-5 md:p-6 shadow-lg border border-gray-100 overflow-visible';
 
 function formatDate(dateString: string) {
     return new Date(dateString).toLocaleDateString('pt-BR', {
@@ -264,23 +271,31 @@ export default function AnalyticsDashboard() {
     const browserChartData = useMemo(() => aggregateBrowsers(devices), [devices]);
     const topPagesChart = useMemo(
         () =>
-            pageStats.slice(0, 8).map((s) => ({
-                name: getPageName(s.page_path).slice(0, 28),
-                views: s.view_count,
-                unique: s.unique_views,
-            })),
+            pageStats.slice(0, 10).map((s) => {
+                const fullName = getPageName(s.page_path);
+                return {
+                    name: truncateLabel(fullName, 28),
+                    fullName,
+                    path: s.page_path,
+                    views: s.view_count,
+                    unique: s.unique_views,
+                };
+            }),
         [pageStats]
     );
     const locationChart = useMemo(
         () =>
-            locations.slice(0, 10).map((l) => ({
-                name:
+            locations.slice(0, 12).map((l) => {
+                const fullName =
                     l.city === 'Desconhecida'
                         ? 'Desconhecida'
-                        : `${l.city}${l.region !== '—' ? `, ${l.region}` : ''}`,
-                views: l.view_count,
-                unique: l.unique_views,
-            })),
+                        : `${l.city}${l.region !== '—' ? `, ${l.region}` : ''}`;
+                return {
+                    fullName,
+                    views: l.view_count,
+                    unique: l.unique_views,
+                };
+            }),
         [locations]
     );
     const dailyChart = useMemo(
@@ -294,8 +309,20 @@ export default function AnalyticsDashboard() {
         [dailyViews]
     );
 
-    const axisTick = { fill: chartTheme.axis, fontSize: 11 };
-    const legendStyle = { color: chartTheme.legend };
+    const axisTick = axisTickStyle(chartTheme);
+    const legend = legendProps(chartTheme);
+    const browserYWidth = useMemo(
+        () => yAxisWidthForLabels(browserChartData.map((b) => b.name)),
+        [browserChartData]
+    );
+    const locationYWidth = useMemo(
+        () => yAxisWidthForLabels(locationChart.map((l) => l.fullName), 96, 200),
+        [locationChart]
+    );
+    const pagesYWidth = useMemo(
+        () => yAxisWidthForLabels(topPagesChart.map((p) => p.fullName), 96, 200),
+        [topPagesChart]
+    );
 
     const hasActiveFilters =
         filters.pageCategory !== 'all' ||
@@ -544,12 +571,12 @@ export default function AnalyticsDashboard() {
                                 className={`${PANEL} xl:col-span-2`}
                             >
                                 <h2 className="admin-section-title mb-4 flex items-center gap-2">
-                                    <Calendar className="w-5 h-5" />
+                                    <Calendar className="w-5 h-5 shrink-0" />
                                     Evolução do tráfego
                                 </h2>
-                                <div className="h-80 w-full">
-                                    <ResponsiveContainer width="100%" height="100%">
-                                        <AreaChart data={dailyChart}>
+                                <div className="admin-analytics-chart w-full min-h-[300px] h-[min(420px,50vh)]">
+                                    <ResponsiveContainer width="100%" height="100%" minHeight={300}>
+                                        <AreaChart data={dailyChart} margin={CHART_MARGINS.area}>
                                             <defs>
                                                 <linearGradient id={chartTheme.gradientId} x1="0" y1="0" x2="0" y2="1">
                                                     <stop offset="5%" stopColor={chartTheme.primary} stopOpacity={0.4} />
@@ -557,10 +584,30 @@ export default function AnalyticsDashboard() {
                                                 </linearGradient>
                                             </defs>
                                             <CartesianGrid strokeDasharray="3 3" stroke={chartTheme.grid} />
-                                            <XAxis dataKey="label" tick={axisTick} />
-                                            <YAxis tick={axisTick} allowDecimals={false} />
-                                            <Tooltip contentStyle={chartTheme.tooltip} />
-                                            <Legend wrapperStyle={legendStyle} />
+                                            <XAxis
+                                                dataKey="label"
+                                                tick={axisTick}
+                                                interval="preserveStartEnd"
+                                                minTickGap={24}
+                                            />
+                                            <YAxis
+                                                tick={axisTick}
+                                                allowDecimals={false}
+                                                tickFormatter={formatChartTick}
+                                                width={48}
+                                            />
+                                            <Tooltip
+                                                content={({ active, payload, label }) => (
+                                                    <AnalyticsChartTooltip
+                                                        active={active}
+                                                        payload={payload}
+                                                        label={label}
+                                                        theme={chartTheme}
+                                                        valueFormatter={(v, n) => [formatNumber(v), n]}
+                                                    />
+                                                )}
+                                            />
+                                            <Legend {...legend} />
                                             <Area
                                                 type="monotone"
                                                 dataKey="view_count"
@@ -594,28 +641,46 @@ export default function AnalyticsDashboard() {
                             {deviceChartData.length === 0 ? (
                                 <p className="admin-empty-text py-8 text-center">Sem dados de dispositivo</p>
                             ) : (
-                                <div className="h-64">
-                                    <ResponsiveContainer width="100%" height="100%">
-                                        <PieChart>
+                                <div className="admin-analytics-chart w-full min-h-[280px] h-[min(360px,45vh)]">
+                                    <ResponsiveContainer width="100%" height="100%" minHeight={280}>
+                                        <PieChart margin={CHART_MARGINS.pie}>
                                             <Pie
                                                 data={deviceChartData}
                                                 dataKey="value"
                                                 nameKey="name"
                                                 cx="50%"
-                                                cy="50%"
-                                                innerRadius={50}
-                                                outerRadius={85}
+                                                cy="45%"
+                                                innerRadius={52}
+                                                outerRadius={80}
                                                 paddingAngle={3}
-                                                label={({ name, percent }) =>
-                                                    `${name} ${((percent ?? 0) * 100).toFixed(0)}%`
-                                                }
                                             >
                                                 {deviceChartData.map((entry) => (
                                                     <Cell key={entry.type} fill={entry.fill} />
                                                 ))}
                                             </Pie>
-                                            <Tooltip contentStyle={chartTheme.tooltip} />
-                                            <Legend wrapperStyle={legendStyle} />
+                                            <Tooltip
+                                                content={({ active, payload, label }) => (
+                                                    <AnalyticsChartTooltip
+                                                        active={active}
+                                                        payload={payload}
+                                                        label={label}
+                                                        theme={chartTheme}
+                                                        labelFormatter={() => 'Dispositivos'}
+                                                        valueFormatter={(v, n) => [formatNumber(v), n]}
+                                                    />
+                                                )}
+                                            />
+                                            <Legend
+                                                {...legend}
+                                                formatter={(value, entry) => {
+                                                    const item = entry.payload as { value?: number } | undefined;
+                                                    const total = deviceChartData.reduce((s, d) => s + d.value, 0);
+                                                    const pct = total
+                                                        ? (((item?.value ?? 0) / total) * 100).toFixed(0)
+                                                        : '0';
+                                                    return `${value} (${pct}%)`;
+                                                }}
+                                            />
                                         </PieChart>
                                     </ResponsiveContainer>
                                 </div>
@@ -630,14 +695,47 @@ export default function AnalyticsDashboard() {
                             {browserChartData.length === 0 ? (
                                 <p className="admin-empty-text py-8 text-center">Sem dados de navegador</p>
                             ) : (
-                                <div className="h-64">
+                                <div
+                                    className="admin-analytics-chart w-full"
+                                    style={{ height: horizontalChartHeight(browserChartData.length) }}
+                                >
                                     <ResponsiveContainer width="100%" height="100%">
-                                        <BarChart data={browserChartData} layout="vertical" margin={{ left: 8 }}>
+                                        <BarChart
+                                            data={browserChartData}
+                                            layout="vertical"
+                                            margin={CHART_MARGINS.barHorizontal}
+                                        >
                                             <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke={chartTheme.grid} />
-                                            <XAxis type="number" tick={axisTick} allowDecimals={false} />
-                                            <YAxis type="category" dataKey="name" width={72} tick={axisTick} />
-                                            <Tooltip contentStyle={chartTheme.tooltip} />
-                                            <Bar dataKey="views" name="Visualizações" fill={chartTheme.primary} radius={[0, 6, 6, 0]} />
+                                            <XAxis
+                                                type="number"
+                                                tick={axisTick}
+                                                allowDecimals={false}
+                                                tickFormatter={formatChartTick}
+                                            />
+                                            <YAxis
+                                                type="category"
+                                                dataKey="name"
+                                                width={browserYWidth}
+                                                tick={axisTick}
+                                            />
+                                            <Tooltip
+                                                content={({ active, payload, label }) => (
+                                                    <AnalyticsChartTooltip
+                                                        active={active}
+                                                        payload={payload}
+                                                        label={label}
+                                                        theme={chartTheme}
+                                                        valueFormatter={(v) => [formatNumber(v), 'Visualizações']}
+                                                    />
+                                                )}
+                                            />
+                                            <Bar
+                                                dataKey="views"
+                                                name="Visualizações"
+                                                fill={chartTheme.primary}
+                                                radius={[0, 6, 6, 0]}
+                                                maxBarSize={28}
+                                            />
                                         </BarChart>
                                     </ResponsiveContainer>
                                 </div>
@@ -655,30 +753,71 @@ export default function AnalyticsDashboard() {
                                 Localização registrada em novos acessos (IP). Registros antigos: &quot;Desconhecida&quot;.
                             </p>
                         ) : (
-                            <div className="h-80">
+                            <div
+                                className="admin-analytics-chart w-full"
+                                style={{ height: horizontalChartHeight(locationChart.length, true) }}
+                            >
                                 <ResponsiveContainer width="100%" height="100%">
-                                    <BarChart data={locationChart} margin={{ bottom: 48 }}>
-                                        <CartesianGrid strokeDasharray="3 3" stroke={chartTheme.grid} />
-                                        <XAxis dataKey="name" tick={axisTick} angle={-28} textAnchor="end" height={70} />
-                                        <YAxis tick={axisTick} allowDecimals={false} />
-                                        <Tooltip
-                                            contentStyle={chartTheme.tooltip}
-                                            formatter={(value: number, name: string) => [
-                                                formatNumber(value),
-                                                name === 'views' ? 'Visualizações' : 'Únicos',
-                                            ]}
+                                    <BarChart
+                                        data={locationChart}
+                                        layout="vertical"
+                                        margin={CHART_MARGINS.barHorizontal}
+                                        barCategoryGap="18%"
+                                        barGap={6}
+                                    >
+                                        <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke={chartTheme.grid} />
+                                        <XAxis
+                                            type="number"
+                                            tick={axisTick}
+                                            allowDecimals={false}
+                                            tickFormatter={formatChartTick}
                                         />
-                                        <Legend wrapperStyle={legendStyle} />
-                                        <Bar dataKey="views" name="Visualizações" fill={chartTheme.accent} radius={[6, 6, 0, 0]} />
-                                        <Bar dataKey="unique" name="Visitantes únicos" fill={chartTheme.accentAlt} radius={[6, 6, 0, 0]} />
+                                        <YAxis
+                                            type="category"
+                                            dataKey="fullName"
+                                            width={locationYWidth}
+                                            tick={axisTick}
+                                        />
+                                        <Tooltip
+                                            content={({ active, payload, label }) => (
+                                                <AnalyticsChartTooltip
+                                                    active={active}
+                                                    payload={payload}
+                                                    label={label}
+                                                    theme={chartTheme}
+                                                    labelFormatter={(_, p) =>
+                                                        String(p[0]?.payload?.fullName ?? '')
+                                                    }
+                                                    valueFormatter={(v, n) => [
+                                                        formatNumber(v),
+                                                        n === 'views' ? 'Visualizações' : 'Visitantes únicos',
+                                                    ]}
+                                                />
+                                            )}
+                                        />
+                                        <Legend {...legend} />
+                                        <Bar
+                                            dataKey="views"
+                                            name="Visualizações"
+                                            fill={chartTheme.accent}
+                                            radius={[0, 6, 6, 0]}
+                                            maxBarSize={22}
+                                        />
+                                        <Bar
+                                            dataKey="unique"
+                                            name="Visitantes únicos"
+                                            fill={chartTheme.accentAlt}
+                                            radius={[0, 6, 6, 0]}
+                                            maxBarSize={22}
+                                        />
                                     </BarChart>
                                 </ResponsiveContainer>
                             </div>
                         )}
 
                         {locations.length > 0 && (
-                            <div className="mt-6 overflow-x-auto">
-                                <table className="w-full text-sm">
+                            <div className="mt-6 overflow-x-auto -mx-1 px-1">
+                                <table className="w-full text-sm min-w-[520px]">
                                     <thead>
                                         <tr className="border-b border-gray-200">
                                             <th className="text-left py-2 admin-table-head">Cidade</th>
@@ -701,7 +840,7 @@ export default function AnalyticsDashboard() {
                                                     </span>
                                                 </td>
                                                 <td className="py-2.5 admin-card-meta">{loc.region}</td>
-                                                <td className="py-2.5 admin-card-meta">{loc.country}</td>
+                                                <td className="py-2.5 admin-card-meta">{formatCountry(loc.country)}</td>
                                                 <td className="py-2.5 text-right font-medium">{formatNumber(loc.view_count)}</td>
                                                 <td className="py-2.5 text-right">{formatNumber(loc.unique_views)}</td>
                                             </tr>
@@ -715,25 +854,78 @@ export default function AnalyticsDashboard() {
                     {topPagesChart.length > 0 && (
                         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className={PANEL}>
                             <h2 className="admin-section-title mb-4 flex items-center gap-2">
-                                <BarChart3 className="w-5 h-5" />
+                                <BarChart3 className="w-5 h-5 shrink-0" />
                                 Páginas mais acessadas
                             </h2>
-                            <div className="h-72 mb-6">
+                            <div
+                                className="admin-analytics-chart w-full mb-6"
+                                style={{ height: horizontalChartHeight(topPagesChart.length, true) }}
+                            >
                                 <ResponsiveContainer width="100%" height="100%">
-                                    <BarChart data={topPagesChart}>
-                                        <CartesianGrid strokeDasharray="3 3" stroke={chartTheme.grid} />
-                                        <XAxis dataKey="name" tick={axisTick} angle={-20} textAnchor="end" height={60} />
-                                        <YAxis tick={axisTick} allowDecimals={false} />
-                                        <Tooltip contentStyle={chartTheme.tooltip} />
-                                        <Legend wrapperStyle={legendStyle} />
-                                        <Bar dataKey="views" name="Visualizações" fill={chartTheme.primary} radius={[6, 6, 0, 0]} />
-                                        <Bar dataKey="unique" name="Únicos" fill={chartTheme.primarySoft} radius={[6, 6, 0, 0]} />
+                                    <BarChart
+                                        data={topPagesChart}
+                                        layout="vertical"
+                                        margin={CHART_MARGINS.barHorizontal}
+                                        barCategoryGap="18%"
+                                        barGap={6}
+                                    >
+                                        <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke={chartTheme.grid} />
+                                        <XAxis
+                                            type="number"
+                                            tick={axisTick}
+                                            allowDecimals={false}
+                                            tickFormatter={formatChartTick}
+                                        />
+                                        <YAxis
+                                            type="category"
+                                            dataKey="fullName"
+                                            width={pagesYWidth}
+                                            tick={axisTick}
+                                        />
+                                        <Tooltip
+                                            content={({ active, payload, label }) => (
+                                                <AnalyticsChartTooltip
+                                                    active={active}
+                                                    payload={payload}
+                                                    label={label}
+                                                    theme={chartTheme}
+                                                    labelFormatter={(_, p) => {
+                                                        const row = p[0]?.payload as {
+                                                            fullName?: string;
+                                                            path?: string;
+                                                        };
+                                                        return row?.path
+                                                            ? `${row.fullName ?? ''}\n${row.path}`
+                                                            : String(row?.fullName ?? '');
+                                                    }}
+                                                    valueFormatter={(v, n) => [
+                                                        formatNumber(v),
+                                                        n === 'views' ? 'Visualizações' : 'Visitantes únicos',
+                                                    ]}
+                                                />
+                                            )}
+                                        />
+                                        <Legend {...legend} />
+                                        <Bar
+                                            dataKey="views"
+                                            name="Visualizações"
+                                            fill={chartTheme.primary}
+                                            radius={[0, 6, 6, 0]}
+                                            maxBarSize={22}
+                                        />
+                                        <Bar
+                                            dataKey="unique"
+                                            name="Visitantes únicos"
+                                            fill={chartTheme.primarySoft}
+                                            radius={[0, 6, 6, 0]}
+                                            maxBarSize={22}
+                                        />
                                     </BarChart>
                                 </ResponsiveContainer>
                             </div>
 
-                            <div className="overflow-x-auto">
-                                <table className="w-full">
+                            <div className="overflow-x-auto -mx-1 px-1">
+                                <table className="w-full min-w-[640px]">
                                     <thead>
                                         <tr className="border-b border-gray-200">
                                             <th className="text-left py-3 px-3 admin-table-head">#</th>
@@ -751,9 +943,13 @@ export default function AnalyticsDashboard() {
                                                         {index + 1}
                                                     </span>
                                                 </td>
-                                                <td className="py-3 px-3">
-                                                    <p className="admin-list-item-title">{getPageName(stat.page_path)}</p>
-                                                    <p className="admin-card-meta">{stat.page_path}</p>
+                                                <td className="py-3 px-3 max-w-[280px]">
+                                                    <p className="admin-list-item-title break-words">
+                                                        {getPageName(stat.page_path)}
+                                                    </p>
+                                                    <p className="admin-card-meta break-all text-xs mt-0.5">
+                                                        {stat.page_path}
+                                                    </p>
                                                 </td>
                                                 <td className="py-3 px-3 text-right font-medium">{formatNumber(stat.view_count)}</td>
                                                 <td className="py-3 px-3 text-right">{formatNumber(stat.unique_views)}</td>

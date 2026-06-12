@@ -26,14 +26,14 @@ interface AnalyticsLiveFeedProps {
 
 export default function AnalyticsLiveFeed({ items, isRefreshing }: AnalyticsLiveFeedProps) {
     return (
-        <div className="admin-analytics-panel admin-card rounded-[10px] p-5 md:p-6 shadow-lg border border-gray-100">
+        <div className="admin-analytics-panel admin-card rounded-[10px] p-5 md:p-6 shadow-lg border border-gray-100 overflow-visible h-full">
             <div className="flex items-center justify-between gap-3 mb-4">
                 <h2 className="admin-section-title flex items-center gap-2 mb-0">
-                    <Activity className="w-5 h-5" />
+                    <Activity className="w-5 h-5 shrink-0" />
                     Acessos em tempo real
                 </h2>
                 {isRefreshing && (
-                    <span className="admin-analytics-live-badge text-xs">Atualizando…</span>
+                    <span className="admin-analytics-live-badge text-xs shrink-0">Atualizando…</span>
                 )}
             </div>
 
@@ -42,35 +42,37 @@ export default function AnalyticsLiveFeed({ items, isRefreshing }: AnalyticsLive
                     Aguardando novos acessos no site…
                 </p>
             ) : (
-                <ul className="admin-analytics-feed divide-y divide-gray-100 max-h-[420px] overflow-y-auto pr-1">
+                <ul className="admin-analytics-feed divide-y divide-gray-100 max-h-[min(520px,60vh)] overflow-y-auto overflow-x-hidden pr-1">
                     {items.map((item) => (
                         <li
                             key={item.id}
-                            className="admin-analytics-feed-item py-3 first:pt-0 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4"
+                            className="admin-analytics-feed-item py-3 first:pt-0 space-y-2"
                         >
-                            <div className="flex-1 min-w-0">
-                                <p className="admin-list-item-title truncate">
+                            <div className="min-w-0">
+                                <p className="admin-list-item-title leading-snug break-words">
                                     {getPageName(item.page_path)}
                                 </p>
-                                <p className="admin-card-meta truncate">{item.page_path}</p>
+                                <p className="admin-card-meta text-xs break-all mt-0.5">{item.page_path}</p>
                             </div>
-                            <div className="flex flex-wrap items-center gap-2 text-xs shrink-0">
-                                <span className="admin-analytics-tag inline-flex items-center gap-1">
+                            <div className="flex flex-wrap items-center gap-1.5 text-xs">
+                                <span className="admin-analytics-tag inline-flex items-center gap-1 max-w-full">
                                     <DeviceIcon type={item.device_type} />
-                                    {deviceTypeLabel(item.device_type || 'unknown')}
+                                    <span className="truncate">{deviceTypeLabel(item.device_type || 'unknown')}</span>
                                 </span>
                                 {item.city && (
-                                    <span className="admin-analytics-tag inline-flex items-center gap-1">
-                                        <MapPin className="w-3.5 h-3.5" aria-hidden />
-                                        {item.city}
-                                        {item.region ? `, ${item.region}` : ''}
+                                    <span className="admin-analytics-tag inline-flex items-center gap-1 max-w-full">
+                                        <MapPin className="w-3.5 h-3.5 shrink-0" aria-hidden />
+                                        <span className="break-words">
+                                            {item.city}
+                                            {item.region ? `, ${item.region}` : ''}
+                                        </span>
                                     </span>
                                 )}
                                 {item.browser && (
-                                    <span className="admin-analytics-tag-muted">{item.browser}</span>
+                                    <span className="admin-analytics-tag-muted break-words">{item.browser}</span>
                                 )}
                                 <time
-                                    className="admin-analytics-time tabular-nums"
+                                    className="admin-analytics-time tabular-nums ml-auto sm:ml-0"
                                     dateTime={item.created_at}
                                 >
                                     {formatRelativeTime(item.created_at)}
