@@ -22,6 +22,7 @@
     "@tiptap/extension-link": "^3.13.0",
     "@tiptap/react": "^3.13.0",
     "@tiptap/starter-kit": "^3.13.0",
+    "@vercel/analytics": "^2.0.1",
     "framer-motion": "^12.23.25",
     "lru-cache": "^11.2.4",
     "lucide-react": "^0.556.0",
