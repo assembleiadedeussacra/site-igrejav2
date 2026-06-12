@@ -87,10 +87,10 @@ export default async function Home() {
         <AboutSection />
         <KnowledgeSection posts={posts} />
         <ScheduleSection events={events} googleCalendarEmbed={settings?.google_calendar_embed} />
-        <GivingSection financials={financials} />
         <GallerySection items={galleryLinks} />
         <TestimonialsSection testimonials={testimonials} />
         <ContactSection settings={settings} />
+        <GivingSection financials={financials} />
       </main>
       <Footer settings={settings} />
     </>

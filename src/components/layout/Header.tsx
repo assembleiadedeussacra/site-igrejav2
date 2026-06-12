@@ -198,12 +198,6 @@ export default function Header(_props: HeaderProps) {
                                     {link.label}
                                 </Link>
                             ))}
-
-                            <div className="ml-2 pl-3 border-l border-[var(--color-primary)]/40">
-                                <Link href="/#doacoes" className="btn-primary text-sm shadow-md hover:shadow-lg">
-                                    Contribuir
-                                </Link>
-                            </div>
                         </nav>
 
                         <button
@@ -328,7 +322,6 @@ export default function Header(_props: HeaderProps) {
                                     </AnimatePresence>
                                 </div>
 
-                                {/* Agenda e Contato */}
                                 {anchorLinks.map((link) => (
                                     <Link
                                         key={link.href}
@@ -341,16 +334,6 @@ export default function Header(_props: HeaderProps) {
                                     </Link>
                                 ))}
                             </nav>
-
-                            <div className="p-4 border-t border-[var(--color-primary)]/25">
-                                <Link
-                                    href="/#doacoes"
-                                    onClick={closeMobile}
-                                    className="btn-primary w-full justify-center"
-                                >
-                                    Contribuir
-                                </Link>
-                            </div>
                         </motion.div>
                     </>
                 )}

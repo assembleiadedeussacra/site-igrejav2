@@ -18,7 +18,7 @@ const navLinks = [
     { href: '/sobre-nos', label: 'Sobre Nós' },
     { href: '/#agenda', label: 'Agenda' },
     { href: '/#contato', label: 'Contato' },
-    { href: '/#doacoes', label: 'Contribuir' },
+    { href: '/#doacoes', label: 'Dízimos e Ofertas' },
 ];
 
 const knowledgeLinks = [
