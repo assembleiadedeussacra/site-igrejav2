@@ -84,7 +84,7 @@ export default function ScheduleSection({ events = [], googleCalendarEmbed }: Sc
                     viewport={{ once: true }}
                     className="mb-12"
                 >
-                    <div className="bg-white rounded-[10px] shadow-lg overflow-hidden">
+                    <div className="surface-card overflow-hidden">
                         <div className="aspect-[4/5] sm:aspect-[16/14] md:aspect-[21/9]">
                             <iframe
                                 src={googleCalendarUrl}
@@ -123,7 +123,7 @@ export default function ScheduleSection({ events = [], googleCalendarEmbed }: Sc
                                     whileInView={{ opacity: 1, y: 0 }}
                                     viewport={{ once: true }}
                                     transition={{ delay: index * 0.1 }}
-                                    className="bg-white rounded-[10px] p-6 shadow-lg hover:shadow-xl transition-all duration-300 card-hover group"
+                                    className="surface-card p-6 hover:shadow-lg transition-all duration-300 card-hover group"
                                 >
                                     {/* Badge */}
                                     <span

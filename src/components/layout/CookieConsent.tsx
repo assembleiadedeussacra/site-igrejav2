@@ -48,8 +48,8 @@ export default function CookieConsent() {
                                 id="cookie-consent-desc"
                                 className="text-sm text-[var(--color-text-secondary)] leading-relaxed"
                             >
-                                Utilizamos cookies e ferramentas de análise para melhorar sua
-                                experiência e entender como o site é utilizado. Você pode aceitar
+                                Utilizamos cookies e ferramentas de análise (Google Analytics e
+                                Vercel Analytics) para melhorar sua experiência. Você pode aceitar
                                 ou recusar o uso de cookies analíticos.{' '}
                                 <Link
                                     href="/privacidade"

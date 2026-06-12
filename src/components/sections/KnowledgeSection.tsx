@@ -107,7 +107,7 @@ export default function KnowledgeSection({ posts = [] }: KnowledgeSectionProps) 
                             >
                                 {activeTab === 'blog' && post.cover_image ? (
                                     // Blog Card with Image
-                                    <div className="bg-white rounded-[10px] overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 card-hover">
+                                    <div className="surface-card overflow-hidden hover:shadow-lg transition-all duration-300 card-hover">
                                         <div className="relative h-48 overflow-hidden">
                                             <Image
                                                 src={post.cover_image}
@@ -150,7 +150,7 @@ export default function KnowledgeSection({ posts = [] }: KnowledgeSectionProps) 
                                     </div>
                                 ) : (
                                     // Study Card (no image)
-                                    <div className="bg-white rounded-[10px] p-6 shadow-lg hover:shadow-xl transition-all duration-300 card-hover h-full flex flex-col">
+                                    <div className="surface-card p-6 hover:shadow-lg transition-all duration-300 card-hover h-full flex flex-col">
                                         <div className="w-12 h-12 rounded-[10px] bg-gradient-to-br from-[var(--color-accent)] to-[var(--color-accent-light)] flex items-center justify-center mb-4 text-white">
                                             <BookOpen className="w-6 h-6" />
                                         </div>

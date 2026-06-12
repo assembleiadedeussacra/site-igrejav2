@@ -12,19 +12,19 @@ import {
     ChevronUp,
 } from 'lucide-react';
 
-const quickLinks = [
-    { href: '/', label: 'Home' },
+import { SiteSettings } from '@/lib/database.types';
+
+const navLinks = [
     { href: '/sobre-nos', label: 'Sobre Nós' },
     { href: '/#agenda', label: 'Agenda' },
     { href: '/#contato', label: 'Contato' },
+    { href: '/#doacoes', label: 'Contribuir' },
 ];
 
 const knowledgeLinks = [
     { href: '/estudos', label: 'Estudos e Reflexões' },
     { href: '/blog', label: 'Blog' },
 ];
-
-import { SiteSettings } from '@/lib/database.types';
 
 interface FooterProps {
     settings?: SiteSettings | null;
@@ -58,6 +58,7 @@ export default function Footer({ settings }: FooterProps) {
             href: settings?.instagram_url || 'https://www.instagram.com/assembleiasacramento/',
         },
     ];
+
     const scrollToTop = () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
@@ -66,7 +67,6 @@ export default function Footer({ settings }: FooterProps) {
 
     return (
         <footer className="relative bg-[var(--color-accent)] text-white overflow-hidden">
-            {/* Decorative Pattern */}
             <div className="absolute inset-0 opacity-5">
                 <div
                     className="absolute inset-0"
@@ -77,9 +77,8 @@ export default function Footer({ settings }: FooterProps) {
             </div>
 
             <div className="container-custom relative">
-                {/* Main Footer Content */}
                 <div className="py-10 sm:py-12 md:py-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 md:gap-12">
-                    {/* Brand Column */}
+                    {/* Brand */}
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
@@ -96,7 +95,7 @@ export default function Footer({ settings }: FooterProps) {
                                 />
                             </div>
                             <div>
-                                <h3 className="font-bold text-xl">AD Missão</h3>
+                                <h3 className="font-bold text-lg">AD Missão</h3>
                                 <p className="text-white/70 text-sm">Sacramento/MG</p>
                             </div>
                         </Link>
@@ -120,23 +119,20 @@ export default function Footer({ settings }: FooterProps) {
                         </div>
                     </motion.div>
 
-                    {/* Quick Links */}
+                    {/* Navegação */}
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ delay: 0.1 }}
                     >
-                        <h4 className="font-bold text-lg mb-6 flex items-center gap-2">
-                            <span className="w-8 h-0.5 bg-[var(--color-primary)]" />
-                            Links Rápidos
-                        </h4>
+                        <h4 className="footer-col-title">Navegação</h4>
                         <ul className="space-y-3">
-                            {quickLinks.map((link) => (
+                            {navLinks.map((link) => (
                                 <li key={link.href}>
                                     <Link
                                         href={link.href}
-                                        className="text-white/80 hover:text-[var(--color-primary)] transition-colors hover:translate-x-1 inline-block"
+                                        className="text-white/80 hover:text-[var(--color-primary)] transition-colors hover:translate-x-1 inline-block text-sm"
                                     >
                                         {link.label}
                                     </Link>
@@ -145,58 +141,36 @@ export default function Footer({ settings }: FooterProps) {
                         </ul>
                     </motion.div>
 
-                    {/* Knowledge Links */}
+                    {/* Conhecimento */}
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ delay: 0.2 }}
                     >
-                        <h4 className="font-bold text-lg mb-6 flex items-center gap-2">
-                            <span className="w-8 h-0.5 bg-[var(--color-primary)]" />
-                            Conhecimento
-                        </h4>
+                        <h4 className="footer-col-title">Conhecimento</h4>
                         <ul className="space-y-3">
                             {knowledgeLinks.map((link) => (
                                 <li key={link.href}>
                                     <Link
                                         href={link.href}
-                                        className="text-white/80 hover:text-[var(--color-primary)] transition-colors hover:translate-x-1 inline-block"
+                                        className="text-white/80 hover:text-[var(--color-primary)] transition-colors hover:translate-x-1 inline-block text-sm"
                                     >
                                         {link.label}
                                     </Link>
                                 </li>
                             ))}
-                            <li>
-                                <Link
-                                    href="/#doacoes"
-                                    className="text-white/80 hover:text-[var(--color-primary)] transition-colors hover:translate-x-1 inline-block"
-                                >
-                                    Dízimos e Ofertas
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    href="/#galeria"
-                                    className="text-white/80 hover:text-[var(--color-primary)] transition-colors hover:translate-x-1 inline-block"
-                                >
-                                    Galeria de Fotos
-                                </Link>
-                            </li>
                         </ul>
                     </motion.div>
 
-                    {/* Contact */}
+                    {/* Contato */}
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ delay: 0.3 }}
                     >
-                        <h4 className="font-bold text-lg mb-6 flex items-center gap-2">
-                            <span className="w-8 h-0.5 bg-[var(--color-primary)]" />
-                            Contato
-                        </h4>
+                        <h4 className="footer-col-title">Contato</h4>
                         <ul className="space-y-4">
                             {contactInfo.map((item) => (
                                 <li key={item.label} className="flex items-start gap-3 min-w-0">
@@ -224,7 +198,6 @@ export default function Footer({ settings }: FooterProps) {
                     </motion.div>
                 </div>
 
-                {/* Bottom Bar */}
                 <div className="border-t border-white/10 py-6">
                     <div className="flex flex-col md:flex-row items-center justify-between gap-4">
                         <p className="text-white/60 text-xs sm:text-sm text-center md:text-left max-w-prose">
@@ -247,7 +220,6 @@ export default function Footer({ settings }: FooterProps) {
                 </div>
             </div>
 
-            {/* Back to Top Button */}
             <button
                 onClick={scrollToTop}
                 className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 w-11 h-11 sm:w-12 sm:h-12 bg-[var(--color-primary)] text-[var(--color-accent)] rounded-[10px] shadow-lg flex items-center justify-center hover:scale-110 transition-transform z-40 safe-bottom"

@@ -1,5 +1,6 @@
 'use client';
 
+import { Analytics } from '@vercel/analytics/next';
 import { useAnalyticsConsent } from '@/components/layout/CookieConsent';
 import GoogleAnalytics from '@/components/analytics/GoogleAnalytics';
 import PerformanceMonitor from '@/components/analytics/PerformanceMonitor';
@@ -15,6 +16,7 @@ export default function ConsentAwareAnalytics() {
             <GoogleAnalytics />
             <PerformanceMonitor />
             <PageViewTracker />
+            <Analytics />
         </>
     );
 }

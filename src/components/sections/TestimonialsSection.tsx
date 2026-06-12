@@ -47,7 +47,7 @@ function StarRating({ rating, size = 'md' }: { rating: number; size?: 'sm' | 'md
 
 function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
     return (
-        <article className="bg-white rounded-[10px] p-6 md:p-8 shadow-lg hover:shadow-xl transition-shadow h-full flex flex-col min-h-[280px]">
+        <article className="surface-card p-6 md:p-8 hover:shadow-lg transition-shadow h-full flex flex-col min-h-[280px]">
             <div className="w-10 h-10 rounded-[10px] bg-[var(--color-primary)]/20 flex items-center justify-center mb-4 flex-shrink-0">
                 <Quote className="w-5 h-5 text-[var(--color-accent)]" />
             </div>

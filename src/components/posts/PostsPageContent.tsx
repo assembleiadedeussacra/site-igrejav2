@@ -10,7 +10,7 @@ import { useRef } from 'react';
 import { Search, Tag, Calendar, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { api } from '@/services/api';
 import type { Post, PageBanner } from '@/lib/database.types';
-import SectionHeader from '@/components/ui/SectionHeader';
+import SectionHeader, { SubsectionHeader } from '@/components/ui/SectionHeader';
 import PageHeader from '@/components/ui/PageHeader';
 
 import 'swiper/css';
@@ -227,12 +227,19 @@ export default function PostsPageContent({
             {/* Posts Grid */}
             <section className="section-padding bg-[var(--color-background)]">
                 <div className="container-custom">
-                    <SectionHeader
-                        align="left"
-                        eyebrow="Arquivo"
-                        title={pageType === 'blog' ? 'Todos os artigos' : 'Todos os estudos'}
-                        className="mb-8 sm:mb-10"
-                    />
+                    {banner ? (
+                        <SubsectionHeader
+                            title={pageType === 'blog' ? 'Todos os artigos' : 'Todos os estudos'}
+                            className="mb-8"
+                        />
+                    ) : (
+                        <SectionHeader
+                            align="left"
+                            eyebrow="Arquivo"
+                            title={pageType === 'blog' ? 'Todos os artigos' : 'Todos os estudos'}
+                            className="mb-8 sm:mb-10"
+                        />
+                    )}
                     {isLoading ? (
                         <div className="text-center py-12">
                             <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--color-accent)]"></div>
@@ -303,7 +310,7 @@ function PostCard({
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="bg-white rounded-[10px] overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 card-hover group"
+            className="surface-card overflow-hidden hover:shadow-lg transition-all duration-300 card-hover group"
         >
             {post.cover_image && (
                 <div className="relative h-48 overflow-hidden">

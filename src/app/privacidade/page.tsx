@@ -67,7 +67,7 @@ export default async function PrivacidadePage() {
                                 </li>
                                 <li>
                                     <strong>Cookies analíticos (com seu consentimento):</strong>{' '}
-                                    Google Analytics, quando configurado.
+                                    Google Analytics e Vercel Analytics, quando configurados.
                                 </li>
                             </ul>
                         </section>
@@ -96,8 +96,8 @@ export default async function PrivacidadePage() {
                             <p>
                                 Não vendemos seus dados. Utilizamos provedores de infraestrutura
                                 (hospedagem e banco de dados) para operar o site. Dados analíticos
-                                podem ser processados pelo Google Analytics, quando ativo e com seu
-                                consentimento.
+                                podem ser processados pelo Google Analytics e pela Vercel Analytics,
+                                quando ativos e com seu consentimento.
                             </p>
                         </section>
 

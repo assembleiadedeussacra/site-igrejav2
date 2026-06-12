@@ -283,6 +283,27 @@ img {
   }
 }
 
+.footer-col-title {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.footer-col-title::before {
+  content: '';
+  width: 1.25rem;
+  height: 2px;
+  background: var(--color-primary);
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+
 .footer-contact-value {
   font-size: 0.75rem;
   line-height: 1.45;

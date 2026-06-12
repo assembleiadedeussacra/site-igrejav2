@@ -59,7 +59,7 @@ export default function GallerySection({ items = [] }: GallerySectionProps) {
                                 viewport={{ once: true }}
                                 transition={{ delay: index * 0.1 }}
                                 whileHover={{ y: -8 }}
-                                className="group relative bg-white rounded-[10px] overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300"
+                                className="group relative surface-card overflow-hidden hover:shadow-lg transition-all duration-300"
                             >
                                 {/* Image */}
                                 <div className="relative h-64 overflow-hidden">

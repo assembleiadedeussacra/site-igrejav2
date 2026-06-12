@@ -33,7 +33,7 @@ export default function RelatedPosts({ posts, type }: RelatedPostsProps) {
                     <Link
                         key={post.id}
                         href={`/${type === 'study' ? 'estudos' : 'blog'}/${post.slug || post.id}`}
-                        className="group bg-white rounded-[10px] overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 card-hover"
+                        className="group surface-card overflow-hidden hover:shadow-lg transition-all duration-300 card-hover"
                     >
                         {post.cover_image && (
                             <div className="relative h-40 overflow-hidden">

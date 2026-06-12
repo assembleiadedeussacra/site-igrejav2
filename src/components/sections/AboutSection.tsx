@@ -104,7 +104,7 @@ export default function AboutSection({ leaders = [] }: AboutSectionProps) {
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
                                 transition={{ delay: index * 0.1 }}
-                                className="bg-white rounded-[10px] p-6 shadow-lg hover:shadow-xl transition-shadow group"
+                                className="surface-card p-6 hover:shadow-lg transition-shadow group"
                             >
                                 <div className="w-12 h-12 rounded-[10px] bg-gradient-to-br from-[var(--color-accent)] to-[var(--color-accent-light)] flex items-center justify-center mb-4 text-white group-hover:scale-110 transition-transform">
                                     <feature.icon className="w-6 h-6" />
