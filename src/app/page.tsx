@@ -21,7 +21,6 @@ import {
   getCachedSettings,
   getCachedGalleryLinks,
   getCachedHomePosts,
-  getCachedLeaders,
 } from '@/lib/cache';
 import { generateEventsSchema } from '@/lib/seo/schema';
 import type {
@@ -33,7 +32,6 @@ import type {
   SiteSettings,
   GalleryLink,
   Post,
-  Leader,
 } from '@/lib/database.types';
 
 export const revalidate = 300;
@@ -48,7 +46,6 @@ export default async function Home() {
   let settings: SiteSettings | null = null;
   let galleryLinks: GalleryLink[] = [];
   let posts: Post[] = [];
-  let leaders: Leader[] = [];
 
   try {
     const results = await Promise.allSettled([
@@ -60,7 +57,6 @@ export default async function Home() {
       getCachedSettings(),
       getCachedGalleryLinks(),
       getCachedHomePosts(),
-      getCachedLeaders()
     ]);
 
     banners = results[0].status === 'fulfilled' ? results[0].value : [];
@@ -71,7 +67,6 @@ export default async function Home() {
     settings = results[5].status === 'fulfilled' ? results[5].value : null;
     galleryLinks = results[6].status === 'fulfilled' ? results[6].value : [];
     posts = results[7].status === 'fulfilled' ? results[7].value : [];
-    leaders = results[8].status === 'fulfilled' ? results[8].value : [];
   } catch (error) {
     // Log do erro em produção (não quebra o build)
     console.error('Error loading page data:', error);
@@ -89,7 +84,7 @@ export default async function Home() {
           autoplaySeconds={settings?.hero_autoplay_seconds ?? 6}
         />
         <VerseSection verse={verse} />
-        <AboutSection leaders={leaders} />
+        <AboutSection />
         <KnowledgeSection posts={posts} />
         <ScheduleSection events={events} googleCalendarEmbed={settings?.google_calendar_embed} />
         <GivingSection financials={financials} />

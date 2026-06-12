@@ -1,6 +1,5 @@
 'use client';
 
-import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import {
@@ -11,13 +10,7 @@ import {
     ArrowRight,
 } from 'lucide-react';
 
-import { Leader } from '@/lib/database.types';
-import LeadershipSection from './LeadershipSection';
 import SectionHeader from '@/components/ui/SectionHeader';
-
-interface AboutSectionProps {
-    leaders: Leader[];
-}
 
 const features = [
     {
@@ -42,9 +35,8 @@ const features = [
     },
 ];
 
-export default function AboutSection({ leaders = [] }: AboutSectionProps) {
+export default function AboutSection() {
     return (
-        <>
         <section id="sobre" className="section-padding bg-[var(--color-background)]">
             <div className="container-custom">
                 {/* Section Header */}
@@ -121,19 +113,5 @@ export default function AboutSection({ leaders = [] }: AboutSectionProps) {
                 </div>
             </div>
         </section>
-
-        {/* Leaders Section */}
-        {leaders.length > 0 && (
-            <section className="section-padding bg-white">
-                <div className="container-custom">
-                    <LeadershipSection 
-                        leaders={leaders}
-                        title="Nossa Liderança"
-                        subtitle="Liderança espiritual comprometida com o serviço cristão"
-                    />
-                </div>
-            </section>
-        )}
-        </>
     );
 }
