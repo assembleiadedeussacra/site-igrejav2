@@ -80,7 +80,7 @@ export default function GivingSection({ financials }: GivingSectionProps) {
                                             Chave PIX (Telefone)
                                         </p>
                                         <div className="flex flex-col sm:flex-row sm:items-center gap-3">
-                                            <span className="text-xl sm:text-2xl md:text-3xl font-bold text-white font-mono break-all">
+                                            <span className="text-base sm:text-2xl md:text-3xl font-semibold sm:font-bold text-white font-mono break-all leading-snug">
                                                 {financials.pix_key}
                                             </span>
                                             <motion.button

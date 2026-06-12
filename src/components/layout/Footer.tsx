@@ -100,7 +100,7 @@ export default function Footer({ settings }: FooterProps) {
                                 <p className="text-white/70 text-sm">Sacramento/MG</p>
                             </div>
                         </Link>
-                        <p className="text-white/80 mb-6 leading-relaxed">
+                        <p className="text-white/80 text-sm sm:text-base mb-6 leading-relaxed">
                             Igreja evangélica comprometida com a pregação do Evangelho, o ensino bíblico
                             e o serviço cristão. Estamos abertos para receber você e sua família.
                         </p>
@@ -199,23 +199,23 @@ export default function Footer({ settings }: FooterProps) {
                         </h4>
                         <ul className="space-y-4">
                             {contactInfo.map((item) => (
-                                <li key={item.label} className="flex items-start gap-3">
-                                    <item.icon className="w-5 h-5 text-[var(--color-primary)] mt-0.5 flex-shrink-0" />
-                                    <div>
-                                        <p className="text-white/60 text-xs uppercase tracking-wider">
+                                <li key={item.label} className="flex items-start gap-3 min-w-0">
+                                    <item.icon className="w-4 h-4 sm:w-5 sm:h-5 text-[var(--color-primary)] mt-0.5 flex-shrink-0" />
+                                    <div className="min-w-0 flex-1">
+                                        <p className="text-white/60 text-[0.65rem] sm:text-xs uppercase tracking-wider mb-0.5">
                                             {item.label}
                                         </p>
                                         {item.href ? (
                                             <a
                                                 href={item.href}
-                                                className="text-white/90 hover:text-[var(--color-primary)] transition-colors"
+                                                className="footer-contact-value text-white/90 hover:text-[var(--color-primary)] transition-colors block"
                                                 target="_blank"
                                                 rel="noopener noreferrer"
                                             >
                                                 {item.value}
                                             </a>
                                         ) : (
-                                            <p className="text-white/90">{item.value}</p>
+                                            <p className="footer-contact-value text-white/90">{item.value}</p>
                                         )}
                                     </div>
                                 </li>
@@ -227,16 +227,17 @@ export default function Footer({ settings }: FooterProps) {
                 {/* Bottom Bar */}
                 <div className="border-t border-white/10 py-6">
                     <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-                        <p className="text-white/60 text-sm text-center md:text-left">
-                            © {currentYear} Assembleia de Deus Missão - Sacramento/MG. Todos os
-                            direitos reservados.
-                            {' · '}
-                            <Link
-                                href="/privacidade"
-                                className="hover:text-[var(--color-primary)] transition-colors underline underline-offset-2"
-                            >
-                                Privacidade
-                            </Link>
+                        <p className="text-white/60 text-xs sm:text-sm text-center md:text-left max-w-prose">
+                            © {currentYear} Assembleia de Deus Missão - Sacramento/MG.
+                            <span className="hidden sm:inline"> Todos os direitos reservados.</span>
+                            <span className="block sm:inline sm:before:content-['·_'] sm:before:mx-1 mt-1 sm:mt-0">
+                                <Link
+                                    href="/privacidade"
+                                    className="hover:text-[var(--color-primary)] transition-colors underline underline-offset-2"
+                                >
+                                    Privacidade
+                                </Link>
+                            </span>
                         </p>
                         <p className="text-white/60 text-sm flex items-center gap-1">
                             Feito com <Heart className="w-4 h-4 text-red-400 fill-red-400" /> para

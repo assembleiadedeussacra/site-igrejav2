@@ -80,18 +80,18 @@ export default function ContactSection({ settings }: ContactSectionProps) {
                                     href={item.href}
                                     target={item.href.startsWith('http') ? '_blank' : undefined}
                                     rel={item.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-                                    className="block bg-white rounded-[10px] p-4 sm:p-6 shadow-lg hover:shadow-xl transition-all duration-300 group card-hover h-full"
+                                    className="block bg-white rounded-[10px] p-4 sm:p-6 shadow-md hover:shadow-lg transition-all duration-300 group card-hover h-full"
                                     aria-label={`${item.title}: ${item.value}. Abrir em nova aba`}
                                 >
                                     <div
-                                        className={`w-14 h-14 rounded-[10px] bg-gradient-to-br ${item.color} flex items-center justify-center mb-4 text-white group-hover:scale-110 transition-transform`}
+                                        className={`w-11 h-11 sm:w-14 sm:h-14 rounded-[10px] bg-gradient-to-br ${item.color} flex items-center justify-center mb-3 sm:mb-4 text-white group-hover:scale-105 transition-transform`}
                                     >
-                                        <item.icon className="w-7 h-7" />
+                                        <item.icon className="w-5 h-5 sm:w-7 sm:h-7" />
                                     </div>
-                                    <h3 className="type-card-title mb-2">
+                                    <h3 className="type-card-title mb-1.5 sm:mb-2">
                                         {item.title}
                                     </h3>
-                                    <p className="text-[var(--color-text-secondary)] group-hover:text-[var(--color-accent)] transition-colors">
+                                    <p className="contact-value text-[var(--color-text-secondary)] group-hover:text-[var(--color-accent)] transition-colors">
                                         {item.value}
                                     </p>
                                     <div className="mt-4 flex items-center gap-1 text-sm text-[var(--color-accent)] font-medium opacity-0 group-hover:opacity-100 transition-opacity">
@@ -100,16 +100,16 @@ export default function ContactSection({ settings }: ContactSectionProps) {
                                     </div>
                                 </a>
                             ) : (
-                                <div className="bg-white rounded-[10px] p-4 sm:p-6 shadow-lg h-full">
+                                <div className="bg-white rounded-[10px] p-4 sm:p-6 shadow-md h-full">
                                     <div
-                                        className={`w-14 h-14 rounded-[10px] bg-gradient-to-br ${item.color} flex items-center justify-center mb-4 text-white`}
+                                        className={`w-11 h-11 sm:w-14 sm:h-14 rounded-[10px] bg-gradient-to-br ${item.color} flex items-center justify-center mb-3 sm:mb-4 text-white`}
                                     >
-                                        <item.icon className="w-7 h-7" />
+                                        <item.icon className="w-5 h-5 sm:w-7 sm:h-7" />
                                     </div>
-                                    <h3 className="type-card-title mb-2">
+                                    <h3 className="type-card-title mb-1.5 sm:mb-2">
                                         {item.title}
                                     </h3>
-                                    <address className="text-[var(--color-text-secondary)] not-italic">
+                                    <address className="contact-value text-[var(--color-text-secondary)] not-italic">
                                         {item.value}
                                     </address>
                                 </div>

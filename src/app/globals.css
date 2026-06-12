@@ -268,6 +268,33 @@ img {
   color: var(--color-accent);
 }
 
+/* Valores de contato — e-mail, endereço, telefone (quebra segura no mobile) */
+.contact-value {
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+@media (min-width: 640px) {
+  .contact-value {
+    font-size: 0.875rem;
+  }
+}
+
+.footer-contact-value {
+  font-size: 0.75rem;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+@media (min-width: 768px) {
+  .footer-contact-value {
+    font-size: 0.875rem;
+  }
+}
+
 .admin-stat-value {
   font-size: clamp(1.5rem, 3vw, 1.875rem);
   line-height: 1.1;
