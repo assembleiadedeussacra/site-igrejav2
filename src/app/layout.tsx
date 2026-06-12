@@ -2,9 +2,8 @@ import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import Toaster from '@/components/ui/Toaster';
-import GoogleAnalytics from '@/components/analytics/GoogleAnalytics';
-import PerformanceMonitor from '@/components/analytics/PerformanceMonitor';
-import PageViewTracker from '@/components/analytics/PageViewTracker';
+import ConsentAwareAnalytics from '@/components/analytics/ConsentAwareAnalytics';
+import CookieConsent from '@/components/layout/CookieConsent';
 import PwaServiceWorker from '@/components/pwa/ServiceWorkerRegistration';
 import ChurchStructuredData from '@/components/seo/ChurchStructuredData';
 import { SITE_URL, SITE_NAME, DEFAULT_DESCRIPTION, OG_IMAGE } from '@/lib/seo/constants';
@@ -128,9 +127,8 @@ export default function RootLayout({
         <ChurchStructuredData />
         {children}
         <Toaster />
-        <GoogleAnalytics />
-        <PerformanceMonitor />
-        <PageViewTracker />
+        <CookieConsent />
+        <ConsentAwareAnalytics />
         <PwaServiceWorker />
       </body>
     </html>

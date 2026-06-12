@@ -292,6 +292,18 @@ export interface RecentPageView {
     created_at: string;
 }
 
+export interface ContactMessage {
+    id: string;
+    name: string;
+    email: string | null;
+    phone: string | null;
+    subject: string | null;
+    message: string;
+    type: 'contact' | 'prayer';
+    status: 'new' | 'read' | 'archived';
+    created_at: string;
+}
+
 export interface AnalyticsRpcFilters {
     days_back?: number;
     page_category?: string | null;
@@ -391,6 +403,11 @@ export type Database = {
                 Omit<PostRelation, 'id' | 'created_at'>,
                 Partial<Omit<PostRelation, 'id' | 'created_at'>>
             >;
+            contact_messages: TableDef<
+                ContactMessage,
+                Omit<ContactMessage, 'id' | 'created_at'>,
+                Partial<Omit<ContactMessage, 'id' | 'created_at'>>
+            >;
         };
         Views: {
             [_ in never]: never;
@@ -452,6 +469,10 @@ export type Database = {
             is_site_admin: {
                 Args: Record<string, never>;
                 Returns: boolean;
+            };
+            increment_post_views: {
+                Args: { post_id: string };
+                Returns: undefined;
             };
         };
         Enums: {

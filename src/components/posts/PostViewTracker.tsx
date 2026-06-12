@@ -1,8 +1,8 @@
 'use client';
 
 import { useEffect } from 'react';
-import { api } from '@/services/api';
 import { AnalyticsEvents } from '@/lib/analytics';
+import { hasAnalyticsConsent } from '@/lib/cookieConsent';
 import type { Post } from '@/lib/database.types';
 
 interface PostViewTrackerProps {
@@ -11,15 +11,14 @@ interface PostViewTrackerProps {
 
 export default function PostViewTracker({ post }: PostViewTrackerProps) {
     useEffect(() => {
-        // Track view on client side
-        api.incrementPostViews(post.id).catch((error) => {
+        fetch(`/api/posts/${post.id}/view`, { method: 'POST' }).catch((error) => {
             console.error('Error tracking view:', error);
         });
 
-        // Track analytics event
-        AnalyticsEvents.postView(post.id, post.title, post.type);
+        if (hasAnalyticsConsent()) {
+            AnalyticsEvents.postView(post.id, post.title, post.type);
+        }
     }, [post.id, post.title, post.type]);
 
     return null;
 }
-

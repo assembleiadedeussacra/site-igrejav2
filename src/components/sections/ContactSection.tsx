@@ -12,6 +12,7 @@ import {
 
 import { SiteSettings } from '@/lib/database.types';
 import SectionHeader from '@/components/ui/SectionHeader';
+import ContactForm from '@/components/sections/ContactForm';
 
 interface ContactSectionProps {
     settings: SiteSettings | null;
@@ -159,7 +160,10 @@ export default function ContactSection({ settings }: ContactSectionProps) {
                     </div>
                 </motion.div>
 
-
+                {/* Contact Form */}
+                <div className="mt-8 sm:mt-12">
+                    <ContactForm />
+                </div>
             </div>
         </section>
     );

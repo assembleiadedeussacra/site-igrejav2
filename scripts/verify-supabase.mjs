@@ -46,6 +46,7 @@ const tables = [
   'departments',
   'department_members',
   'admin_users',
+  'contact_messages',
 ];
 
 /** Colunas críticas por tabela (select=id,col) */
@@ -95,12 +96,20 @@ const rpcChecks = [
   'get_device_breakdown',
   'get_location_breakdown',
   'is_site_admin',
+  'increment_post_views',
 ];
 for (const fn of rpcChecks) {
+  const body =
+    fn === 'increment_post_views'
+      ? JSON.stringify({ post_id: '00000000-0000-4000-8000-000000000000' })
+      : fn === 'is_site_admin'
+        ? JSON.stringify({})
+        : JSON.stringify({ days_back: 1 });
+
   const res = await fetch(`${url}/rest/v1/rpc/${fn}`, {
     method: 'POST',
     headers: { ...headers, 'Content-Type': 'application/json', Prefer: 'return=representation' },
-    body: JSON.stringify({ days_back: 1 }),
+    body,
   });
 
   if (res.ok || res.status === 200) {

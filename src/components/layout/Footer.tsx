@@ -230,6 +230,13 @@ export default function Footer({ settings }: FooterProps) {
                         <p className="text-white/60 text-sm text-center md:text-left">
                             © {currentYear} Assembleia de Deus Missão - Sacramento/MG. Todos os
                             direitos reservados.
+                            {' · '}
+                            <Link
+                                href="/privacidade"
+                                className="hover:text-[var(--color-primary)] transition-colors underline underline-offset-2"
+                            >
+                                Privacidade
+                            </Link>
                         </p>
                         <p className="text-white/60 text-sm flex items-center gap-1">
                             Feito com <Heart className="w-4 h-4 text-red-400 fill-red-400" /> para
